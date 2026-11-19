@@ -45,15 +45,15 @@ public class RouteNavigationTest {
             click(By.text("Cai"));
             click(By.res(PACKAGE, "manage_mission").enabled(true));
             assertVisible(By.textContains("Fecha límite"));
-            click(By.text("Cerrar"));
+            click(By.res("android", "button1"));
 
             click(By.res(PACKAGE, "manage_units").enabled(true));
             assertVisible(By.textContains("reclutada"));
-            click(By.text("Cerrar"));
+            click(By.res("android", "button1"));
 
             click(By.res(PACKAGE, "manage_supports").enabled(true));
             assertVisible(By.textContains("de apoyo"));
-            click(By.text("Cerrar"));
+            click(By.res("android", "button1"));
             assertVisible(By.text("Senda de Cai"));
         }
     }

@@ -3,23 +3,23 @@ plugins {
 }
 
 android {
-    namespace 'com.davidsm24.fefwmanager'
-    compileSdk 36
+    namespace = 'com.davidsm24.fefwmanager'
+    compileSdk = 36
 
     defaultConfig {
-        applicationId 'com.davidsm24.fefwmanager'
-        minSdk 24
-        targetSdk 36
-        versionCode 1
-        versionName '0.1.0'
+        applicationId = 'com.davidsm24.fefwmanager'
+        minSdk = 24
+        targetSdk = 36
+        versionCode = 1
+        versionName = '0.1.0'
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildFeatures {
-        viewBinding true
+        viewBinding = true
     }
 }

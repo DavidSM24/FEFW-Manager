@@ -9,7 +9,7 @@ FEFW-Manager ayudará al jugador a llevar en paralelo las sendas de **Cai, Theod
 El jugador anotará y podrá actualizar manualmente en cada senda:
 
 - **Unidades reclutadas.** Lista de las unidades que ya se han unido al equipo en esa senda.
-- **Próxima misión principal.** Fecha límite de la siguiente misión principal de esa senda, expresada como día y mes del calendario del juego.
+- **Próxima misión principal.** Descripción y fecha límite de la siguiente misión principal de esa senda. La fecha se expresa como día y mes del calendario del juego.
 - **Parejas de apoyo (shipeos).** Pares de unidades que el jugador quiere vincular mediante el sistema de apoyo (*Support*) en esa senda.
 
 Al cambiar de senda en la aplicación, el jugador verá el registro de la ruta seleccionada. Una unidad reclutada o una pareja de apoyo puede figurar en varias sendas, con un registro independiente en cada una.
@@ -30,6 +30,14 @@ Cuando el jugador complete una misión principal, podrá actualizar en esa senda
 | Dietrich | 13/6 |
 
 El menú mostrará **Cai → Theodora → Leda → Dietrich**.
+
+### Pantallas y navegación
+
+1. **Menú principal.** Presenta el resumen de las cuatro sendas en el orden de juego, con el retrato de cada protagonista y la fecha límite de su próxima misión principal. Al pulsar un retrato, se abre la gestión de esa senda.
+2. **Gestión de senda.** Desde la senda seleccionada, el jugador puede abrir **Gestionar unidades**, **Gestionar apoyos** o **Modificar misión principal**.
+3. **Gestión de unidades.** Muestra las unidades reclutadas en esa senda, con su imagen y nombre. El jugador puede añadir o quitar unidades. Al pulsar **Añadir unidad**, se abre un modal con una lista de unidades identificadas por su imagen y nombre. Al elegir una, se incorpora a la senda seleccionada.
+4. **Modificar misión principal.** Abre un modal con la fecha límite y la descripción de la próxima misión principal de la senda. El jugador puede editar ambos campos y guardar. Al guardar, el menú principal actualiza el resumen y vuelve a ordenar las sendas por fecha límite.
+5. **Gestión de apoyos (shipeos).** Muestra las parejas de apoyo de la senda seleccionada, con los retratos de los dos personajes en cada entrada. El jugador puede crear una pareja eligiendo a sus dos integrantes o quitar una pareja existente.
 
 ## Ficha del juego
 

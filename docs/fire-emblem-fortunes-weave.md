@@ -6,6 +6,8 @@ Ficha de referencia para FEFW-Manager. Fuentes consultadas el **19 de noviembre 
 
 FEFW-Manager ayudará al jugador a llevar en paralelo las sendas de **Cai, Theodora, Dietrich y Leda** mientras alterna entre ellas en el juego. Cada senda tendrá una ficha con su información de referencia y su propio registro de partida.
 
+Las fases de implementación y sus criterios de aceptación se recogen en el [roadmap de desarrollo](roadmap.md).
+
 El jugador anotará y podrá actualizar manualmente en cada senda:
 
 - **Unidades reclutadas.** Lista de las unidades que ya se han unido al equipo en esa senda.

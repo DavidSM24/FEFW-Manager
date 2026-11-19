@@ -32,6 +32,8 @@ Room guarda una misión por senda y usa el ID de cada unidad para asociar reclut
 
 **Entregable.** Con el ejemplo de la ficha, el menú muestra **Cai (10/5) → Theodora (28/5) → Leda (5/6) → Dietrich (13/6)**. Si se cambia la fecha de Leda a 5/5, el menú la sitúa primera al guardar y conserva su nueva descripción al volver a abrir la aplicación.
 
+**Validada en Android 11.** El modal carga la descripción y la fecha guardadas. Los dos campos numéricos de fecha se separan por una barra. **Guardar** valida el día y el mes y actualiza la misión. **Cancelar** descarta los cambios del formulario. Las sendas sin fecha aparecen al final y los empates mantienen el orden del menú inicial. [Resultado en GitHub Actions](https://github.com/DavidSM24/FEFW-Manager/actions/runs/44560882178)
+
 ## Fase 4. Incorporar el catálogo y gestionar unidades
 
 - Usar `unidades-fefw.json` como catálogo inicial. Contiene 63 unidades y disponibilidad por senda para las 50 de la primera parte. Revisar los nombres de la localización española, la disponibilidad dudosa y los enlaces a retratos antes de cerrar el catálogo de la primera versión. Usar imágenes provisionales para desarrollar el flujo mientras se validan los retratos.

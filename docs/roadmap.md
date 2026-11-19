@@ -19,6 +19,12 @@ La primera versión permitirá seguir en paralelo las sendas de Cai, Theodora, D
 
 **Entregable.** Los cuatro retratos abren la senda correcta y sus anotaciones se guardan por separado.
 
+El menú presenta cuatro fichas con iniciales provisionales. Cada ficha abre su propia senda, con resúmenes de la misión principal, las unidades reclutadas y los apoyos. Las fases 3 a 5 incorporan la edición desde esas pantallas.
+
+Room guarda una misión por senda y usa el ID de cada unidad para asociar reclutamientos y parejas. Una unidad puede pertenecer a varias sendas. El orden de selección de los personajes de una pareja no cambia su identidad. El catálogo y los retratos se incorporarán por separado en la fase 4.
+
+**Validada en Android 11.** Tres pruebas instrumentadas comprueban el acceso a las cuatro sendas, la apertura de los tres resúmenes y la persistencia por senda al cerrar y volver a abrir la base. [Resultado en GitHub Actions](https://github.com/DavidSM24/FEFW-Manager/actions/runs/44550018402)
+
 ## Fase 3. Editar las misiones y ordenar el menú
 
 - Implementar el modal de misión principal. Mostrar la fecha límite y la descripción actuales, permitir editarlas y guardarlas juntas para la senda seleccionada.

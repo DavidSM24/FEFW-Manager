@@ -1,13 +1,13 @@
 # FEFW-Manager
 
-Aplicación Android para seguir en paralelo las cuatro sendas de *Fire Emblem: Fortune’s Weave*. La primera versión del proyecto abre una pantalla de inicio con el nombre de la aplicación y los protagonistas de las sendas.
+Aplicación Android para seguir en paralelo las cuatro sendas de *Fire Emblem: Fortune’s Weave*. El menú abre la vista de cada senda, con resúmenes de su misión principal, unidades y apoyos. El progreso se almacena en Room.
 
 ## Abrir y ejecutar en Android Studio
 
 1. Clona el repositorio y abre la carpeta que contiene `settings.gradle` con **File → Open**.
 2. En **SDK Manager**, instala **Android SDK Platform 36**, **Android SDK Build-Tools 35.0.0** y **Android SDK Platform-Tools**. Configura el JDK de Gradle con la versión 17 o 21 y sincroniza el proyecto.
 3. En **Device Manager**, crea e inicia un emulador con Android 7.0 (API 24) o superior. Selecciona la configuración **app**, elige el emulador y pulsa **Run**.
-4. Al abrir la aplicación verás **FEFW Manager** y los nombres **Cai · Theodora · Dietrich · Leda**.
+4. Al abrir **FEFW Manager**, pulsa la ficha de Cai, Theodora, Dietrich o Leda para abrir su senda. Las iniciales identifican las fichas provisionalmente hasta incorporar los retratos.
 
 ## Compilar desde la terminal
 
@@ -32,6 +32,8 @@ El APK se genera en `app/build/outputs/apk/debug/app-debug.apk`. Para `installDe
 ```sh
 adb shell am start -W -n com.davidsm24.fefwmanager/.home.MainActivity
 ```
+
+Con un dispositivo o emulador conectado, ejecuta `./gradlew :app:connectedDebugAndroidTest` en macOS o Linux, o `.\gradlew.bat :app:connectedDebugAndroidTest` en Windows, para probar la navegación y la persistencia por senda.
 
 ## Proyecto
 

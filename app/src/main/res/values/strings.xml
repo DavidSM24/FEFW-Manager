@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">FEFW Manager</string>
-    <string name="route_names">Cai · Theodora · Dietrich · Leda</string>
+    <string name="routes_title">Sendas</string>
+    <string name="route_cai">Cai</string>
+    <string name="route_theodora">Theodora</string>
+    <string name="route_dietrich">Dietrich</string>
+    <string name="route_leda">Leda</string>
+    <string name="route_title">Senda de %1$s</string>
+    <string name="back_to_routes">Volver a sendas</string>
+    <string name="deadline_legend">Fecha límite de la próxima misión</string>
+    <string name="no_deadline">Sin fecha</string>
+    <string name="deadline_format">%1$d/%2$d</string>
+    <string name="next_mission_summary">Próxima misión · %1$s</string>
+    <string name="main_mission">Misión principal</string>
+    <string name="manage_units">Gestionar unidades</string>
+    <string name="manage_supports">Gestionar apoyos</string>
+    <string name="no_mission_description">Sin descripción</string>
+    <string name="mission_preview">Fecha límite · %1$s\n\n%2$s</string>
+    <string name="close_summary">Cerrar</string>
+    <plurals name="recruited_units">
+        <item quantity="one">%d unidad reclutada</item>
+        <item quantity="other">%d unidades reclutadas</item>
+    </plurals>
+    <plurals name="saved_supports">
+        <item quantity="one">%d pareja de apoyo</item>
+        <item quantity="other">%d parejas de apoyo</item>
+    </plurals>
 </resources>

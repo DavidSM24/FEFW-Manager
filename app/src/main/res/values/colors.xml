@@ -3,4 +3,10 @@
     <color name="midnight">#17232D</color>
     <color name="parchment">#F5EEDD</color>
     <color name="sand">#D7C5A2</color>
+    <color name="route_surface">#223540</color>
+    <color name="route_outline">#455763</color>
+    <color name="route_cai">#EAC77E</color>
+    <color name="route_theodora">#CF8D7B</color>
+    <color name="route_dietrich">#A9A0C8</color>
+    <color name="route_leda">#86BCAE</color>
 </resources>

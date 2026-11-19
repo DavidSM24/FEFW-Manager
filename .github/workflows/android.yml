@@ -50,14 +50,8 @@ jobs:
           tail -100 "$RUNNER_TEMP/emulator.log"
           exit 1
 
-      - name: Instalar el APK y abrir la pantalla inicial
+      - name: Verificar la navegación y los datos en Android
         run: |
-          adb install app/build/outputs/apk/debug/app-debug.apk
           adb shell input keyevent KEYCODE_WAKEUP
           adb shell wm dismiss-keyguard
-          adb shell am start -W -n com.davidsm24.fefwmanager/.home.MainActivity | tee "$RUNNER_TEMP/arranque.txt"
-          grep -F 'Status: ok' "$RUNNER_TEMP/arranque.txt"
-          adb shell uiautomator dump /sdcard/fefw-window.xml
-          adb pull /sdcard/fefw-window.xml "$RUNNER_TEMP/ventana.xml"
-          grep -F 'resource-id="com.davidsm24.fefwmanager:id/app_title"' "$RUNNER_TEMP/ventana.xml"
-          grep -F 'text="Cai · Theodora · Dietrich · Leda"' "$RUNNER_TEMP/ventana.xml"
+          ./gradlew :app:connectedDebugAndroidTest

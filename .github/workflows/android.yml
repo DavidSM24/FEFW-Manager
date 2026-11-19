@@ -31,10 +31,14 @@ jobs:
       - name: Iniciar el emulador de Android 11
         run: |
           export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+          export ANDROID_AVD_HOME="$RUNNER_TEMP/fefw-avd"
+          mkdir -p "$ANDROID_AVD_HOME"
           echo "$ANDROID_HOME/platform-tools" >> "$GITHUB_PATH"
           sudo setfacl -m "u:$(id -un):rw" /dev/kvm
           sdkmanager 'emulator' 'system-images;android-30;default;x86_64'
-          echo no | avdmanager create avd -n fefw -k 'system-images;android-30;default;x86_64'
+          avdmanager create avd -n fefw -k 'system-images;android-30;default;x86_64' -d pixel_2 -p "$ANDROID_AVD_HOME/fefw.avd"
+          test -s "$ANDROID_AVD_HOME/fefw.avd/config.ini"
+          printf 'avd.ini.encoding=UTF-8\npath=%s\ntarget=android-30\n' "$ANDROID_AVD_HOME/fefw.avd" > "$ANDROID_AVD_HOME/fefw.ini"
           adb start-server
           "$ANDROID_HOME/emulator/emulator" -avd fefw -no-window -no-audio -no-snapshot -no-boot-anim -gpu software -no-metrics > "$RUNNER_TEMP/emulator.log" 2>&1 &
           emulator_pid=$!

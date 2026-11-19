@@ -32,52 +32,52 @@ public class RouteProgressTest {
         Context context = instrumentation.getTargetContext();
         String name = "progress-test-" + UUID.randomUUID() + ".db";
 
+        ProgressDatabase database = Room.databaseBuilder(context, ProgressDatabase.class, name).build();
         try {
-            try (ProgressDatabase database = Room.databaseBuilder(context, ProgressDatabase.class, name).build()) {
-                RouteProgressDao progress = database.routeProgress();
-                progress.saveMission(new MainMission(Route.CAI, 10, 5, "Misión inicial"));
-                progress.saveMission(new MainMission(Route.CAI, 11, 5, "Misión actualizada"));
-                progress.saveMission(new MainMission(Route.THEODORA, 28, 5, "Misión de Theodora"));
+            RouteProgressDao progress = database.routeProgress();
+            progress.saveMission(new MainMission(Route.CAI, 10, 5, "Misión inicial"));
+            progress.saveMission(new MainMission(Route.CAI, 11, 5, "Misión actualizada"));
+            progress.saveMission(new MainMission(Route.THEODORA, 28, 5, "Misión de Theodora"));
 
-                progress.recruit(new RecruitedUnit(Route.CAI, "tialla"));
-                progress.recruit(new RecruitedUnit(Route.CAI, "tialla"));
-                progress.recruit(new RecruitedUnit(Route.DIETRICH, "tialla"));
+            progress.recruit(new RecruitedUnit(Route.CAI, "tialla"));
+            progress.recruit(new RecruitedUnit(Route.CAI, "tialla"));
+            progress.recruit(new RecruitedUnit(Route.DIETRICH, "tialla"));
 
-                progress.addSupport(new SupportPair(Route.CAI, "tialla", "peter"));
-                progress.addSupport(new SupportPair(Route.CAI, "peter", "tialla"));
-                progress.addSupport(new SupportPair(Route.DIETRICH, "tialla", "peter"));
-            }
+            progress.addSupport(new SupportPair(Route.CAI, "tialla", "peter"));
+            progress.addSupport(new SupportPair(Route.CAI, "peter", "tialla"));
+            progress.addSupport(new SupportPair(Route.DIETRICH, "tialla", "peter"));
 
-            try (ProgressDatabase database = Room.databaseBuilder(context, ProgressDatabase.class, name).build()) {
-                RouteProgressDao progress = database.routeProgress();
+            database.close();
+            database = Room.databaseBuilder(context, ProgressDatabase.class, name).build();
+            progress = database.routeProgress();
 
-                RouteProgress cai = observeOnce(progress.observeProgress(Route.CAI));
-                assertEquals(Integer.valueOf(11), cai.day);
-                assertEquals(Integer.valueOf(5), cai.month);
-                assertEquals("Misión actualizada", cai.description);
-                assertEquals(1, cai.unitCount);
-                assertEquals(1, cai.supportCount);
+            RouteProgress cai = observeOnce(progress.observeProgress(Route.CAI));
+            assertEquals(Integer.valueOf(11), cai.day);
+            assertEquals(Integer.valueOf(5), cai.month);
+            assertEquals("Misión actualizada", cai.description);
+            assertEquals(1, cai.unitCount);
+            assertEquals(1, cai.supportCount);
 
-                RouteProgress theodora = observeOnce(progress.observeProgress(Route.THEODORA));
-                assertEquals(Integer.valueOf(28), theodora.day);
-                assertEquals("Misión de Theodora", theodora.description);
-                assertEquals(0, theodora.unitCount);
-                assertEquals(0, theodora.supportCount);
+            RouteProgress theodora = observeOnce(progress.observeProgress(Route.THEODORA));
+            assertEquals(Integer.valueOf(28), theodora.day);
+            assertEquals("Misión de Theodora", theodora.description);
+            assertEquals(0, theodora.unitCount);
+            assertEquals(0, theodora.supportCount);
 
-                RouteProgress dietrich = observeOnce(progress.observeProgress(Route.DIETRICH));
-                assertNull(dietrich.day);
-                assertEquals(1, dietrich.unitCount);
-                assertEquals(1, dietrich.supportCount);
+            RouteProgress dietrich = observeOnce(progress.observeProgress(Route.DIETRICH));
+            assertNull(dietrich.day);
+            assertEquals(1, dietrich.unitCount);
+            assertEquals(1, dietrich.supportCount);
 
-                RouteProgress leda = observeOnce(progress.observeProgress(Route.LEDA));
-                assertNull(leda.day);
-                assertNull(leda.description);
-                assertEquals(0, leda.unitCount);
-                assertEquals(0, leda.supportCount);
+            RouteProgress leda = observeOnce(progress.observeProgress(Route.LEDA));
+            assertNull(leda.day);
+            assertNull(leda.description);
+            assertEquals(0, leda.unitCount);
+            assertEquals(0, leda.supportCount);
 
-                assertEquals(2, observeOnce(progress.observeMissions()).size());
-            }
+            assertEquals(2, observeOnce(progress.observeMissions()).size());
         } finally {
+            database.close();
             context.deleteDatabase(name);
         }
     }

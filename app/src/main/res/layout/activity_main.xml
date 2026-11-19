@@ -10,27 +10,16 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/app_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableStart="@drawable/four_paths_mark"
+            android:drawablePadding="8dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:importantForAccessibility="no"
-                android:src="@drawable/four_paths" />
-
-            <TextView
-                android:id="@+id/app_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="@string/app_name"
-                android:textColor="@color/sand"
-                android:textSize="16sp" />
-        </LinearLayout>
+            android:text="@string/app_name"
+            android:textColor="@color/sand"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="match_parent"

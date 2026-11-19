@@ -18,17 +18,21 @@ public final class MainMission {
     @NonNull public final String description;
 
     public MainMission(@NonNull Route route, int day, int month, @NonNull String description) {
-        int daysInMonth = switch (month) {
-            case 2 -> 29;
-            case 4, 6, 9, 11 -> 30;
-            default -> 31;
-        };
-        if (month < 1 || month > 12 || day < 1 || day > daysInMonth) {
+        if (!isValidDate(day, month)) {
             throw new IllegalArgumentException("Invalid mission date");
         }
         this.route = route;
         this.day = day;
         this.month = month;
         this.description = description;
+    }
+
+    public static boolean isValidDate(int day, int month) {
+        int daysInMonth = switch (month) {
+            case 2 -> 29;
+            case 4, 6, 9, 11 -> 30;
+            default -> 31;
+        };
+        return month >= 1 && month <= 12 && day >= 1 && day <= daysInMonth;
     }
 }

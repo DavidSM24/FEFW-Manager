@@ -1,6 +1,6 @@
 # FEFW-Manager
 
-Aplicación Android para seguir en paralelo las cuatro sendas de *Fire Emblem: Fortune’s Weave*. El menú abre la vista de cada senda, con resúmenes de su misión principal, unidades y apoyos. El progreso se almacena en Room.
+Aplicación Android para seguir en paralelo las cuatro sendas de *Fire Emblem: Fortune’s Weave*. Desde cada senda se puede modificar su próxima misión principal y consultar los resúmenes de unidades y apoyos. El progreso se almacena en Room.
 
 ## Abrir y ejecutar en Android Studio
 

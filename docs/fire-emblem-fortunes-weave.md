@@ -38,7 +38,7 @@ El menú mostrará **Cai → Theodora → Leda → Dietrich**.
 1. **Menú principal.** Presenta el resumen de las cuatro sendas en el orden de juego, con el retrato de cada protagonista y la fecha límite de su próxima misión principal. Al pulsar un retrato, se abre la gestión de esa senda.
 2. **Gestión de senda.** Desde la senda seleccionada, el jugador puede abrir **Gestionar unidades**, **Gestionar apoyos** o **Modificar misión principal**.
 3. **Gestión de unidades.** Muestra las unidades reclutadas en esa senda, con su imagen y nombre. El jugador puede añadir o quitar unidades. Al pulsar **Añadir unidad**, se abre un modal con una lista de unidades identificadas por su imagen y nombre. Al elegir una, se incorpora a la senda seleccionada.
-4. **Modificar misión principal.** Abre un modal con la fecha límite y la descripción de la próxima misión principal de la senda. El jugador puede editar ambos campos y guardar. Al guardar, el menú principal actualiza el resumen y vuelve a ordenar las sendas por fecha límite.
+4. **Modificar misión principal.** El botón superior abre el modal de la próxima misión de la senda. La fecha se escribe en dos campos numéricos, día y mes, separados por una barra. La descripción se edita en un área de varias líneas. **Cancelar** descarta los cambios. **Guardar** actualiza la fecha y la descripción juntas y vuelve a ordenar el menú por fecha límite.
 5. **Gestión de apoyos (shipeos).** Muestra las parejas de apoyo de la senda seleccionada, con los retratos de los dos personajes en cada entrada. El jugador puede crear una pareja eligiendo a sus dos integrantes o quitar una pareja existente.
 
 ## Ficha del juego

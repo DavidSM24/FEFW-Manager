@@ -1,6 +1,7 @@
 package com.davidsm24.fefwmanager.home;
 
 import android.os.Bundle;
+import android.widget.LinearLayout;
 
 import androidx.activity.ComponentActivity;
 
@@ -12,6 +13,8 @@ import com.davidsm24.fefwmanager.databinding.ItemRouteBinding;
 import com.davidsm24.fefwmanager.route.Route;
 import com.davidsm24.fefwmanager.route.RouteActivity;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -38,20 +41,33 @@ public final class MainActivity extends ComponentActivity {
         }
 
         ((FefwApplication) getApplication()).routeProgress().observeMissions()
-                .observe(this, this::renderMissions);
+                .observe(this, missions -> renderMissions(binding.routeCards, missions));
     }
 
-    private void renderMissions(List<MainMission> missions) {
+    private void renderMissions(LinearLayout routeCards, List<MainMission> missions) {
         Map<Route, MainMission> byRoute = new EnumMap<>(Route.class);
         for (MainMission mission : missions) {
             byRoute.put(mission.route, mission);
         }
-        cards.forEach((route, card) -> {
+        Route[] ordered = Route.values();
+        // The stable sort keeps menu order for ties and puts routes without dates last.
+        Arrays.sort(ordered, Comparator.comparingInt(route -> {
+            MainMission mission = byRoute.get(route);
+            return mission == null ? Integer.MAX_VALUE : mission.month * 100 + mission.day;
+        }));
+
+        for (int index = 0; index < ordered.length; index++) {
+            Route route = ordered[index];
+            ItemRouteBinding card = cards.get(route);
             MainMission mission = byRoute.get(route);
             String deadline = mission == null
                     ? getString(R.string.no_deadline)
                     : getString(R.string.deadline_format, mission.day, mission.month);
             card.routeDeadline.setText(deadline);
-        });
+            if (routeCards.getChildAt(index) != card.getRoot()) {
+                routeCards.removeView(card.getRoot());
+                routeCards.addView(card.getRoot(), index);
+            }
+        }
     }
 }

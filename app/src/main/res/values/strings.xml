@@ -12,11 +12,19 @@
     <string name="no_deadline">Sin fecha</string>
     <string name="deadline_format">%1$d/%2$d</string>
     <string name="next_mission_summary">Próxima misión · %1$s</string>
-    <string name="main_mission">Misión principal</string>
+    <string name="edit_main_mission">Modificar misión principal</string>
+    <string name="mission_date_label">Fecha límite</string>
+    <string name="day_hint">Día</string>
+    <string name="month_hint">Mes</string>
+    <string name="date_separator" translatable="false">/</string>
+    <string name="mission_description_label">Descripción</string>
+    <string name="invalid_mission_day">Introduce un día válido para ese mes.</string>
+    <string name="invalid_mission_month">Introduce un mes del 1 al 12.</string>
+    <string name="mission_save_error">No se pudo guardar la misión. Inténtalo de nuevo.</string>
+    <string name="cancel_mission_edit">Cancelar</string>
+    <string name="save_mission_edit">Guardar</string>
     <string name="manage_units">Gestionar unidades</string>
     <string name="manage_supports">Gestionar apoyos</string>
-    <string name="no_mission_description">Sin descripción</string>
-    <string name="mission_preview">Fecha límite · %1$s\n\n%2$s</string>
     <string name="close_summary">Cerrar</string>
     <plurals name="recruited_units">
         <item quantity="one">%d unidad reclutada</item>

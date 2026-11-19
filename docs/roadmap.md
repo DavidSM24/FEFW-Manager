@@ -9,6 +9,8 @@ La primera versión permitirá seguir en paralelo las sendas de Cai, Theodora, D
 
 **Entregable.** La aplicación de base compila con el wrapper y abre en un emulador.
 
+**Completada el 19 de noviembre de 2026.** El módulo `app` usa Java 17 y vistas XML. Su identificador es `com.davidsm24.fefwmanager`, con Android 7.0 (API 24) como mínimo y API 36 como objetivo. La compilación de depuración y lint han pasado. En un emulador de Android 11 se instaló el APK, se abrió la actividad principal y se comprobaron los nombres de las cuatro sendas en pantalla. [Instrucciones de ejecución](../README.md) · [Prueba de arranque en GitHub Actions](https://github.com/DavidSM24/FEFW-Manager/actions/runs/44545502221)
+
 ## Fase 2. Definir los datos y la navegación
 
 - Identificar las cuatro sendas con IDs estables. Guardar por senda la descripción y fecha de la próxima misión, las unidades reclutadas y las parejas de apoyo. Separar el catálogo de unidades del progreso del jugador para poder actualizar el catálogo sin perder sus registros.

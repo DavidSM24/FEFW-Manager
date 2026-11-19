@@ -1,1 +1,43 @@
 # FEFW-Manager
+
+Aplicación Android para seguir en paralelo las cuatro sendas de *Fire Emblem: Fortune’s Weave*. La primera versión del proyecto abre una pantalla de inicio con el nombre de la aplicación y los protagonistas de las sendas.
+
+## Abrir y ejecutar en Android Studio
+
+1. Clona el repositorio y abre la carpeta que contiene `settings.gradle` con **File → Open**.
+2. En **SDK Manager**, instala **Android SDK Platform 36**, **Android SDK Build-Tools 35.0.0** y **Android SDK Platform-Tools**. Configura el JDK de Gradle con la versión 17 o 21 y sincroniza el proyecto.
+3. En **Device Manager**, crea e inicia un emulador con Android 7.0 (API 24) o superior. Selecciona la configuración **app**, elige el emulador y pulsa **Run**.
+4. Al abrir la aplicación verás **FEFW Manager** y los nombres **Cai · Theodora · Dietrich · Leda**.
+
+## Compilar desde la terminal
+
+Ejecuta los comandos desde la raíz. El wrapper descarga Gradle 8.14.7 en la primera compilación. Se necesita un JDK y un SDK de Android configurado en `ANDROID_HOME` o mediante `sdk.dir` en `local.properties`.
+
+Compilación e instalación en Windows con PowerShell
+
+```powershell
+.\gradlew.bat :app:assembleDebug :app:lintDebug :app:testDebugUnitTest
+.\gradlew.bat :app:installDebug
+```
+
+Compilación e instalación en macOS o Linux
+
+```sh
+./gradlew :app:assembleDebug :app:lintDebug :app:testDebugUnitTest
+./gradlew :app:installDebug
+```
+
+El APK se genera en `app/build/outputs/apk/debug/app-debug.apk`. Para `installDebug`, conecta un dispositivo o arranca el emulador. Puedes abrir la app desde el lanzador o ejecutar el siguiente comando con `adb` en el `PATH`.
+
+```sh
+adb shell am start -W -n com.davidsm24.fefwmanager/.home.MainActivity
+```
+
+## Proyecto
+
+El módulo `app` usa Java 17, vistas XML y View Binding. El identificador de aplicación es `com.davidsm24.fefwmanager`. La versión mínima es Android 7.0 (API 24) y se compila con la API 36, que también es la versión objetivo.
+
+- [Roadmap de desarrollo](docs/roadmap.md)
+- [Descripción del juego, las rutas y las pantallas](docs/fire-emblem-fortunes-weave.md)
+- [Reglas para trabajar con Codex](AGENTS.md)
+- [Guía de Android en Java](docs/android-java.md)

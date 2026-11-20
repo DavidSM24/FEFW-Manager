@@ -51,31 +51,7 @@ jobs:
           exit 1
 
       - name: Verificar la navegación y los datos en Android
-        if: ${{ false }}
         run: |
           adb shell input keyevent KEYCODE_WAKEUP
           adb shell wm dismiss-keyguard
           ./gradlew :app:connectedDebugAndroidTest
-
-      - name: Capturar pantallas del rediseño
-        if: success() || failure()
-        run: |
-          adb shell input keyevent KEYCODE_WAKEUP
-          adb shell wm dismiss-keyguard
-          adb install -r app/build/outputs/apk/debug/app-debug.apk
-          status=0
-          python3 .github/scripts/imperial-preview.py "$RUNNER_TEMP/imperial-previews" || status=$?
-          java -Djava.awt.headless=true .github/scripts/EncodePreview.java "$RUNNER_TEMP/imperial-previews"
-          shopt -s nullglob
-          for screen in "$RUNNER_TEMP/imperial-previews/"*.jpg; do
-            base64 -w 240 "$screen" | sed "s/^/FEFW_VIEW_$(basename "${screen%.jpg}") /"
-          done
-          exit "$status"
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: vistas-interfaz-imperial
-          path: ${{ runner.temp }}/imperial-previews/*.png
-          if-no-files-found: error
-          retention-days: 7

@@ -43,3 +43,4 @@ El módulo `app` usa Java 17, vistas XML y View Binding. El identificador de apl
 - [Descripción del juego, las rutas y las pantallas](docs/fire-emblem-fortunes-weave.md)
 - [Reglas para trabajar con Codex](AGENTS.md)
 - [Guía de Android en Java](docs/android-java.md)
+- [Diseño de la interfaz imperial](docs/interfaz-imperial.md)

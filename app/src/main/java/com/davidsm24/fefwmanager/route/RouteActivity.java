@@ -21,6 +21,7 @@ import com.davidsm24.fefwmanager.data.RouteProgress;
 import com.davidsm24.fefwmanager.databinding.ActivityRouteBinding;
 import com.davidsm24.fefwmanager.databinding.DialogMissionEditorBinding;
 import com.davidsm24.fefwmanager.supports.SupportPairsActivity;
+import com.davidsm24.fefwmanager.ui.ImperialMotion;
 import com.davidsm24.fefwmanager.units.UnitRosterActivity;
 
 public final class RouteActivity extends ComponentActivity {
@@ -52,6 +53,9 @@ public final class RouteActivity extends ComponentActivity {
 
         binding = ActivityRouteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        if (savedInstanceState == null) {
+            ImperialMotion.reveal(binding.pageHeader);
+        }
 
         binding.routeTitle.setText(getString(R.string.route_title, getString(route.nameResource)));
         binding.backToRoutes.setOnClickListener(view -> finish());

@@ -15,6 +15,7 @@ import com.davidsm24.fefwmanager.FefwApplication;
 import com.davidsm24.fefwmanager.R;
 import com.davidsm24.fefwmanager.databinding.ActivityUnitRosterBinding;
 import com.davidsm24.fefwmanager.route.Route;
+import com.davidsm24.fefwmanager.ui.ImperialMotion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,12 @@ public final class UnitRosterActivity extends ComponentActivity {
 
         binding = ActivityUnitRosterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        binding.unitRosterRoute.setText(getString(R.string.route_title, getString(route.nameResource)));
+        binding.pageHeader.ledgerTitle.setText(R.string.unit_roster_title);
+        binding.pageHeader.ledgerRoute.setText(
+                getString(R.string.route_title, getString(route.nameResource)));
+        if (savedInstanceState == null) {
+            ImperialMotion.reveal(binding.pageHeader.getRoot());
+        }
         binding.backToRoute.setOnClickListener(view -> finish());
         binding.addUnit.setOnClickListener(view -> showAvailableUnits());
         rosterAdapter = new UnitListAdapter(getLayoutInflater(), getColor(route.accentResource),
@@ -83,6 +89,7 @@ public final class UnitRosterActivity extends ComponentActivity {
         }
         units.sort(UnitLabel.BY_NAME);
         rosterAdapter.show(units, !writing);
+        binding.recruitedUnitList.setVisibility(units.isEmpty() ? View.GONE : View.VISIBLE);
 
         if (writeState == UnitRosterViewModel.WriteState.FAILED) {
             showNotice(R.string.recruit_write_error);

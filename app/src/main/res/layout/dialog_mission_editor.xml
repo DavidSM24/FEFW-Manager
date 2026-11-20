@@ -16,16 +16,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/mission_date_label"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="@style/TextAppearance.Fefw.Inscription" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/mission_day"
+                style="@style/Widget.FefwManager.MissionField"
                 android:layout_width="76dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -44,10 +46,11 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:text="@string/date_separator"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="@style/TextAppearance.Fefw.Body" />
 
             <EditText
                 android:id="@+id/mission_month"
+                style="@style/Widget.FefwManager.MissionField"
                 android:layout_width="76dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -66,12 +69,14 @@
             android:layout_marginTop="16dp"
             android:labelFor="@id/mission_description"
             android:text="@string/mission_description_label"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="@style/TextAppearance.Fefw.Inscription" />
 
         <EditText
             android:id="@+id/mission_description"
+            style="@style/Widget.FefwManager.MissionField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
             android:gravity="top|start"
             android:importantForAutofill="no"
             android:inputType="textCapSentences|textMultiLine"
@@ -84,6 +89,7 @@
             android:layout_height="wrap_content"
             android:accessibilityLiveRegion="polite"
             android:text="@string/mission_save_error"
+            android:textColor="@color/error_pale"
             android:visibility="gone" />
     </LinearLayout>
 </ScrollView>

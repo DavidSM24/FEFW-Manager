@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="screen_gutter">20dp</dimen>
+    <dimen name="section_gap">16dp</dimen>
+    <dimen name="item_gap">10dp</dimen>
+    <dimen name="panel_inset">16dp</dimen>
+    <dimen name="hero_height">192dp</dimen>
+    <dimen name="hero_title_size">38sp</dimen>
+    <dimen name="page_title_size">27sp</dimen>
+    <dimen name="emblem_size">44dp</dimen>
+    <dimen name="title_emblem_size">52dp</dimen>
+</resources>

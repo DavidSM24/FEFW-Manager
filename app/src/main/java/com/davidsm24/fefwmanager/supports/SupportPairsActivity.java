@@ -18,6 +18,7 @@ import com.davidsm24.fefwmanager.R;
 import com.davidsm24.fefwmanager.data.SupportPair;
 import com.davidsm24.fefwmanager.databinding.ActivitySupportPairsBinding;
 import com.davidsm24.fefwmanager.route.Route;
+import com.davidsm24.fefwmanager.ui.ImperialMotion;
 import com.davidsm24.fefwmanager.units.UnitCatalog;
 import com.davidsm24.fefwmanager.units.UnitLabel;
 import com.davidsm24.fefwmanager.units.UnitListAdapter;
@@ -53,7 +54,12 @@ public final class SupportPairsActivity extends ComponentActivity {
 
         binding = ActivitySupportPairsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        binding.supportRoute.setText(getString(R.string.route_title, getString(route.nameResource)));
+        binding.pageHeader.ledgerTitle.setText(R.string.support_pairs_title);
+        binding.pageHeader.ledgerRoute.setText(
+                getString(R.string.route_title, getString(route.nameResource)));
+        if (savedInstanceState == null) {
+            ImperialMotion.reveal(binding.pageHeader.getRoot());
+        }
         binding.backToRoute.setOnClickListener(view -> finish());
         binding.addSupport.setOnClickListener(view -> chooseFirst());
         accent = getColor(route.accentResource);
@@ -99,6 +105,7 @@ public final class SupportPairsActivity extends ComponentActivity {
             rows.add(new SupportPairAdapter.Row(pair, first, second));
         }
         adapter.show(rows, !writing);
+        binding.supportPairList.setVisibility(rows.isEmpty() ? View.GONE : View.VISIBLE);
 
         if (write == SupportPairsViewModel.WriteState.DUPLICATE) {
             showNotice(R.string.duplicate_support);

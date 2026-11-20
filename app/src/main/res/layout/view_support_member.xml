@@ -12,9 +12,9 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@drawable/route_initial_background"
-        android:fontFamily="serif"
         android:gravity="center"
         android:importantForAccessibility="no"
+        android:textAppearance="@style/TextAppearance.Fefw.Display"
         android:textSize="22sp" />
 
     <TextView
@@ -23,8 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:gravity="center"
-        android:textColor="@color/parchment"
-        android:textSize="16sp" />
+        android:textAppearance="@style/TextAppearance.Fefw.LedgerBody" />
 
     <TextView
         android:id="@+id/support_member_status"
@@ -33,7 +32,7 @@
         android:layout_marginTop="3dp"
         android:gravity="center"
         android:text="@string/support_member_not_recruited"
-        android:textColor="@color/sand"
+        android:textColor="@color/ink_crimson"
         android:textSize="12sp"
         android:visibility="gone" />
 </LinearLayout>

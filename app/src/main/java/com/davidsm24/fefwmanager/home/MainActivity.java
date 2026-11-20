@@ -12,6 +12,7 @@ import com.davidsm24.fefwmanager.databinding.ActivityMainBinding;
 import com.davidsm24.fefwmanager.databinding.ItemRouteBinding;
 import com.davidsm24.fefwmanager.route.Route;
 import com.davidsm24.fefwmanager.route.RouteActivity;
+import com.davidsm24.fefwmanager.ui.ImperialMotion;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -27,6 +28,9 @@ public final class MainActivity extends ComponentActivity {
         super.onCreate(savedInstanceState);
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        if (savedInstanceState == null) {
+            ImperialMotion.reveal(binding.heroHeading);
+        }
 
         for (Route route : Route.values()) {
             ItemRouteBinding card = ItemRouteBinding.inflate(getLayoutInflater(),

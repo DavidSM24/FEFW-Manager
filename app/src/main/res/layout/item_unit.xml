@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/imperial_ledger"
+    android:foreground="@drawable/imperial_touch"
     android:gravity="center_vertical"
     android:minHeight="60dp"
     android:orientation="horizontal"
@@ -15,9 +17,9 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@drawable/route_initial_background"
-        android:fontFamily="serif"
         android:gravity="center"
         android:importantForAccessibility="no"
+        android:textAppearance="@style/TextAppearance.Fefw.Display"
         android:textSize="22sp" />
 
     <TextView
@@ -26,15 +28,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="14dp"
         android:layout_weight="1"
-        android:textColor="@color/parchment"
-        android:textSize="18sp" />
+        android:textAppearance="@style/TextAppearance.Fefw.LedgerBody"
+        android:textSize="17sp" />
 
     <Button
         android:id="@+id/remove_unit"
-        style="?android:attr/borderlessButtonStyle"
+        style="@style/Widget.FefwManager.LedgerAction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/remove_unit"
-        android:textAllCaps="false"
-        android:textColor="@color/sand" />
+        android:text="@string/remove_unit" />
 </LinearLayout>

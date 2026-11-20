@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="midnight">#17232D</color>
-    <color name="parchment">#F5EEDD</color>
-    <color name="sand">#D7C5A2</color>
-    <color name="route_surface">#223540</color>
-    <color name="route_outline">#455763</color>
-    <color name="route_cai">#EAC77E</color>
-    <color name="route_theodora">#CF8D7B</color>
-    <color name="route_dietrich">#A9A0C8</color>
-    <color name="route_leda">#86BCAE</color>
+    <color name="midnight">#24212A</color>
+    <color name="midnight_deep">#19171F</color>
+    <color name="parchment">#F0E2C8</color>
+    <color name="parchment_shade">#DFCCAA</color>
+    <color name="sand">#DAC9AE</color>
+    <color name="imperial_gold">#C9A45D</color>
+    <color name="imperial_blue">#263D51</color>
+    <color name="imperial_crimson">#8E3039</color>
+    <color name="crimson_shade">#5E2733</color>
+    <color name="panel_shadow">#1C2836</color>
+    <color name="panel_border">#887050</color>
+    <color name="panel_inlay">#506274</color>
+    <color name="ink">#30252A</color>
+    <color name="ink_muted">#584235</color>
+    <color name="ink_crimson">#73303D</color>
+    <color name="marble_outline">#A58D66</color>
+    <color name="bronze_ripple">#55C9A45D</color>
+    <color name="panel_disabled">#322D37</color>
+    <color name="text_disabled">#AA9D91</color>
+    <color name="error_pale">#FCC4B8</color>
+    <color name="route_cai">#F0CC86</color>
+    <color name="route_theodora">#F2A99D</color>
+    <color name="route_dietrich">#CCC2E5</color>
+    <color name="route_leda">#9ED5CA</color>
 </resources>

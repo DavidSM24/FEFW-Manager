@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="hero_height">164dp</dimen>
+    <dimen name="section_gap">10dp</dimen>
+    <dimen name="panel_inset">12dp</dimen>
+    <dimen name="page_title_size">23sp</dimen>
+</resources>

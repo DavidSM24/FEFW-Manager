@@ -4,57 +4,51 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:paddingStart="@dimen/screen_gutter"
+    android:paddingTop="6dp"
+    android:paddingEnd="@dimen/screen_gutter"
+    android:paddingBottom="@dimen/section_gap">
 
     <Button
         android:id="@+id/back_to_route"
-        style="?android:attr/borderlessButtonStyle"
+        style="@style/Widget.FefwManager.Back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/back_to_route"
-        android:textAllCaps="false"
-        android:textColor="@color/sand" />
+        android:text="@string/back_to_route" />
 
-    <TextView
+    <include
+        android:id="@+id/page_header"
+        layout="@layout/view_ledger_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:fontFamily="serif"
-        android:text="@string/unit_roster_title"
-        android:textColor="@color/parchment"
-        android:textSize="30sp" />
-
-    <TextView
-        android:id="@+id/unit_roster_route"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/sand"
-        android:textSize="16sp" />
+        android:layout_marginTop="@dimen/item_gap" />
 
     <Button
         android:id="@+id/add_unit"
-        style="@style/Widget.FefwManager.RouteAction"
+        style="@style/Widget.FefwManager.RouteAction.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/section_gap"
+        android:drawableStart="@drawable/ic_ledger_add"
         android:text="@string/add_unit" />
 
     <TextView
         android:id="@+id/unit_notice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/item_gap"
         android:accessibilityLiveRegion="polite"
-        android:paddingTop="14dp"
-        android:paddingBottom="8dp"
-        android:textColor="@color/sand"
-        android:textSize="16sp" />
+        android:background="@drawable/imperial_ledger"
+        android:padding="@dimen/panel_inset"
+        android:textAppearance="@style/TextAppearance.Fefw.LedgerBody"
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/recruited_unit_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="@dimen/item_gap"
         android:layout_weight="1"
-        android:divider="@color/route_outline"
-        android:dividerHeight="1dp" />
+        android:divider="@android:color/transparent"
+        android:dividerHeight="6dp" />
 </LinearLayout>

@@ -2,46 +2,54 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    android:background="@drawable/route_row_background"
+    android:layout_marginBottom="@dimen/item_gap"
+    android:background="@drawable/imperial_ledger"
+    android:elevation="2dp"
     android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
+    android:foreground="@drawable/imperial_touch"
     android:gravity="center_vertical"
-    android:minHeight="76dp"
+    android:minHeight="70dp"
     android:orientation="horizontal"
     android:padding="12dp">
 
     <TextView
         android:id="@+id/route_initial"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/emblem_size"
+        android:layout_height="@dimen/emblem_size"
         android:background="@drawable/route_initial_background"
-        android:fontFamily="serif"
         android:gravity="center"
         android:importantForAccessibility="no"
+        android:textAppearance="@style/TextAppearance.Fefw.Display"
         android:textSize="24sp" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/route_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="8dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:textAppearance="@style/TextAppearance.Fefw.LedgerTitle" />
 
-        <TextView
-            android:id="@+id/route_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="serif"
-            android:textColor="@color/parchment"
-            android:textSize="24sp" />
+    <TextView
+        android:id="@+id/route_deadline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/deadline_stamp"
+        android:gravity="center"
+        android:maxWidth="104dp"
+        android:paddingStart="9dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="9dp"
+        android:paddingBottom="5dp"
+        android:textAppearance="@style/TextAppearance.Fefw.LedgerBody"
+        android:textColor="@color/ink_muted"
+        android:textSize="13sp" />
 
-        <TextView
-            android:id="@+id/route_deadline"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:textColor="@color/sand"
-            android:textSize="14sp" />
-    </LinearLayout>
+    <ImageView
+        android:layout_width="14dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="9dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_gate_next" />
 </LinearLayout>

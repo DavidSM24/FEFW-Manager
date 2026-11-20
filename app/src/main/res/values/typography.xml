@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TextAppearance.Fefw.Display.Base" parent="@android:style/TextAppearance.Material">
+        <item name="android:fontFamily">serif</item>
+        <item name="android:letterSpacing">0.025</item>
+        <item name="android:textColor">@color/parchment</item>
+    </style>
+    <style name="TextAppearance.Fefw.Display" parent="TextAppearance.Fefw.Display.Base" />
+    <style name="TextAppearance.Fefw.Hero" parent="TextAppearance.Fefw.Display">
+        <item name="android:textSize">@dimen/hero_title_size</item>
+    </style>
+    <style name="TextAppearance.Fefw.Title" parent="TextAppearance.Fefw.Display">
+        <item name="android:textSize">@dimen/page_title_size</item>
+    </style>
+    <style name="TextAppearance.Fefw.DialogTitle" parent="TextAppearance.Fefw.Display">
+        <item name="android:textSize">21sp</item>
+    </style>
+    <style name="TextAppearance.Fefw.Inscription" parent="@android:style/TextAppearance.Material">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.075</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/sand</item>
+    </style>
+    <style name="TextAppearance.Fefw.Body" parent="@android:style/TextAppearance.Material">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/sand</item>
+    </style>
+    <style name="TextAppearance.Fefw.LedgerTitle" parent="TextAppearance.Fefw.Display">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/ink</item>
+    </style>
+    <style name="TextAppearance.Fefw.LedgerBody" parent="TextAppearance.Fefw.Body">
+        <item name="android:textColor">@color/ink</item>
+    </style>
+</resources>

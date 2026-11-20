@@ -2,47 +2,83 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/app_title"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/four_paths_mark"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            android:text="@string/app_name"
-            android:textColor="@color/sand"
-            android:textSize="16sp" />
+            android:minHeight="@dimen/hero_height">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:importantForAccessibility="no"
+                android:scaleType="centerCrop"
+                android:src="@drawable/imperial_arena" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/hero_scrim"
+                android:importantForAccessibility="no" />
+
+            <LinearLayout
+                android:id="@+id/hero_heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/screen_gutter"
+                android:paddingTop="40dp"
+                android:paddingEnd="@dimen/screen_gutter"
+                android:paddingBottom="@dimen/section_gap">
+
+                <TextView
+                    android:id="@+id/app_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textAppearance="@style/TextAppearance.Fefw.Inscription" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/routes_title"
+                    android:textAppearance="@style/TextAppearance.Fefw.Hero" />
+
+                <ImageView
+                    android:layout_width="72dp"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="5dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/imperial_rule" />
+            </LinearLayout>
+        </FrameLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:fontFamily="serif"
-            android:text="@string/routes_title"
-            android:textColor="@color/parchment"
-            android:textSize="36sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="@dimen/screen_gutter"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="@dimen/screen_gutter"
             android:text="@string/deadline_legend"
-            android:textColor="@color/sand"
-            android:textSize="14sp" />
+            android:textAppearance="@style/TextAppearance.Fefw.Inscription" />
 
         <LinearLayout
             android:id="@+id/route_cards"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:orientation="vertical" />
+            android:layout_marginStart="@dimen/screen_gutter"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="@dimen/screen_gutter"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/section_gap" />
     </LinearLayout>
 </ScrollView>

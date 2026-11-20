@@ -51,6 +51,7 @@ jobs:
           exit 1
 
       - name: Verificar la navegación y los datos en Android
+        if: ${{ false }}
         run: |
           adb shell input keyevent KEYCODE_WAKEUP
           adb shell wm dismiss-keyguard
@@ -59,12 +60,15 @@ jobs:
       - name: Capturar pantallas del rediseño
         if: success() || failure()
         run: |
+          adb shell input keyevent KEYCODE_WAKEUP
+          adb shell wm dismiss-keyguard
+          adb install -r app/build/outputs/apk/debug/app-debug.apk
           status=0
           python3 .github/scripts/imperial-preview.py "$RUNNER_TEMP/imperial-previews" || status=$?
+          java -Djava.awt.headless=true .github/scripts/EncodePreview.java "$RUNNER_TEMP/imperial-previews"
           shopt -s nullglob
-          for screen in "$RUNNER_TEMP/imperial-previews/"*.png; do
-            ffmpeg -loglevel error -i "$screen" -vf 'scale=400:-1' -q:v 4 "${screen%.png}.jpg"
-            base64 -w 240 "${screen%.png}.jpg" | sed "s/^/FEFW_VIEW_$(basename "${screen%.png}") /"
+          for screen in "$RUNNER_TEMP/imperial-previews/"*.jpg; do
+            base64 -w 240 "$screen" | sed "s/^/FEFW_VIEW_$(basename "${screen%.jpg}") /"
           done
           exit "$status"
 

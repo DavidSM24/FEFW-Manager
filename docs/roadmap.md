@@ -53,6 +53,8 @@ La pantalla y el selector muestran iniciales provisionales hasta que se incorpor
 
 **Entregable.** Se puede crear y quitar una pareja en una senda, y el cambio se conserva al cerrar y volver a abrir la aplicación.
 
+**Validada en Android 11.** Las pruebas comprobaron la creación y retirada de parejas, el aviso al invertir los integrantes de una pareja existente y la conservación del apoyo al retirar una unidad del registro. [Resultado en GitHub Actions](https://github.com/DavidSM24/FEFW-Manager/actions/runs/44702411510)
+
 ## Fase 6. Probar y preparar una primera versión
 
 - Probar en el emulador el flujo completo desde el menú. Abrir las cuatro sendas, editar una misión, añadir y quitar unidades y gestionar apoyos. Revisar el orden por fechas y la persistencia tras reiniciar. Comprobar también que los retratos y los controles se entiendan en pantallas pequeñas y con lector de pantalla.

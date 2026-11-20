@@ -1,5 +1,6 @@
 package com.davidsm24.fefwmanager.route;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -26,6 +27,9 @@ import com.davidsm24.fefwmanager.home.MainActivity;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 @RunWith(AndroidJUnit4.class)
 public class RouteNavigationTest {
@@ -217,6 +221,57 @@ public class RouteNavigationTest {
             return cursor.moveToFirst()
                     ? new MainMission(route, cursor.getInt(0), cursor.getInt(1), cursor.getString(2))
                     : null;
+        }
+    }
+
+    @Test
+    public void summarizesPlayOrderOnlyWhenAtLeastTwoRoutesHaveDates() {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        RouteProgressDao progress = ((FefwApplication) context.getApplicationContext()).routeProgress();
+        ProgressDatabase fixture = Room.databaseBuilder(context, ProgressDatabase.class,
+                "route-progress.db").build();
+        BySelector summary = By.res(PACKAGE, "play_order_summary");
+
+        try {
+            Map<Route, MainMission> before = new EnumMap<>(Route.class);
+            for (Route route : Route.values()) {
+                before.put(route, readMission(fixture, route));
+            }
+            try {
+                for (Route route : Route.values()) {
+                    restoreMission(fixture, progress, route, null);
+                }
+                try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+                    assertVisible(By.res(PACKAGE, "route_deadline").text("Sin fecha"));
+                    assertFalse(device.hasObject(summary));
+
+                    progress.saveMission(new MainMission(Route.LEDA, 5, 6, ""));
+                    assertVisible(By.res(PACKAGE, "route_deadline").text("5/6"));
+                    assertAbove("Leda", "Cai");
+                    assertFalse(device.hasObject(summary));
+
+                    progress.saveMission(new MainMission(Route.CAI, 10, 5, ""));
+                    assertVisible(By.res(PACKAGE, "play_order_summary").text("Cai → Leda"));
+                    assertAbove("Cai", "Leda");
+                    assertAbove("Leda", "Theodora");
+
+                    progress.saveMission(new MainMission(Route.DIETRICH, 13, 6, ""));
+                    progress.saveMission(new MainMission(Route.THEODORA, 28, 5, ""));
+                    assertVisible(By.res(PACKAGE, "play_order_summary")
+                            .text("Cai → Theodora → Leda → Dietrich"));
+
+                    progress.saveMission(new MainMission(Route.LEDA, 5, 5, ""));
+                    assertVisible(By.res(PACKAGE, "play_order_summary")
+                            .text("Leda → Cai → Theodora → Dietrich"));
+                    assertAbove("Leda", "Cai");
+                }
+            } finally {
+                for (Route route : Route.values()) {
+                    restoreMission(fixture, progress, route, before.get(route));
+                }
+            }
+        } finally {
+            fixture.close();
         }
     }
 

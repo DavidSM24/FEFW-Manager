@@ -1,6 +1,8 @@
 package com.davidsm24.fefwmanager.home;
 
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.activity.ComponentActivity;
@@ -14,6 +16,7 @@ import com.davidsm24.fefwmanager.route.Route;
 import com.davidsm24.fefwmanager.route.RouteActivity;
 import com.davidsm24.fefwmanager.ui.ImperialMotion;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.EnumMap;
@@ -45,10 +48,10 @@ public final class MainActivity extends ComponentActivity {
         }
 
         ((FefwApplication) getApplication()).routeProgress().observeMissions()
-                .observe(this, missions -> renderMissions(binding.routeCards, missions));
+                .observe(this, missions -> renderMissions(binding, missions));
     }
 
-    private void renderMissions(LinearLayout routeCards, List<MainMission> missions) {
+    private void renderMissions(ActivityMainBinding binding, List<MainMission> missions) {
         Map<Route, MainMission> byRoute = new EnumMap<>(Route.class);
         for (MainMission mission : missions) {
             byRoute.put(mission.route, mission);
@@ -60,6 +63,8 @@ public final class MainActivity extends ComponentActivity {
             return mission == null ? Integer.MAX_VALUE : mission.month * 100 + mission.day;
         }));
 
+        LinearLayout routeCards = binding.routeCards;
+        List<String> playOrder = new ArrayList<>();
         for (int index = 0; index < ordered.length; index++) {
             Route route = ordered[index];
             ItemRouteBinding card = cards.get(route);
@@ -68,10 +73,21 @@ public final class MainActivity extends ComponentActivity {
                     ? getString(R.string.no_deadline)
                     : getString(R.string.deadline_format, mission.day, mission.month);
             card.routeDeadline.setText(deadline);
+            if (mission != null) {
+                playOrder.add(getString(route.nameResource));
+            }
             if (routeCards.getChildAt(index) != card.getRoot()) {
                 routeCards.removeView(card.getRoot());
                 routeCards.addView(card.getRoot(), index);
             }
+        }
+
+        if (playOrder.size() >= 2) {
+            binding.playOrderSummary.setText(TextUtils.join(
+                    getString(R.string.play_order_separator), playOrder));
+            binding.playOrderPanel.setVisibility(View.VISIBLE);
+        } else {
+            binding.playOrderPanel.setVisibility(View.GONE);
         }
     }
 }

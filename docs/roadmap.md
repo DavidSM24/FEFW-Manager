@@ -28,7 +28,7 @@ Room guarda una misión por senda y usa el ID de cada unidad para asociar reclut
 ## Fase 3. Editar las misiones y ordenar el menú
 
 - Implementar el modal de misión principal. Mostrar la fecha límite y la descripción actuales, permitir editarlas y guardarlas juntas para la senda seleccionada.
-- Comparar las fechas por mes y día del calendario del juego. Tras guardar una nueva fecha, actualizar el resumen y reordenar las cuatro sendas de la más temprana a la más tardía. Definir cómo se mostrarán las sendas sin fecha y cómo se resolverán los empates.
+- Comparar las fechas por mes y día del calendario del juego. Tras guardar una fecha, actualizar las fichas de la más temprana a la más tardía. El panel **Orden de juego** aparece a partir de dos sendas con fecha y muestra solo esas sendas. Las sendas sin fecha quedan al final y los empates mantienen el orden inicial.
 
 **Entregable.** Con el ejemplo de la ficha, el menú muestra **Cai (10/5) → Theodora (28/5) → Leda (5/6) → Dietrich (13/6)**. Si se cambia la fecha de Leda a 5/5, el menú la sitúa primera al guardar y conserva su nueva descripción al volver a abrir la aplicación.
 

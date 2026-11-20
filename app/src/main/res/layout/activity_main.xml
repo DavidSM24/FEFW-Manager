@@ -61,6 +61,35 @@
             </LinearLayout>
         </FrameLayout>
 
+        <LinearLayout
+            android:id="@+id/play_order_panel"
+            style="@style/Widget.FefwManager.TitlePanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/screen_gutter"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="@dimen/screen_gutter"
+            android:layout_marginBottom="@dimen/item_gap"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/play_order_title"
+                android:textAppearance="@style/TextAppearance.Fefw.Inscription"
+                android:textColor="@color/imperial_gold" />
+
+            <TextView
+                android:id="@+id/play_order_summary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:accessibilityLiveRegion="polite"
+                android:textAppearance="@style/TextAppearance.Fefw.Body"
+                android:textColor="@color/parchment" />
+        </LinearLayout>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

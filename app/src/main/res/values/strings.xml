@@ -9,6 +9,8 @@
     <string name="route_title">Senda de %1$s</string>
     <string name="back_to_routes">Volver a sendas</string>
     <string name="deadline_legend">Fecha límite de la próxima misión</string>
+    <string name="play_order_title">Orden de juego</string>
+    <string name="play_order_separator" translatable="false">" → "</string>
     <string name="no_deadline">Sin fecha</string>
     <string name="deadline_format">%1$d/%2$d</string>
     <string name="next_mission_summary">Próxima misión · %1$s</string>

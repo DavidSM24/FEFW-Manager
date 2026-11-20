@@ -18,9 +18,9 @@ Al cambiar de senda en la aplicación, el jugador verá el registro de la ruta s
 
 ### Menú principal y orden de juego
 
-El menú principal mostrará las cuatro sendas ordenadas por la fecha límite de su próxima misión principal, de la más temprana a la más tardía en el calendario del juego. Cada entrada mostrará el nombre de la senda y su fecha límite.
+El menú principal muestra primero las sendas con fecha límite, de la más temprana a la más tardía en el calendario del juego. Las sendas sin fecha quedan al final. Cada ficha muestra el nombre de la senda y su fecha límite, si tiene una.
 
-Cuando el jugador complete una misión principal, podrá actualizar en esa senda la fecha límite de la siguiente. Al guardar la nueva fecha, el menú recalculará el orden y actualizará el resumen.
+El panel **Orden de juego** muestra la secuencia recomendada cuando hay al menos dos sendas con fecha límite. Al guardar una fecha, se actualizan tanto el panel como las fichas.
 
 **Ejemplo de fechas límite (día/mes)**
 

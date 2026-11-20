@@ -20,7 +20,7 @@ Al cambiar de senda en la aplicación, el jugador verá el registro de la ruta s
 
 El menú principal muestra primero las sendas con fecha límite, de la más temprana a la más tardía en el calendario del juego. Las sendas sin fecha quedan al final. Cada ficha muestra el nombre de la senda y su fecha límite, si tiene una.
 
-El panel **Orden de juego** muestra la secuencia recomendada cuando hay al menos dos sendas con fecha límite. Al guardar una fecha, se actualizan tanto el panel como las fichas.
+El panel **Orden de juego** muestra la secuencia recomendada, con un retrato por senda, cuando hay al menos dos sendas con fecha límite. Al guardar una fecha, se actualizan tanto el panel como las fichas.
 
 **Ejemplo de fechas límite (día/mes)**
 
@@ -39,7 +39,7 @@ El menú mostrará **Cai → Theodora → Leda → Dietrich**.
 2. **Gestión de senda.** Desde la senda seleccionada, el jugador puede abrir **Gestionar unidades**, **Gestionar apoyos** o **Modificar misión principal**.
 3. **Gestión de unidades.** Muestra las unidades reclutadas en esa senda, con su imagen y nombre. El jugador puede añadir o quitar unidades. Al pulsar **Añadir unidad**, se abre un modal con una lista de unidades identificadas por su imagen y nombre. Al elegir una, se incorpora a la senda seleccionada.
 4. **Modificar misión principal.** El botón superior abre el modal de la próxima misión de la senda. La fecha se escribe en dos campos numéricos, día y mes, separados por una barra. La descripción se edita en un área de varias líneas. **Cancelar** descarta los cambios. **Guardar** actualiza la fecha y la descripción juntas y vuelve a ordenar el menú por fecha límite.
-5. **Gestión de apoyos (shipeos).** Muestra las parejas de apoyo de la senda seleccionada con el nombre y la inicial de cada integrante. El jugador puede crear una pareja con dos unidades distintas que estén reclutadas en esa senda o quitar una pareja existente. Cuando una unidad sale del registro, aparece marcada como **Fuera del registro** en las parejas guardadas.
+5. **Gestión de apoyos (shipeos).** Muestra las parejas de apoyo de la senda seleccionada con el nombre y el retrato de cada integrante. El jugador puede crear una pareja con dos unidades distintas que estén reclutadas en esa senda o quitar una pareja existente. Cuando una unidad sale del registro, aparece marcada como **Fuera del registro** en las parejas guardadas.
 
 ## Ficha del juego
 

@@ -7,7 +7,7 @@ Aplicación Android para seguir en paralelo las cuatro sendas de *Fire Emblem: F
 1. Clona el repositorio y abre la carpeta que contiene `settings.gradle` con **File → Open**.
 2. En **SDK Manager**, instala **Android SDK Platform 36**, **Android SDK Build-Tools 35.0.0** y **Android SDK Platform-Tools**. Configura el JDK de Gradle con la versión 17 o 21 y sincroniza el proyecto.
 3. En **Device Manager**, crea e inicia un emulador con Android 7.0 (API 24) o superior. Selecciona la configuración **app**, elige el emulador y pulsa **Run**.
-4. Al abrir **FEFW Manager**, pulsa la ficha de Cai, Theodora, Dietrich o Leda para abrir su senda. Las iniciales identifican las fichas provisionalmente hasta incorporar los retratos.
+4. Al abrir **FEFW Manager**, pulsa la ficha con el retrato de Cai, Theodora, Dietrich o Leda para abrir su senda.
 
 ## Compilar desde la terminal
 

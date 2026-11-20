@@ -36,6 +36,8 @@
     <string name="loading_units">Cargando unidades…</string>
     <string name="no_recruited_units">Aún no hay unidades reclutadas.</string>
     <string name="no_available_units">Ya has añadido todas las unidades disponibles para esta senda.</string>
+    <string name="search_units">Buscar unidad</string>
+    <string name="no_matching_units">No hay unidades que coincidan.</string>
     <string name="unit_catalog_error">No se pudo abrir el catálogo de unidades.</string>
     <string name="recruit_write_error">No se pudo actualizar el registro. Inténtalo de nuevo.</string>
     <string name="support_pairs_title">Parejas de apoyo</string>

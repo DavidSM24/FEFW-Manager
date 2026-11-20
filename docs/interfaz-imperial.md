@@ -1,10 +1,12 @@
 # Interfaz imperial
 
-La pantalla de Sendas usa una ilustración original de un anfiteatro al atardecer. Las fechas se presentan como sellos sobre placas de marfil. Las pantallas de misión, unidades y apoyos usan paneles azul imperial, iniciales de color por senda y acciones principales en carmesí.
+La pantalla de Sendas usa una ilustración original de un anfiteatro al atardecer. Las fechas se presentan como sellos sobre placas de marfil. Las pantallas de misión, unidades y apoyos usan paneles azul imperial, retratos enmarcados y acciones principales en carmesí.
 
 La paleta, la tipografía y los espaciados viven en `app/src/main/res/values`. Los botones y los campos muestran el foco en dorado. Los diálogos conservan los controles nativos de Android y la entrada de las cabeceras sigue la preferencia de animación del sistema.
 
 Los títulos usan Cinzel a partir de Android 8 y la familia serif del sistema en Android 7. El cuerpo usa la familia sans-serif de Android. La licencia de Cinzel se incluye en `app/src/main/assets/licenses/Cinzel-OFL.txt`. [Cinzel y su licencia](https://github.com/google/fonts/tree/main/ofl/cinzel)
+
+Los retratos del ZIP proporcionado se empaquetan como miniaturas WebP de 192 × 192 píxeles y se asocian al ID de cada unidad. Se usan en las fichas, el orden de juego, los selectores, las parejas y sus confirmaciones. La entrada de Eshmel usa la variante femenina del ZIP. Los registros antiguos sin retrato conservan su inicial.
 
 ## Ilustración de la portada
 

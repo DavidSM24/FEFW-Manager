@@ -114,9 +114,13 @@ public class SupportPairsFlowTest {
 
     private void choosePair(String first, String second) {
         click(By.res(PACKAGE, "add_support").enabled(true));
+        BySelector search = By.res(PACKAGE, "unit_search");
+        find(search).setText(first.substring(1));
+        assertTrue(device.wait(Until.gone(By.res(PACKAGE, "unit_name").text(second)), TIMEOUT));
         click(By.res(PACKAGE, "unit_name").text(first));
         find(By.text("Elegir pareja para " + first));
         assertFalse(device.hasObject(By.res(PACKAGE, "unit_name").text(first)));
+        find(search).setText(second.substring(1));
         click(By.res(PACKAGE, "unit_name").text(second));
     }
 

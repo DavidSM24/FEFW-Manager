@@ -57,14 +57,19 @@ jobs:
           ./gradlew :app:connectedDebugAndroidTest
 
       - name: Capturar pantallas del rediseño
+        if: success() || failure()
         run: |
-          python3 .github/scripts/imperial-preview.py "$RUNNER_TEMP/imperial-previews"
+          status=0
+          python3 .github/scripts/imperial-preview.py "$RUNNER_TEMP/imperial-previews" || status=$?
+          shopt -s nullglob
           for screen in "$RUNNER_TEMP/imperial-previews/"*.png; do
             ffmpeg -loglevel error -i "$screen" -vf 'scale=400:-1' -q:v 4 "${screen%.png}.jpg"
             base64 -w 240 "${screen%.png}.jpg" | sed "s/^/FEFW_VIEW_$(basename "${screen%.png}") /"
           done
+          exit "$status"
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: vistas-interfaz-imperial
           path: ${{ runner.temp }}/imperial-previews/*.png

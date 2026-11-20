@@ -43,6 +43,8 @@ Room guarda una misión por senda y usa el ID de cada unidad para asociar reclut
 
 La pantalla y el selector muestran iniciales provisionales hasta que se incorporen los retratos. Los nombres se mantienen tal como figuran en el catálogo local y queda pendiente contrastarlos con la localización española.
 
+**Validada en Android 11.** Las pruebas comprobaron el alta, la cancelación de la retirada y la retirada de una unidad, así como la persistencia y la independencia del registro entre las sendas de Cai y Leda. [Resultado en GitHub Actions](https://github.com/DavidSM24/FEFW-Manager/actions/runs/44698936854)
+
 ## Fase 5. Gestionar parejas de apoyo
 
 - Mostrar las parejas guardadas de la senda seleccionada con los retratos de ambos personajes. Permitir crear y quitar parejas. Definir qué unidades se podrán elegir y cómo se mostrará una pareja si se retira a uno de sus integrantes del registro de unidades.

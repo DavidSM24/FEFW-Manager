@@ -1,9 +1,13 @@
 package com.davidsm24.fefwmanager.home;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.activity.ComponentActivity;
 
@@ -15,6 +19,7 @@ import com.davidsm24.fefwmanager.databinding.ItemRouteBinding;
 import com.davidsm24.fefwmanager.route.Route;
 import com.davidsm24.fefwmanager.route.RouteActivity;
 import com.davidsm24.fefwmanager.ui.ImperialMotion;
+import com.davidsm24.fefwmanager.units.UnitPortraits;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,8 +45,7 @@ public final class MainActivity extends ComponentActivity {
                     binding.routeCards, false);
             String name = getString(route.nameResource);
             card.routeName.setText(name);
-            card.routeInitial.setText(name.substring(0, 1));
-            card.routeInitial.setTextColor(getColor(route.accentResource));
+            UnitPortraits.bind(card.routePortrait, route);
             card.getRoot().setOnClickListener(view -> startActivity(RouteActivity.intent(this, route)));
             binding.routeCards.addView(card.getRoot());
             cards.put(route, card);
@@ -64,7 +68,7 @@ public final class MainActivity extends ComponentActivity {
         }));
 
         LinearLayout routeCards = binding.routeCards;
-        List<String> playOrder = new ArrayList<>();
+        List<Route> playOrder = new ArrayList<>();
         for (int index = 0; index < ordered.length; index++) {
             Route route = ordered[index];
             ItemRouteBinding card = cards.get(route);
@@ -74,7 +78,7 @@ public final class MainActivity extends ComponentActivity {
                     : getString(R.string.deadline_format, mission.day, mission.month);
             card.routeDeadline.setText(deadline);
             if (mission != null) {
-                playOrder.add(getString(route.nameResource));
+                playOrder.add(route);
             }
             if (routeCards.getChildAt(index) != card.getRoot()) {
                 routeCards.removeView(card.getRoot());
@@ -83,11 +87,41 @@ public final class MainActivity extends ComponentActivity {
         }
 
         if (playOrder.size() >= 2) {
-            binding.playOrderSummary.setText(TextUtils.join(
-                    getString(R.string.play_order_separator), playOrder));
+            renderPlayOrder(binding.playOrderSummary, playOrder);
             binding.playOrderPanel.setVisibility(View.VISIBLE);
         } else {
             binding.playOrderPanel.setVisibility(View.GONE);
         }
+    }
+
+    private void renderPlayOrder(TextView summary, List<Route> order) {
+        String separator = getString(R.string.play_order_separator);
+        int size = getResources().getDimensionPixelSize(R.dimen.play_order_portrait_size);
+        SpannableStringBuilder text = new SpannableStringBuilder();
+        StringBuilder description = new StringBuilder();
+
+        for (Route route : order) {
+            if (description.length() > 0) {
+                text.append(separator);
+                description.append(separator);
+            }
+
+            int resource = UnitPortraits.resourceFor(route.id);
+            if (resource != 0) {
+                Drawable portrait = getDrawable(resource);
+                if (portrait != null) {
+                    portrait.setBounds(0, 0, size, size);
+                    int start = text.length();
+                    text.append("\uFFFC\u00A0");
+                    text.setSpan(new ImageSpan(portrait, ImageSpan.ALIGN_BASELINE),
+                            start, start + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+            String name = getString(route.nameResource);
+            text.append(name);
+            description.append(name);
+        }
+        summary.setText(text);
+        summary.setContentDescription(description);
     }
 }

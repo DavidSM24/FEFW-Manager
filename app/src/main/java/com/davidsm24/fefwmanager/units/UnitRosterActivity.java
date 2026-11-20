@@ -47,6 +47,7 @@ public final class UnitRosterActivity extends ComponentActivity {
         binding.pageHeader.ledgerTitle.setText(R.string.unit_roster_title);
         binding.pageHeader.ledgerRoute.setText(
                 getString(R.string.route_title, getString(route.nameResource)));
+        UnitPortraits.bind(binding.pageHeader.routePortrait, route);
         if (savedInstanceState == null) {
             ImperialMotion.reveal(binding.pageHeader.getRoot());
         }
@@ -128,6 +129,7 @@ public final class UnitRosterActivity extends ComponentActivity {
     private void confirmRemoval(UnitLabel unit) {
         dialog = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.remove_unit_named, unit.name()))
+                .setIcon(UnitPortraits.resourceFor(unit.id()))
                 .setMessage(R.string.remove_unit_confirmation)
                 .setNegativeButton(R.string.cancel_action, null)
                 .setPositiveButton(R.string.remove_unit, (ignored, which) -> viewModel.remove(unit))

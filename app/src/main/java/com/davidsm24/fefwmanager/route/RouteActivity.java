@@ -23,6 +23,7 @@ import com.davidsm24.fefwmanager.databinding.DialogMissionEditorBinding;
 import com.davidsm24.fefwmanager.supports.SupportPairsActivity;
 import com.davidsm24.fefwmanager.ui.ImperialMotion;
 import com.davidsm24.fefwmanager.units.UnitRosterActivity;
+import com.davidsm24.fefwmanager.units.UnitPortraits;
 
 public final class RouteActivity extends ComponentActivity {
     private static final String EXTRA_ROUTE_ID = "com.davidsm24.fefwmanager.ROUTE_ID";
@@ -58,6 +59,7 @@ public final class RouteActivity extends ComponentActivity {
         }
 
         binding.routeTitle.setText(getString(R.string.route_title, getString(route.nameResource)));
+        UnitPortraits.bind(binding.routePortrait, route);
         binding.backToRoutes.setOnClickListener(view -> finish());
         binding.manageUnits.setOnClickListener(
                 view -> startActivity(UnitRosterActivity.intent(this, route)));

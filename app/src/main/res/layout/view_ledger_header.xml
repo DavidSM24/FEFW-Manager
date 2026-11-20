@@ -3,8 +3,16 @@
     style="@style/Widget.FefwManager.TitlePanel"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:baselineAligned="false"
     android:gravity="center_vertical"
     android:orientation="horizontal">
+
+    <include
+        android:id="@+id/route_portrait"
+        layout="@layout/view_unit_portrait"
+        android:layout_width="@dimen/title_emblem_size"
+        android:layout_height="@dimen/title_emblem_size"
+        android:layout_marginEnd="14dp" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -26,9 +34,4 @@
             android:textAppearance="@style/TextAppearance.Fefw.Body" />
     </LinearLayout>
 
-    <ImageView
-        android:layout_width="@dimen/title_emblem_size"
-        android:layout_height="@dimen/title_emblem_size"
-        android:importantForAccessibility="no"
-        android:src="@drawable/imperial_insignia" />
 </LinearLayout>

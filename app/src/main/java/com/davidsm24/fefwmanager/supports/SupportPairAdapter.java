@@ -12,6 +12,7 @@ import com.davidsm24.fefwmanager.data.SupportPair;
 import com.davidsm24.fefwmanager.databinding.ItemSupportPairBinding;
 import com.davidsm24.fefwmanager.databinding.ViewSupportMemberBinding;
 import com.davidsm24.fefwmanager.units.UnitLabel;
+import com.davidsm24.fefwmanager.units.UnitPortraits;
 
 import java.util.Collections;
 import java.util.List;
@@ -78,8 +79,7 @@ final class SupportPairAdapter extends BaseAdapter {
 
     private void bind(ViewSupportMemberBinding binding, Member member) {
         binding.supportMemberName.setText(member.unit().name());
-        binding.supportMemberInitial.setText(member.unit().initial());
-        binding.supportMemberInitial.setTextColor(accent);
+        UnitPortraits.bind(binding.supportMemberPortrait, member.unit(), accent);
         binding.supportMemberStatus.setVisibility(member.recruited() ? View.GONE : View.VISIBLE);
     }
 }

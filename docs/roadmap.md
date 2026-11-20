@@ -19,9 +19,9 @@ La primera versión permitirá seguir en paralelo las sendas de Cai, Theodora, D
 
 **Entregable.** Los cuatro retratos abren la senda correcta y sus anotaciones se guardan por separado.
 
-El menú presenta cuatro fichas con iniciales provisionales. Cada ficha abre su propia senda, con resúmenes de la misión principal, las unidades reclutadas y los apoyos. Las fases 3 a 5 incorporan la edición desde esas pantallas.
+La primera versión del menú usó iniciales provisionales. Cada ficha abre su propia senda, con accesos a la misión principal, las unidades reclutadas y los apoyos.
 
-Room guarda una misión por senda y usa el ID de cada unidad para asociar reclutamientos y parejas. Una unidad puede pertenecer a varias sendas. El orden de selección de los personajes de una pareja no cambia su identidad. El catálogo y los retratos se incorporarán por separado en la fase 4.
+Room guarda una misión por senda y usa el ID de cada unidad para asociar reclutamientos y parejas. Una unidad puede pertenecer a varias sendas. El orden de selección de los personajes de una pareja no cambia su identidad.
 
 **Validada en Android 11.** Tres pruebas instrumentadas comprueban el acceso a las cuatro sendas, la apertura de los tres resúmenes y la persistencia por senda al cerrar y volver a abrir la base. [Resultado en GitHub Actions](https://github.com/DavidSM24/FEFW-Manager/actions/runs/44550018402)
 
@@ -41,13 +41,13 @@ Room guarda una misión por senda y usa el ID de cada unidad para asociar reclut
 
 **Entregable.** Se puede añadir y retirar una unidad, la lista evita duplicados dentro de la misma senda y se puede registrar a la misma unidad en otra senda disponible de forma independiente.
 
-La pantalla y el selector muestran iniciales provisionales hasta que se incorporen los retratos. Los nombres se mantienen tal como figuran en el catálogo local y queda pendiente contrastarlos con la localización española.
+La pantalla y el selector usan retratos del ZIP aportado por el usuario para las 63 unidades del catálogo. Los nombres se mantienen tal como figuran en el catálogo local y queda pendiente contrastarlos con la localización española.
 
 **Validada en Android 11.** Las pruebas comprobaron el alta, la cancelación de la retirada y la retirada de una unidad, así como la persistencia y la independencia del registro entre las sendas de Cai y Leda. [Resultado en GitHub Actions](https://github.com/DavidSM24/FEFW-Manager/actions/runs/44698936854)
 
 ## Fase 5. Gestionar parejas de apoyo
 
-- Mostrar las parejas guardadas de la senda seleccionada con los nombres y las iniciales de ambos personajes. Las iniciales se usarán hasta que se incorporen los retratos. Permitir crear y quitar parejas.
+- Mostrar las parejas guardadas de la senda seleccionada con los nombres y retratos de ambos personajes. Permitir crear y quitar parejas.
 - Guardar cada pareja asociada a su senda. Identificar el par por sus dos integrantes, de modo que invertir el orden al seleccionarlos no cree un duplicado.
 - Elegir dos unidades distintas que estén reclutadas en la senda. Si se retira una unidad del registro, la pareja se conserva y el integrante aparece marcado como **Fuera del registro**.
 

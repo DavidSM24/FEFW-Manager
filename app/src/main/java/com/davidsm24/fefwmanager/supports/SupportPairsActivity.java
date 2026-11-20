@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.activity.ComponentActivity;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
@@ -17,11 +18,13 @@ import com.davidsm24.fefwmanager.FefwApplication;
 import com.davidsm24.fefwmanager.R;
 import com.davidsm24.fefwmanager.data.SupportPair;
 import com.davidsm24.fefwmanager.databinding.ActivitySupportPairsBinding;
+import com.davidsm24.fefwmanager.databinding.DialogSupportPortraitsBinding;
 import com.davidsm24.fefwmanager.route.Route;
 import com.davidsm24.fefwmanager.ui.ImperialMotion;
 import com.davidsm24.fefwmanager.units.UnitCatalog;
 import com.davidsm24.fefwmanager.units.UnitLabel;
 import com.davidsm24.fefwmanager.units.UnitListAdapter;
+import com.davidsm24.fefwmanager.units.UnitPortraits;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -57,6 +60,7 @@ public final class SupportPairsActivity extends ComponentActivity {
         binding.pageHeader.ledgerTitle.setText(R.string.support_pairs_title);
         binding.pageHeader.ledgerRoute.setText(
                 getString(R.string.route_title, getString(route.nameResource)));
+        UnitPortraits.bind(binding.pageHeader.routePortrait, route);
         if (savedInstanceState == null) {
             ImperialMotion.reveal(binding.pageHeader.getRoot());
         }
@@ -136,13 +140,14 @@ public final class SupportPairsActivity extends ComponentActivity {
     }
 
     private void chooseFirst() {
-        showUnitPicker(getString(R.string.choose_first_support), choicesExcept(null),
+        showUnitPicker(getString(R.string.choose_first_support), 0, choicesExcept(null),
                 this::chooseSecond);
     }
 
     private void chooseSecond(UnitLabel first) {
         showUnitPicker(getString(R.string.choose_second_support, first.name()),
-                choicesExcept(first.id()), second -> viewModel.create(first, second));
+                UnitPortraits.resourceFor(first.id()), choicesExcept(first.id()),
+                second -> viewModel.create(first, second));
     }
 
     private List<UnitLabel> choicesExcept(@Nullable String excludedId) {
@@ -157,11 +162,13 @@ public final class SupportPairsActivity extends ComponentActivity {
         return choices;
     }
 
-    private void showUnitPicker(String title, List<UnitLabel> choices, Consumer<UnitLabel> choose) {
+    private void showUnitPicker(String title, @DrawableRes int icon,
+            List<UnitLabel> choices, Consumer<UnitLabel> choose) {
         UnitListAdapter picker = new UnitListAdapter(getLayoutInflater(), accent, null);
         picker.show(choices, false);
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(title)
+                .setIcon(icon)
                 .setNegativeButton(R.string.cancel_action, null);
         if (choices.isEmpty()) {
             builder.setMessage(R.string.support_recruits_changed);
@@ -172,10 +179,15 @@ public final class SupportPairsActivity extends ComponentActivity {
     }
 
     private void confirmRemoval(SupportPairAdapter.Row row) {
+        DialogSupportPortraitsBinding portraits =
+                DialogSupportPortraitsBinding.inflate(getLayoutInflater());
+        UnitPortraits.bind(portraits.firstPortrait, row.first().unit(), accent);
+        UnitPortraits.bind(portraits.secondPortrait, row.second().unit(), accent);
         dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.remove_support)
                 .setMessage(getString(R.string.remove_support_confirmation,
                         row.first().unit().name(), row.second().unit().name()))
+                .setView(portraits.getRoot())
                 .setNegativeButton(R.string.cancel_action, null)
                 .setPositiveButton(R.string.remove_unit, (ignored, which) -> viewModel.remove(row.pair()))
                 .show();

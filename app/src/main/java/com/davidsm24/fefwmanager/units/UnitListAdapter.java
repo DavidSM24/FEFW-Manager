@@ -63,8 +63,7 @@ public final class UnitListAdapter extends BaseAdapter {
         UnitLabel unit = getItem(position);
         String name = unit.name();
         row.unitName.setText(name);
-        row.unitInitial.setText(unit.initial());
-        row.unitInitial.setTextColor(accent);
+        UnitPortraits.bind(row.unitPortrait, unit, accent);
         if (onRemove == null) {
             row.removeUnit.setVisibility(View.GONE);
         } else {

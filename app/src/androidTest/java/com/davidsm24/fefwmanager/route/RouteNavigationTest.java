@@ -1,11 +1,15 @@
 package com.davidsm24.fefwmanager.route;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
+import android.widget.TextView;
 
 import androidx.room.Room;
 import androidx.sqlite.db.SimpleSQLiteQuery;
@@ -19,6 +23,7 @@ import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
 
 import com.davidsm24.fefwmanager.FefwApplication;
+import com.davidsm24.fefwmanager.R;
 import com.davidsm24.fefwmanager.data.MainMission;
 import com.davidsm24.fefwmanager.data.ProgressDatabase;
 import com.davidsm24.fefwmanager.data.RecruitedUnit;
@@ -251,18 +256,23 @@ public class RouteNavigationTest {
                     assertFalse(device.hasObject(summary));
 
                     progress.saveMission(new MainMission(Route.CAI, 10, 5, ""));
-                    assertVisible(By.res(PACKAGE, "play_order_summary").text("Cai → Leda"));
+                    assertVisible(By.res(PACKAGE, "play_order_summary").desc("Cai → Leda"));
                     assertAbove("Cai", "Leda");
                     assertAbove("Leda", "Theodora");
 
                     progress.saveMission(new MainMission(Route.DIETRICH, 13, 6, ""));
                     progress.saveMission(new MainMission(Route.THEODORA, 28, 5, ""));
                     assertVisible(By.res(PACKAGE, "play_order_summary")
-                            .text("Cai → Theodora → Leda → Dietrich"));
+                            .desc("Cai → Theodora → Leda → Dietrich"));
+                    scenario.onActivity(activity -> {
+                        TextView sequence = activity.findViewById(R.id.play_order_summary);
+                        Spanned text = (Spanned) sequence.getText();
+                        assertEquals(4, text.getSpans(0, text.length(), ImageSpan.class).length);
+                    });
 
                     progress.saveMission(new MainMission(Route.LEDA, 5, 5, ""));
                     assertVisible(By.res(PACKAGE, "play_order_summary")
-                            .text("Leda → Cai → Theodora → Dietrich"));
+                            .desc("Leda → Cai → Theodora → Dietrich"));
                     assertAbove("Leda", "Cai");
                 }
             } finally {

@@ -84,6 +84,19 @@ public class RouteProgressTest {
             assertEquals(Collections.singletonList("tialla"),
                     observeOnce(progress.observeRecruitedUnitIds(Route.DIETRICH)));
             assertEquals(1, observeOnce(progress.observeProgress(Route.CAI)).supportCount);
+
+            SupportPair newPair = new SupportPair(Route.THEODORA, "tialla", "peter");
+            assertEquals(RouteProgressDao.SupportCreation.MISSING_RECRUITS,
+                    progress.createSupport(newPair));
+            progress.recruit(new RecruitedUnit(Route.THEODORA, "tialla"));
+            progress.recruit(new RecruitedUnit(Route.THEODORA, "peter"));
+            assertEquals(RouteProgressDao.SupportCreation.ADDED, progress.createSupport(newPair));
+            assertEquals(RouteProgressDao.SupportCreation.DUPLICATE,
+                    progress.createSupport(new SupportPair(Route.THEODORA, "peter", "tialla")));
+            assertEquals(1, observeOnce(progress.observeSupportPairs(Route.THEODORA)).size());
+            progress.removeSupport(newPair);
+            assertTrue(observeOnce(progress.observeSupportPairs(Route.THEODORA)).isEmpty());
+            assertEquals(1, observeOnce(progress.observeSupportPairs(Route.CAI)).size());
         } finally {
             database.close();
             context.deleteDatabase(name);

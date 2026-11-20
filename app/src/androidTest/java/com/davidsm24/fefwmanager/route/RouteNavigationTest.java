@@ -64,8 +64,8 @@ public class RouteNavigationTest {
             click(By.res(PACKAGE, "back_to_route"));
 
             click(By.res(PACKAGE, "manage_supports").enabled(true));
-            assertVisible(By.textContains("de apoyo"));
-            click(By.res("android", "button1"));
+            assertVisible(By.text("Parejas de apoyo"));
+            click(By.res(PACKAGE, "back_to_route"));
             assertVisible(By.text("Senda de Cai"));
         }
     }

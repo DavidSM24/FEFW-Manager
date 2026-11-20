@@ -2,7 +2,6 @@ package com.davidsm24.fefwmanager.units;
 
 import android.util.Log;
 
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -12,43 +11,32 @@ import com.davidsm24.fefwmanager.data.RouteProgressDao;
 import com.davidsm24.fefwmanager.route.Route;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
 final class UnitRosterViewModel extends ViewModel {
     enum WriteState { IDLE, SAVING, FAILED }
 
-    record CatalogResult(@Nullable UnitCatalog catalog) {
-    }
-
     private final Route route;
     private final RouteProgressDao progress;
     private final Executor io;
     private final LiveData<List<String>> recruited;
-    private final MutableLiveData<CatalogResult> catalog = new MutableLiveData<>();
+    private final LiveData<UnitCatalog.LoadResult> catalog;
     private final MutableLiveData<WriteState> writes = new MutableLiveData<>(WriteState.IDLE);
 
     UnitRosterViewModel(Route route, RouteProgressDao progress, Executor io,
-            Callable<UnitCatalog> loadCatalog) {
+            LiveData<UnitCatalog.LoadResult> catalog) {
         this.route = route;
         this.progress = progress;
         this.io = io;
+        this.catalog = catalog;
         recruited = progress.observeRecruitedUnitIds(route);
-        io.execute(() -> {
-            try {
-                catalog.postValue(new CatalogResult(loadCatalog.call()));
-            } catch (Exception exception) {
-                Log.e("UnitRoster", "Unable to read unit catalog", exception);
-                catalog.postValue(new CatalogResult(null));
-            }
-        });
     }
 
     LiveData<List<String>> recruited() {
         return recruited;
     }
 
-    LiveData<CatalogResult> catalog() {
+    LiveData<UnitCatalog.LoadResult> catalog() {
         return catalog;
     }
 

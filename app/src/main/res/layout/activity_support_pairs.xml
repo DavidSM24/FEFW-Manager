@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <Button
+        android:id="@+id/back_to_route"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/back_to_route"
+        android:textAllCaps="false"
+        android:textColor="@color/sand" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="serif"
+        android:text="@string/support_pairs_title"
+        android:textColor="@color/parchment"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/support_route"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/sand"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/add_support"
+        style="@style/Widget.FefwManager.RouteAction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/add_support_pair" />
+
+    <TextView
+        android:id="@+id/support_notice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:accessibilityLiveRegion="polite"
+        android:paddingTop="14dp"
+        android:paddingBottom="8dp"
+        android:textColor="@color/sand"
+        android:textSize="16sp" />
+
+    <ListView
+        android:id="@+id/support_pair_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="6dp"
+        android:layout_weight="1"
+        android:divider="@color/route_outline"
+        android:dividerHeight="1dp" />
+</LinearLayout>

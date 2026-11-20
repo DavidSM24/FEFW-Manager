@@ -17,14 +17,10 @@ import com.davidsm24.fefwmanager.databinding.ActivityUnitRosterBinding;
 import com.davidsm24.fefwmanager.route.Route;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public final class UnitRosterActivity extends ComponentActivity {
     private static final String EXTRA_ROUTE_ID = "route_id";
-    private static final Comparator<UnitLabel> BY_NAME = Comparator
-            .comparing(UnitLabel::name, String.CASE_INSENSITIVE_ORDER)
-            .thenComparing(UnitLabel::id);
 
     private ActivityUnitRosterBinding binding;
     private UnitRosterViewModel viewModel;
@@ -60,8 +56,7 @@ public final class UnitRosterActivity extends ComponentActivity {
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
                 return modelClass.cast(new UnitRosterViewModel(route, app.routeProgress(),
-                        app.progressIo(), () -> UnitCatalog.read(
-                                app.getResources().openRawResource(R.raw.unidades_fefw))));
+                        app.progressIo(), app.unitCatalog()));
             }
         }).get(UnitRosterViewModel.class);
         viewModel.catalog().observe(this, ignored -> render());
@@ -70,7 +65,7 @@ public final class UnitRosterActivity extends ComponentActivity {
     }
 
     private void render() {
-        UnitRosterViewModel.CatalogResult result = viewModel.catalog().getValue();
+        UnitCatalog.LoadResult result = viewModel.catalog().getValue();
         List<String> recruitedIds = viewModel.recruited().getValue();
         UnitRosterViewModel.WriteState writeState = viewModel.writes().getValue();
         if (result == null || recruitedIds == null) {
@@ -86,7 +81,7 @@ public final class UnitRosterActivity extends ComponentActivity {
         for (String id : recruitedIds) {
             units.add(catalog == null ? new UnitLabel(id, id) : catalog.labelFor(id));
         }
-        units.sort(BY_NAME);
+        units.sort(UnitLabel.BY_NAME);
         rosterAdapter.show(units, !writing);
 
         if (writeState == UnitRosterViewModel.WriteState.FAILED) {
@@ -108,7 +103,7 @@ public final class UnitRosterActivity extends ComponentActivity {
     private void showAvailableUnits() {
         UnitCatalog catalog = viewModel.catalog().getValue().catalog();
         List<UnitLabel> choices = catalog.availableFor(route, viewModel.recruited().getValue());
-        choices.sort(BY_NAME);
+        choices.sort(UnitLabel.BY_NAME);
         AlertDialog.Builder picker = new AlertDialog.Builder(this)
                 .setTitle(R.string.add_unit)
                 .setNegativeButton(R.string.cancel_action, null);

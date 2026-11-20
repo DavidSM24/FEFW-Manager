@@ -25,7 +25,6 @@
     <string name="save_mission_edit">Guardar</string>
     <string name="manage_units">Gestionar unidades</string>
     <string name="manage_supports">Gestionar apoyos</string>
-    <string name="close_summary">Cerrar</string>
     <string name="unit_roster_title">Unidades reclutadas</string>
     <string name="back_to_route">Volver a la senda</string>
     <string name="add_unit">Añadir unidad</string>
@@ -37,8 +36,19 @@
     <string name="no_available_units">Ya has añadido todas las unidades disponibles para esta senda.</string>
     <string name="unit_catalog_error">No se pudo abrir el catálogo de unidades.</string>
     <string name="recruit_write_error">No se pudo actualizar el registro. Inténtalo de nuevo.</string>
-    <plurals name="saved_supports">
-        <item quantity="one">%d pareja de apoyo</item>
-        <item quantity="other">%d parejas de apoyo</item>
-    </plurals>
+    <string name="support_pairs_title">Parejas de apoyo</string>
+    <string name="add_support_pair">Crear pareja</string>
+    <string name="choose_first_support">Elegir primera unidad</string>
+    <string name="choose_second_support">Elegir pareja para %1$s</string>
+    <string name="support_pair_connector" translatable="false">+</string>
+    <string name="support_member_not_recruited">Fuera del registro</string>
+    <string name="remove_support">Quitar pareja</string>
+    <string name="remove_support_named">Quitar la pareja de %1$s y %2$s</string>
+    <string name="remove_support_confirmation">¿Quitar la pareja de %1$s y %2$s de esta senda?</string>
+    <string name="loading_supports">Cargando parejas…</string>
+    <string name="no_support_pairs">Aún no hay parejas de apoyo.</string>
+    <string name="recruit_two_for_support">Recluta al menos dos unidades para crear una pareja.</string>
+    <string name="duplicate_support">Esta pareja ya está guardada en la senda.</string>
+    <string name="support_recruits_changed">El registro de unidades ha cambiado. Elige dos unidades reclutadas.</string>
+    <string name="support_write_error">No se pudo actualizar la pareja. Inténtalo de nuevo.</string>
 </resources>

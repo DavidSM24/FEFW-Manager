@@ -47,8 +47,9 @@ La pantalla y el selector muestran iniciales provisionales hasta que se incorpor
 
 ## Fase 5. Gestionar parejas de apoyo
 
-- Mostrar las parejas guardadas de la senda seleccionada con los retratos de ambos personajes. Permitir crear y quitar parejas. Definir qué unidades se podrán elegir y cómo se mostrará una pareja si se retira a uno de sus integrantes del registro de unidades.
+- Mostrar las parejas guardadas de la senda seleccionada con los nombres y las iniciales de ambos personajes. Las iniciales se usarán hasta que se incorporen los retratos. Permitir crear y quitar parejas.
 - Guardar cada pareja asociada a su senda. Identificar el par por sus dos integrantes, de modo que invertir el orden al seleccionarlos no cree un duplicado.
+- Elegir dos unidades distintas que estén reclutadas en la senda. Si se retira una unidad del registro, la pareja se conserva y el integrante aparece marcado como **Fuera del registro**.
 
 **Entregable.** Se puede crear y quitar una pareja en una senda, y el cambio se conserva al cerrar y volver a abrir la aplicación.
 

@@ -20,6 +20,7 @@ import com.davidsm24.fefwmanager.data.MainMission;
 import com.davidsm24.fefwmanager.data.RouteProgress;
 import com.davidsm24.fefwmanager.databinding.ActivityRouteBinding;
 import com.davidsm24.fefwmanager.databinding.DialogMissionEditorBinding;
+import com.davidsm24.fefwmanager.supports.SupportPairsActivity;
 import com.davidsm24.fefwmanager.units.UnitRosterActivity;
 
 public final class RouteActivity extends ComponentActivity {
@@ -57,6 +58,9 @@ public final class RouteActivity extends ComponentActivity {
         binding.manageUnits.setOnClickListener(
                 view -> startActivity(UnitRosterActivity.intent(this, route)));
         binding.manageUnits.setEnabled(true);
+        binding.manageSupports.setOnClickListener(
+                view -> startActivity(SupportPairsActivity.intent(this, route)));
+        binding.manageSupports.setEnabled(true);
 
         FefwApplication app = (FefwApplication) getApplication();
         missionEditor = new ViewModelProvider(this, new ViewModelProvider.Factory() {
@@ -91,12 +95,7 @@ public final class RouteActivity extends ComponentActivity {
                     progress.month == null ? "" : progress.month.toString(), progress.description);
         });
 
-        binding.manageSupports.setOnClickListener(view -> showSummary(R.string.manage_supports,
-                getResources().getQuantityString(R.plurals.saved_supports,
-                        progress.supportCount, progress.supportCount)));
-
         binding.manageMission.setEnabled(true);
-        binding.manageSupports.setEnabled(true);
     }
 
     private void showMissionEditor(String day, String month, String description) {
@@ -174,14 +173,6 @@ public final class RouteActivity extends ComponentActivity {
         missionForm.missionDescription.setEnabled(editable);
         missionForm.missionSaveError.setVisibility(state == MissionEditorViewModel.SaveState.FAILED
                 ? View.VISIBLE : View.GONE);
-    }
-
-    private void showSummary(int title, String message) {
-        dialog = new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(R.string.close_summary, null)
-                .show();
     }
 
     @Override

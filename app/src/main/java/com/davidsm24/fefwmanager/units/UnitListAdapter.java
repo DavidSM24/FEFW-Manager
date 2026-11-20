@@ -15,21 +15,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-final class UnitListAdapter extends BaseAdapter {
+public final class UnitListAdapter extends BaseAdapter {
     private final LayoutInflater inflater;
     private final int accent;
     @Nullable private final Consumer<UnitLabel> onRemove;
     private List<UnitLabel> units = Collections.emptyList();
     private boolean canRemove;
 
-    UnitListAdapter(LayoutInflater inflater, @ColorInt int accent,
+    public UnitListAdapter(LayoutInflater inflater, @ColorInt int accent,
             @Nullable Consumer<UnitLabel> onRemove) {
         this.inflater = inflater;
         this.accent = accent;
         this.onRemove = onRemove;
     }
 
-    void show(List<UnitLabel> units, boolean canRemove) {
+    public void show(List<UnitLabel> units, boolean canRemove) {
         this.units = units;
         this.canRemove = canRemove;
         notifyDataSetChanged();
@@ -63,7 +63,7 @@ final class UnitListAdapter extends BaseAdapter {
         UnitLabel unit = getItem(position);
         String name = unit.name();
         row.unitName.setText(name);
-        row.unitInitial.setText(name.isEmpty() ? "" : name.substring(0, name.offsetByCodePoints(0, 1)));
+        row.unitInitial.setText(unit.initial());
         row.unitInitial.setTextColor(accent);
         if (onRemove == null) {
             row.removeUnit.setVisibility(View.GONE);

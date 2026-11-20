@@ -1,5 +1,7 @@
 package com.davidsm24.fefwmanager.units;
 
+import androidx.annotation.Nullable;
+
 import com.davidsm24.fefwmanager.route.Route;
 
 import org.json.JSONArray;
@@ -18,14 +20,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-final class UnitCatalog {
+public final class UnitCatalog {
+    public record LoadResult(@Nullable UnitCatalog catalog) {
+    }
+
     private final Map<String, Entry> entries;
 
     private UnitCatalog(Map<String, Entry> entries) {
         this.entries = Collections.unmodifiableMap(entries);
     }
 
-    static UnitCatalog read(InputStream resource) throws IOException, JSONException {
+    public static UnitCatalog read(InputStream resource) throws IOException, JSONException {
         StringBuilder json = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(resource, StandardCharsets.UTF_8))) {
@@ -58,7 +63,7 @@ final class UnitCatalog {
         return new UnitCatalog(entries);
     }
 
-    UnitLabel labelFor(String id) {
+    public UnitLabel labelFor(String id) {
         Entry entry = entries.get(id);
         return entry == null ? new UnitLabel(id, id) : entry.label;
     }

@@ -87,7 +87,7 @@
         <item name="android:background">@drawable/imperial_panel</item>
         <item name="android:padding">@dimen/panel_inset</item>
     </style>
-    <style name="Widget.FefwManager.MissionField" parent="@android:style/Widget.Material.EditText">
+    <style name="Widget.FefwManager.Field" parent="@android:style/Widget.Material.EditText">
         <item name="android:background">@drawable/imperial_field</item>
         <item name="android:backgroundTint">@null</item>
         <item name="android:minHeight">48dp</item>

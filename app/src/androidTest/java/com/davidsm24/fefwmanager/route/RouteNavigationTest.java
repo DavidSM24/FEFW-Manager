@@ -139,6 +139,13 @@ public class RouteNavigationTest {
 
     private void addAlexandra() {
         click(By.res(PACKAGE, "add_unit").enabled(true));
+        BySelector search = By.res(PACKAGE, "unit_search");
+        find(search).setText("zzzz");
+        assertVisible(By.res(PACKAGE, "unit_search_empty"));
+        find(search).setText("");
+        assertVisible(By.res(PACKAGE, "unit_name").text("Alexandra"));
+        find(search).setText(" eXan ");
+        assertTrue(device.wait(Until.gone(By.res(PACKAGE, "unit_search_empty")), TIMEOUT));
         click(By.res(PACKAGE, "unit_name").text("Alexandra"));
         assertVisible(By.desc("Quitar a Alexandra"));
     }

@@ -23,7 +23,7 @@ import com.davidsm24.fefwmanager.route.Route;
 import com.davidsm24.fefwmanager.ui.ImperialMotion;
 import com.davidsm24.fefwmanager.units.UnitCatalog;
 import com.davidsm24.fefwmanager.units.UnitLabel;
-import com.davidsm24.fefwmanager.units.UnitListAdapter;
+import com.davidsm24.fefwmanager.units.UnitPicker;
 import com.davidsm24.fefwmanager.units.UnitPortraits;
 
 import java.util.ArrayList;
@@ -164,18 +164,10 @@ public final class SupportPairsActivity extends ComponentActivity {
 
     private void showUnitPicker(String title, @DrawableRes int icon,
             List<UnitLabel> choices, Consumer<UnitLabel> choose) {
-        UnitListAdapter picker = new UnitListAdapter(getLayoutInflater(), accent, null);
-        picker.show(choices, false);
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(title)
-                .setIcon(icon)
-                .setNegativeButton(R.string.cancel_action, null);
-        if (choices.isEmpty()) {
-            builder.setMessage(R.string.support_recruits_changed);
-        } else {
-            builder.setAdapter(picker, (ignored, position) -> choose.accept(picker.getItem(position)));
-        }
-        dialog = builder.show();
+                .setIcon(icon);
+        dialog = UnitPicker.show(builder, accent, choices, R.string.support_recruits_changed, choose);
     }
 
     private void confirmRemoval(SupportPairAdapter.Row row) {

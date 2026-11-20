@@ -113,17 +113,9 @@ public final class UnitRosterActivity extends ComponentActivity {
         List<UnitLabel> choices = catalog.availableFor(route, viewModel.recruited().getValue());
         choices.sort(UnitLabel.BY_NAME);
         AlertDialog.Builder picker = new AlertDialog.Builder(this)
-                .setTitle(R.string.add_unit)
-                .setNegativeButton(R.string.cancel_action, null);
-        if (choices.isEmpty()) {
-            picker.setMessage(R.string.no_available_units);
-        } else {
-            UnitListAdapter adapter = new UnitListAdapter(getLayoutInflater(),
-                    getColor(route.accentResource), null);
-            adapter.show(choices, false);
-            picker.setAdapter(adapter, (ignored, position) -> viewModel.recruit(adapter.getItem(position)));
-        }
-        dialog = picker.show();
+                .setTitle(R.string.add_unit);
+        dialog = UnitPicker.show(picker, getColor(route.accentResource), choices,
+                R.string.no_available_units, viewModel::recruit);
     }
 
     private void confirmRemoval(UnitLabel unit) {

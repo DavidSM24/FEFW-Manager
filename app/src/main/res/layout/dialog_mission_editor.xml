@@ -27,7 +27,7 @@
 
             <EditText
                 android:id="@+id/mission_day"
-                style="@style/Widget.FefwManager.MissionField"
+                style="@style/Widget.FefwManager.Field"
                 android:layout_width="76dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -50,7 +50,7 @@
 
             <EditText
                 android:id="@+id/mission_month"
-                style="@style/Widget.FefwManager.MissionField"
+                style="@style/Widget.FefwManager.Field"
                 android:layout_width="76dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -73,7 +73,7 @@
 
         <EditText
             android:id="@+id/mission_description"
-            style="@style/Widget.FefwManager.MissionField"
+            style="@style/Widget.FefwManager.Field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"

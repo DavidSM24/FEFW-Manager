@@ -20,6 +20,7 @@ import androidx.test.uiautomator.Until;
 import com.davidsm24.fefwmanager.FefwApplication;
 import com.davidsm24.fefwmanager.data.MainMission;
 import com.davidsm24.fefwmanager.data.ProgressDatabase;
+import com.davidsm24.fefwmanager.data.RecruitedUnit;
 import com.davidsm24.fefwmanager.data.RouteProgressDao;
 import com.davidsm24.fefwmanager.home.MainActivity;
 
@@ -59,13 +60,93 @@ public class RouteNavigationTest {
             click(By.res("android", "button2"));
 
             click(By.res(PACKAGE, "manage_units").enabled(true));
-            assertVisible(By.textContains("reclutada"));
-            click(By.res("android", "button1"));
+            assertVisible(By.res(PACKAGE, "add_unit").enabled(true));
+            click(By.res(PACKAGE, "back_to_route"));
 
             click(By.res(PACKAGE, "manage_supports").enabled(true));
             assertVisible(By.textContains("de apoyo"));
             click(By.res("android", "button1"));
             assertVisible(By.text("Senda de Cai"));
+        }
+    }
+
+    @Test
+    public void managesTheSameUnitIndependentlyInTwoRoutes() {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        RouteProgressDao progress = ((FefwApplication) context.getApplicationContext()).routeProgress();
+        ProgressDatabase fixture = Room.databaseBuilder(context, ProgressDatabase.class,
+                "route-progress.db").build();
+        RecruitedUnit cai = new RecruitedUnit(Route.CAI, "alexandra");
+        RecruitedUnit leda = new RecruitedUnit(Route.LEDA, "alexandra");
+
+        try {
+            boolean caiHadUnit = hasRecruit(fixture, cai);
+            boolean ledaHadUnit = hasRecruit(fixture, leda);
+            try {
+                progress.removeRecruit(cai);
+                progress.removeRecruit(leda);
+                try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+                    openUnits("Cai");
+                    addAlexandra();
+                    click(By.res(PACKAGE, "back_to_route"));
+                    click(By.res(PACKAGE, "back_to_routes"));
+
+                    openUnits("Leda");
+                    addAlexandra();
+                    click(By.res(PACKAGE, "back_to_route"));
+                    click(By.res(PACKAGE, "back_to_routes"));
+
+                    BySelector remove = By.desc("Quitar a Alexandra");
+                    openUnits("Cai");
+                    click(remove);
+                    click(By.res("android", "button2"));
+                    assertVisible(remove);
+                    click(remove);
+                    click(By.res("android", "button1"));
+                    assertTrue("Alexandra should be removed from Cai",
+                            device.wait(Until.gone(remove), TIMEOUT));
+                    click(By.res(PACKAGE, "back_to_route"));
+                    click(By.res(PACKAGE, "back_to_routes"));
+
+                    openUnits("Leda");
+                    assertVisible(remove);
+                    click(By.res(PACKAGE, "back_to_route"));
+                    click(By.res(PACKAGE, "back_to_routes"));
+                }
+            } finally {
+                restoreRecruit(progress, cai, caiHadUnit);
+                restoreRecruit(progress, leda, ledaHadUnit);
+            }
+        } finally {
+            fixture.close();
+        }
+    }
+
+    private void openUnits(String route) {
+        click(By.text(route));
+        click(By.res(PACKAGE, "manage_units").enabled(true));
+        assertVisible(By.res(PACKAGE, "add_unit").enabled(true));
+    }
+
+    private void addAlexandra() {
+        click(By.res(PACKAGE, "add_unit").enabled(true));
+        click(By.res(PACKAGE, "unit_name").text("Alexandra"));
+        assertVisible(By.desc("Quitar a Alexandra"));
+    }
+
+    private static boolean hasRecruit(ProgressDatabase database, RecruitedUnit unit) {
+        try (Cursor cursor = database.getOpenHelper().getReadableDatabase().query(
+                new SimpleSQLiteQuery("SELECT 1 FROM recruited_units WHERE route_id = ? AND unit_id = ?",
+                        new Object[]{unit.route.id, unit.unitId}))) {
+            return cursor.moveToFirst();
+        }
+    }
+
+    private static void restoreRecruit(RouteProgressDao progress, RecruitedUnit unit, boolean recruited) {
+        if (recruited) {
+            progress.recruit(unit);
+        } else {
+            progress.removeRecruit(unit);
         }
     }
 

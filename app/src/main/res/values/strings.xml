@@ -21,15 +21,22 @@
     <string name="invalid_mission_day">Introduce un día válido para ese mes.</string>
     <string name="invalid_mission_month">Introduce un mes del 1 al 12.</string>
     <string name="mission_save_error">No se pudo guardar la misión. Inténtalo de nuevo.</string>
-    <string name="cancel_mission_edit">Cancelar</string>
+    <string name="cancel_action">Cancelar</string>
     <string name="save_mission_edit">Guardar</string>
     <string name="manage_units">Gestionar unidades</string>
     <string name="manage_supports">Gestionar apoyos</string>
     <string name="close_summary">Cerrar</string>
-    <plurals name="recruited_units">
-        <item quantity="one">%d unidad reclutada</item>
-        <item quantity="other">%d unidades reclutadas</item>
-    </plurals>
+    <string name="unit_roster_title">Unidades reclutadas</string>
+    <string name="back_to_route">Volver a la senda</string>
+    <string name="add_unit">Añadir unidad</string>
+    <string name="remove_unit">Quitar</string>
+    <string name="remove_unit_named">Quitar a %1$s</string>
+    <string name="remove_unit_confirmation">Se retirará del registro de esta senda.</string>
+    <string name="loading_units">Cargando unidades…</string>
+    <string name="no_recruited_units">Aún no hay unidades reclutadas.</string>
+    <string name="no_available_units">Ya has añadido todas las unidades disponibles para esta senda.</string>
+    <string name="unit_catalog_error">No se pudo abrir el catálogo de unidades.</string>
+    <string name="recruit_write_error">No se pudo actualizar el registro. Inténtalo de nuevo.</string>
     <plurals name="saved_supports">
         <item quantity="one">%d pareja de apoyo</item>
         <item quantity="other">%d parejas de apoyo</item>

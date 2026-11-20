@@ -20,6 +20,7 @@ import com.davidsm24.fefwmanager.data.MainMission;
 import com.davidsm24.fefwmanager.data.RouteProgress;
 import com.davidsm24.fefwmanager.databinding.ActivityRouteBinding;
 import com.davidsm24.fefwmanager.databinding.DialogMissionEditorBinding;
+import com.davidsm24.fefwmanager.units.UnitRosterActivity;
 
 public final class RouteActivity extends ComponentActivity {
     private static final String EXTRA_ROUTE_ID = "com.davidsm24.fefwmanager.ROUTE_ID";
@@ -53,6 +54,9 @@ public final class RouteActivity extends ComponentActivity {
 
         binding.routeTitle.setText(getString(R.string.route_title, getString(route.nameResource)));
         binding.backToRoutes.setOnClickListener(view -> finish());
+        binding.manageUnits.setOnClickListener(
+                view -> startActivity(UnitRosterActivity.intent(this, route)));
+        binding.manageUnits.setEnabled(true);
 
         FefwApplication app = (FefwApplication) getApplication();
         missionEditor = new ViewModelProvider(this, new ViewModelProvider.Factory() {
@@ -60,7 +64,7 @@ public final class RouteActivity extends ComponentActivity {
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
                 return modelClass.cast(
-                        new MissionEditorViewModel(app.routeProgress(), app.missionWrites()));
+                        new MissionEditorViewModel(app.routeProgress(), app.progressIo()));
             }
         }).get(MissionEditorViewModel.class);
 
@@ -87,15 +91,11 @@ public final class RouteActivity extends ComponentActivity {
                     progress.month == null ? "" : progress.month.toString(), progress.description);
         });
 
-        binding.manageUnits.setOnClickListener(view -> showSummary(R.string.manage_units,
-                getResources().getQuantityString(R.plurals.recruited_units,
-                        progress.unitCount, progress.unitCount)));
         binding.manageSupports.setOnClickListener(view -> showSummary(R.string.manage_supports,
                 getResources().getQuantityString(R.plurals.saved_supports,
                         progress.supportCount, progress.supportCount)));
 
         binding.manageMission.setEnabled(true);
-        binding.manageUnits.setEnabled(true);
         binding.manageSupports.setEnabled(true);
     }
 
@@ -108,7 +108,7 @@ public final class RouteActivity extends ComponentActivity {
         AlertDialog editor = new AlertDialog.Builder(this)
                 .setTitle(R.string.edit_main_mission)
                 .setView(form.getRoot())
-                .setNegativeButton(R.string.cancel_mission_edit, null)
+                .setNegativeButton(R.string.cancel_action, null)
                 .setPositiveButton(R.string.save_mission_edit, null)
                 .create();
         editor.setCanceledOnTouchOutside(false);

@@ -18,6 +18,7 @@ import com.davidsm24.fefwmanager.route.Route;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -76,6 +77,13 @@ public class RouteProgressTest {
             assertEquals(0, leda.supportCount);
 
             assertEquals(2, observeOnce(progress.observeMissions()).size());
+            assertEquals(Collections.singletonList("tialla"),
+                    observeOnce(progress.observeRecruitedUnitIds(Route.CAI)));
+            progress.removeRecruit(new RecruitedUnit(Route.CAI, "tialla"));
+            assertTrue(observeOnce(progress.observeRecruitedUnitIds(Route.CAI)).isEmpty());
+            assertEquals(Collections.singletonList("tialla"),
+                    observeOnce(progress.observeRecruitedUnitIds(Route.DIETRICH)));
+            assertEquals(1, observeOnce(progress.observeProgress(Route.CAI)).supportCount);
         } finally {
             database.close();
             context.deleteDatabase(name);

@@ -2,6 +2,7 @@ package com.davidsm24.fefwmanager.data;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -25,11 +26,17 @@ public interface RouteProgressDao {
             """)
     LiveData<RouteProgress> observeProgress(Route route);
 
+    @Query("SELECT unit_id FROM recruited_units WHERE route_id = :route")
+    LiveData<List<String>> observeRecruitedUnitIds(Route route);
+
     @Upsert
     void saveMission(MainMission mission);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void recruit(RecruitedUnit unit);
+
+    @Delete
+    void removeRecruit(RecruitedUnit unit);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void addSupport(SupportPair support);

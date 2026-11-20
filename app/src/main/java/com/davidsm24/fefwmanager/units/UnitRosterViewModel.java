@@ -1,0 +1,82 @@
+package com.davidsm24.fefwmanager.units;
+
+import android.util.Log;
+
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import com.davidsm24.fefwmanager.data.RecruitedUnit;
+import com.davidsm24.fefwmanager.data.RouteProgressDao;
+import com.davidsm24.fefwmanager.route.Route;
+
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+
+final class UnitRosterViewModel extends ViewModel {
+    enum WriteState { IDLE, SAVING, FAILED }
+
+    record CatalogResult(@Nullable UnitCatalog catalog) {
+    }
+
+    private final Route route;
+    private final RouteProgressDao progress;
+    private final Executor io;
+    private final LiveData<List<String>> recruited;
+    private final MutableLiveData<CatalogResult> catalog = new MutableLiveData<>();
+    private final MutableLiveData<WriteState> writes = new MutableLiveData<>(WriteState.IDLE);
+
+    UnitRosterViewModel(Route route, RouteProgressDao progress, Executor io,
+            Callable<UnitCatalog> loadCatalog) {
+        this.route = route;
+        this.progress = progress;
+        this.io = io;
+        recruited = progress.observeRecruitedUnitIds(route);
+        io.execute(() -> {
+            try {
+                catalog.postValue(new CatalogResult(loadCatalog.call()));
+            } catch (Exception exception) {
+                Log.e("UnitRoster", "Unable to read unit catalog", exception);
+                catalog.postValue(new CatalogResult(null));
+            }
+        });
+    }
+
+    LiveData<List<String>> recruited() {
+        return recruited;
+    }
+
+    LiveData<CatalogResult> catalog() {
+        return catalog;
+    }
+
+    LiveData<WriteState> writes() {
+        return writes;
+    }
+
+    void recruit(UnitLabel unit) {
+        save(() -> progress.recruit(new RecruitedUnit(route, unit.id())));
+    }
+
+    void remove(UnitLabel unit) {
+        save(() -> progress.removeRecruit(new RecruitedUnit(route, unit.id())));
+    }
+
+    private void save(Runnable operation) {
+        if (writes.getValue() == WriteState.SAVING) {
+            return;
+        }
+        writes.setValue(WriteState.SAVING);
+        io.execute(() -> {
+            try {
+                operation.run();
+                writes.postValue(WriteState.IDLE);
+            } catch (RuntimeException exception) {
+                Log.e("UnitRoster", "Unable to change recruited units", exception);
+                writes.postValue(WriteState.FAILED);
+            }
+        });
+    }
+}

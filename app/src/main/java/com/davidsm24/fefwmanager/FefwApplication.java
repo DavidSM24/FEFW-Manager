@@ -11,7 +11,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public final class FefwApplication extends Application {
-    private final Executor missionWrites = Executors.newSingleThreadExecutor();
+    private final Executor progressIo = Executors.newSingleThreadExecutor();
     private ProgressDatabase database;
 
     @Override
@@ -24,7 +24,7 @@ public final class FefwApplication extends Application {
         return database.routeProgress();
     }
 
-    public Executor missionWrites() {
-        return missionWrites;
+    public Executor progressIo() {
+        return progressIo;
     }
 }

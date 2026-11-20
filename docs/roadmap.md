@@ -36,10 +36,12 @@ Room guarda una misión por senda y usa el ID de cada unidad para asociar reclut
 
 ## Fase 4. Incorporar el catálogo y gestionar unidades
 
-- Usar `unidades-fefw.json` como catálogo inicial. Contiene 63 unidades y disponibilidad por senda para las 50 de la primera parte. Revisar los nombres de la localización española, la disponibilidad dudosa y los enlaces a retratos antes de cerrar el catálogo de la primera versión. Usar imágenes provisionales para desarrollar el flujo mientras se validan los retratos.
+- Usar el catálogo local de 63 unidades y sus IDs estables. La aplicación incorpora los nombres del catálogo original. El selector usa la disponibilidad registrada para las 50 unidades de la primera parte. Las otras 13 quedan en el catálogo hasta confirmar su disponibilidad por senda.
 - Mostrar las unidades reclutadas con su imagen y nombre. En **Añadir unidad**, abrir un modal con las unidades disponibles en la senda, también con imagen y nombre. Permitir quitar unidades del registro de esa senda.
 
 **Entregable.** Se puede añadir y retirar una unidad, la lista evita duplicados dentro de la misma senda y se puede registrar a la misma unidad en otra senda disponible de forma independiente.
+
+La pantalla y el selector muestran iniciales provisionales hasta que se incorporen los retratos. Los nombres se mantienen tal como figuran en el catálogo local y queda pendiente contrastarlos con la localización española.
 
 ## Fase 5. Gestionar parejas de apoyo
 

@@ -69,7 +69,7 @@ final class ImperialMosaic extends Drawable {
             long now = clock.getAsLong();
             float offset = (float) (now % LOOP_MILLIS) / LOOP_MILLIS * tileSize;
             transform.setScale(scale, scale);
-            transform.postTranslate(0f, offset);
+            transform.postTranslate(-offset, offset);
             shader.setLocalMatrix(transform);
             unscheduleSelf(nextFrame);
             scheduleSelf(nextFrame, now + FRAME_INTERVAL_MILLIS);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="screen_gutter">20dp</dimen>
+    <dimen name="mosaic_tile_size">576dp</dimen>
     <dimen name="section_gap">16dp</dimen>
     <dimen name="item_gap">10dp</dimen>
     <dimen name="panel_inset">16dp</dimen>

@@ -9,8 +9,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.activity.ComponentActivity;
-
 import com.davidsm24.fefwmanager.FefwApplication;
 import com.davidsm24.fefwmanager.R;
 import com.davidsm24.fefwmanager.data.MainMission;
@@ -18,6 +16,7 @@ import com.davidsm24.fefwmanager.databinding.ActivityMainBinding;
 import com.davidsm24.fefwmanager.databinding.ItemRouteBinding;
 import com.davidsm24.fefwmanager.route.Route;
 import com.davidsm24.fefwmanager.route.RouteActivity;
+import com.davidsm24.fefwmanager.ui.ImperialActivity;
 import com.davidsm24.fefwmanager.ui.ImperialMotion;
 import com.davidsm24.fefwmanager.units.UnitPortraits;
 
@@ -28,7 +27,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-public final class MainActivity extends ComponentActivity {
+public final class MainActivity extends ImperialActivity {
     private final Map<Route, ItemRouteBinding> cards = new EnumMap<>(Route.class);
 
     @Override

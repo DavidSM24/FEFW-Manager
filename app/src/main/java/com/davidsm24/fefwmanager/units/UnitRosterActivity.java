@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,12 +14,13 @@ import com.davidsm24.fefwmanager.FefwApplication;
 import com.davidsm24.fefwmanager.R;
 import com.davidsm24.fefwmanager.databinding.ActivityUnitRosterBinding;
 import com.davidsm24.fefwmanager.route.Route;
+import com.davidsm24.fefwmanager.ui.ImperialActivity;
 import com.davidsm24.fefwmanager.ui.ImperialMotion;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class UnitRosterActivity extends ComponentActivity {
+public final class UnitRosterActivity extends ImperialActivity {
     private static final String EXTRA_ROUTE_ID = "route_id";
 
     private ActivityUnitRosterBinding binding;

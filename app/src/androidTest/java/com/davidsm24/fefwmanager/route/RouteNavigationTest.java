@@ -174,6 +174,7 @@ public class RouteNavigationTest {
                 "route-progress.db").build();
         MainMission caiBefore = readMission(fixture, Route.CAI);
         MainMission theodoraBefore = readMission(fixture, Route.THEODORA);
+        String updatedDescription = "Nueva misión\nReúne a las unidades";
 
         try {
             progress.saveMission(new MainMission(Route.CAI, 7, 5, "Descripción inicial"));
@@ -183,6 +184,7 @@ public class RouteNavigationTest {
                 assertVisible(By.text("4/5"));
                 assertAbove("Theodora", "Cai");
                 click(By.text("Cai"));
+                assertMissionDescription("Descripción inicial");
                 click(By.res(PACKAGE, "manage_mission").enabled(true));
                 assertVisible(By.res(PACKAGE, "mission_description").text("Descripción inicial"));
 
@@ -191,28 +193,37 @@ public class RouteNavigationTest {
                 assertVisible(By.res(PACKAGE, "mission_description").text("Cambios descartados"));
                 click(By.res("android", "button2"));
                 assertVisible(By.textContains("7/5"));
+                assertMissionDescription("Descripción inicial");
                 click(By.res(PACKAGE, "manage_mission").enabled(true));
                 assertVisible(By.res(PACKAGE, "mission_description").text("Descripción inicial"));
 
-                editMission("5", "4", "Nueva misión");
+                editMission("5", "4", updatedDescription);
                 click(By.res("android", "button1"));
                 assertVisible(By.textContains("5/4"));
+                assertMissionDescription(updatedDescription);
                 click(By.res(PACKAGE, "back_to_routes"));
                 assertVisible(By.text("5/4"));
                 assertAbove("Cai", "Theodora");
 
                 click(By.text("Cai"));
+                assertMissionDescription(updatedDescription);
                 click(By.res(PACKAGE, "manage_mission").enabled(true));
                 assertVisible(By.res(PACKAGE, "mission_day").text("5"));
                 assertVisible(By.res(PACKAGE, "mission_month").text("4"));
-                assertVisible(By.res(PACKAGE, "mission_description").text("Nueva misión"));
+                assertVisible(By.res(PACKAGE, "mission_description").text(updatedDescription));
                 click(By.res("android", "button2"));
 
                 click(By.res(PACKAGE, "back_to_routes"));
                 click(By.text("Theodora"));
+                assertMissionDescription("Misión de Theodora");
                 click(By.res(PACKAGE, "manage_mission").enabled(true));
                 assertVisible(By.res(PACKAGE, "mission_description").text("Misión de Theodora"));
-                click(By.res("android", "button2"));
+                editMission("4", "5", "");
+                click(By.res("android", "button1"));
+                assertTrue(device.wait(Until.gone(By.res(PACKAGE, "mission_description")), TIMEOUT));
+                assertVisible(By.res(PACKAGE, "mission_summary").textContains("4/5"));
+                assertTrue(device.wait(
+                        Until.gone(By.res(PACKAGE, "mission_summary_description")), TIMEOUT));
                 click(By.res(PACKAGE, "back_to_routes"));
             }
         } finally {
@@ -306,6 +317,10 @@ public class RouteNavigationTest {
         find(By.res(PACKAGE, "mission_day")).setText(day);
         find(By.res(PACKAGE, "mission_month")).setText(month);
         find(By.res(PACKAGE, "mission_description")).setText(description);
+    }
+
+    private void assertMissionDescription(String description) {
+        assertVisible(By.res(PACKAGE, "mission_summary_description").text(description));
     }
 
     private void assertAbove(String first, String second) {

@@ -94,6 +94,10 @@ public final class RouteActivity extends ComponentActivity {
                 ? getString(R.string.no_deadline)
                 : getString(R.string.deadline_format, progress.day, progress.month);
         binding.missionSummary.setText(getString(R.string.next_mission_summary, deadline));
+        String description = progress.description;
+        binding.missionSummaryDescription.setText(description);
+        binding.missionSummaryDescription.setVisibility(
+                description == null || description.trim().isEmpty() ? View.GONE : View.VISIBLE);
 
         binding.manageMission.setOnClickListener(view -> {
             missionEditor.reset();

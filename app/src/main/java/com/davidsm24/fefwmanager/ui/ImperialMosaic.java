@@ -23,7 +23,7 @@ import com.davidsm24.fefwmanager.R;
 import java.util.function.LongSupplier;
 
 final class ImperialMosaic extends Drawable {
-    static final long LOOP_MILLIS = 72_000;
+    static final long LOOP_MILLIS = 36_000;
     private static final long FRAME_INTERVAL_MILLIS = 33;
     private static Bitmap texture;
 

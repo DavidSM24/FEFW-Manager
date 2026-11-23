@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,11 +20,12 @@ import com.davidsm24.fefwmanager.data.RouteProgress;
 import com.davidsm24.fefwmanager.databinding.ActivityRouteBinding;
 import com.davidsm24.fefwmanager.databinding.DialogMissionEditorBinding;
 import com.davidsm24.fefwmanager.supports.SupportPairsActivity;
+import com.davidsm24.fefwmanager.ui.ImperialActivity;
 import com.davidsm24.fefwmanager.ui.ImperialMotion;
 import com.davidsm24.fefwmanager.units.UnitRosterActivity;
 import com.davidsm24.fefwmanager.units.UnitPortraits;
 
-public final class RouteActivity extends ComponentActivity {
+public final class RouteActivity extends ImperialActivity {
     private static final String EXTRA_ROUTE_ID = "com.davidsm24.fefwmanager.ROUTE_ID";
     private static final String MISSION_DRAFT = "mission_draft";
     private static final String DRAFT_DAY = "day";

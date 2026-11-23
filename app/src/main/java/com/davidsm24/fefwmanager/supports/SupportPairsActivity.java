@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.activity.ComponentActivity;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +19,7 @@ import com.davidsm24.fefwmanager.data.SupportPair;
 import com.davidsm24.fefwmanager.databinding.ActivitySupportPairsBinding;
 import com.davidsm24.fefwmanager.databinding.DialogSupportPortraitsBinding;
 import com.davidsm24.fefwmanager.route.Route;
+import com.davidsm24.fefwmanager.ui.ImperialActivity;
 import com.davidsm24.fefwmanager.ui.ImperialMotion;
 import com.davidsm24.fefwmanager.units.UnitCatalog;
 import com.davidsm24.fefwmanager.units.UnitLabel;
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public final class SupportPairsActivity extends ComponentActivity {
+public final class SupportPairsActivity extends ImperialActivity {
     private static final String EXTRA_ROUTE_ID = "route_id";
 
     private ActivitySupportPairsBinding binding;

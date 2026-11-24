@@ -22,21 +22,23 @@ import java.util.function.Consumer;
 public final class UnitListAdapter extends ChoiceListAdapter<UnitLabel> {
     private final LayoutInflater inflater;
     private final int accent;
+    @Nullable private final Consumer<UnitLabel> onChangeClass;
     @Nullable private final Consumer<UnitLabel> onRemove;
     private final UnitClassIcons classIcons = new UnitClassIcons();
     private Map<String, UnitClass> assignedClasses = Collections.emptyMap();
-    private boolean canRemove;
+    private boolean canEdit;
 
     public UnitListAdapter(LayoutInflater inflater, @ColorInt int accent,
-            @Nullable Consumer<UnitLabel> onRemove) {
+            @Nullable Consumer<UnitLabel> onChangeClass, @Nullable Consumer<UnitLabel> onRemove) {
         this.inflater = inflater;
         this.accent = accent;
+        this.onChangeClass = onChangeClass;
         this.onRemove = onRemove;
     }
 
-    void show(List<UnitLabel> units, Map<String, UnitClass> assignedClasses, boolean canRemove) {
+    void show(List<UnitLabel> units, Map<String, UnitClass> assignedClasses, boolean canEdit) {
         this.assignedClasses = assignedClasses;
-        this.canRemove = canRemove;
+        this.canEdit = canEdit;
         showChoices(units);
     }
 
@@ -54,12 +56,12 @@ public final class UnitListAdapter extends ChoiceListAdapter<UnitLabel> {
         String name = unit.name();
         row.unitName.setText(name);
         UnitPortraits.bind(row.unitPortrait, unit, accent);
-        bindClassIcon(row.recruitedClassIcon, assignedClasses.get(unit.id()));
+        bindClassAction(row, unit, assignedClasses.get(unit.id()));
         if (onRemove == null) {
             row.removeUnit.setVisibility(View.GONE);
         } else {
             row.removeUnit.setVisibility(View.VISIBLE);
-            row.removeUnit.setEnabled(canRemove);
+            row.removeUnit.setEnabled(canEdit);
             row.removeUnit.setContentDescription(
                     parent.getContext().getString(R.string.remove_unit_named, name));
             row.removeUnit.setOnClickListener(view -> onRemove.accept(unit));
@@ -67,11 +69,20 @@ public final class UnitListAdapter extends ChoiceListAdapter<UnitLabel> {
         return row.getRoot();
     }
 
-    private void bindClassIcon(ImageView view, @Nullable UnitClass unitClass) {
+    private void bindClassAction(ItemUnitBinding row, UnitLabel unit, @Nullable UnitClass unitClass) {
+        if (onChangeClass == null) {
+            return;
+        }
+        ImageView view = row.recruitedClassIcon;
         classIcons.bind(view, unitClass);
-        String name = unitClass == null ? null : unitClass.name;
-        view.setVisibility(name == null ? View.GONE : View.VISIBLE);
-        view.setContentDescription(name);
+        boolean hasClass = unitClass != null;
+        String name = hasClass ? unitClass.name : null;
+        view.setVisibility(hasClass ? View.VISIBLE : View.GONE);
+        view.setEnabled(canEdit);
+        view.setContentDescription(hasClass
+                ? view.getContext().getString(R.string.change_class_description, unit.name(), name)
+                : null);
+        view.setOnClickListener(icon -> onChangeClass.accept(unit));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             view.setTooltipText(name);
         } else {
@@ -81,5 +92,10 @@ public final class UnitListAdapter extends ChoiceListAdapter<UnitLabel> {
             });
             view.setLongClickable(name != null);
         }
+        row.assignClass.setVisibility(hasClass ? View.GONE : View.VISIBLE);
+        row.assignClass.setEnabled(canEdit);
+        row.assignClass.setContentDescription(
+                view.getContext().getString(R.string.assign_class_description, unit.name()));
+        row.assignClass.setOnClickListener(button -> onChangeClass.accept(unit));
     }
 }

@@ -20,6 +20,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.BySelector;
+import androidx.test.uiautomator.Direction;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
@@ -97,47 +98,62 @@ public class RouteNavigationTest {
                 progress.removeRecruit(leda);
                 try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
                     openUnits("Cai");
+                    assertVisible(By.res(PACKAGE, "group_attack").desc("Ataque, 1 de 5"));
+                    assertVisible(By.text("Asigna una clase a una unidad para evaluar el grupo."));
                     openAlexandraClassPicker();
                     click(By.res("android", "button2"));
                     assertTrue(device.wait(Until.gone(By.text("Elegir clase para Alexandra")), TIMEOUT));
                     assertNull(fixture.routeProgress().findRecruit(cai.route, cai.unitId));
                     openAlexandraClassPicker();
                     chooseClass("Archer", " aRcH ");
+                    assertVisible(By.res(PACKAGE, "group_attack").desc("Ataque, 4 de 5"));
                     assertEquals("archer", fixture.routeProgress().findRecruit(cai.route, cai.unitId).classId);
-                    assertVisible(By.res(PACKAGE, "group_attack"));
-                    click(By.res(PACKAGE, "group_alerts"));
                     assertVisible(By.text("Alertas tácticas"));
-                    assertVisible(By.textContains("Falta daño mágico."));
-                    click(By.res("android", "button1"));
-                    UiObject2 archerIcon = find(By.res(PACKAGE, "recruited_class_icon").desc("Archer"));
+                    assertVisible(By.res(PACKAGE, "group_alerts").textContains("Falta daño mágico."));
+                    BySelector archer = By.res(PACKAGE, "recruited_class_icon").descContains("Archer");
+                    UiObject2 archerIcon = revealRosterItem(archer, Direction.DOWN);
                     assertTrue(archerIcon.getVisibleBounds().right
                             <= find(By.desc("Quitar a Alexandra")).getVisibleBounds().left);
                     assertClassTooltip(archerIcon, "Archer");
+                    click(archer);
+                    assertVisible(By.text("Cambiar clase de Alexandra"));
+                    chooseClass("Diviner", "divin");
+                    revealRosterItem(By.res(PACKAGE, "recruited_class_icon").descContains("Diviner"),
+                            Direction.DOWN);
+                    assertEquals("diviner", fixture.routeProgress().findRecruit(cai.route, cai.unitId).classId);
+                    revealRosterItem(By.res(PACKAGE, "group_healing").desc("Curación, 4 de 5"), Direction.UP);
+                    assertVisible(By.res(PACKAGE, "group_alerts").textContains("Falta daño físico."));
+                    assertFalse(device.hasObject(By.res(PACKAGE, "group_alerts")
+                            .textContains("Falta daño mágico.")));
                     click(By.res(PACKAGE, "back_to_route"));
                     click(By.res(PACKAGE, "back_to_routes"));
 
                     openUnits("Leda");
                     openAlexandraClassPicker();
                     chooseClass("Bishop", "bIsh");
+                    revealRosterItem(By.res(PACKAGE, "recruited_class_icon").descContains("Bishop"),
+                            Direction.DOWN);
                     assertEquals("bishop", fixture.routeProgress().findRecruit(leda.route, leda.unitId).classId);
-                    assertVisible(By.res(PACKAGE, "recruited_class_icon").desc("Bishop"));
                     click(By.res(PACKAGE, "back_to_route"));
                     click(By.res(PACKAGE, "back_to_routes"));
 
                     BySelector remove = By.desc("Quitar a Alexandra");
                     openUnits("Cai");
-                    click(remove);
+                    revealRosterItem(remove, Direction.DOWN).click();
                     click(By.res("android", "button2"));
                     assertVisible(remove);
                     click(remove);
                     click(By.res("android", "button1"));
                     assertTrue("Alexandra should be removed from Cai",
                             device.wait(Until.gone(remove), TIMEOUT));
+                    revealRosterItem(By.res(PACKAGE, "group_evaluated_units").textEndsWith("0/0"),
+                            Direction.UP);
+                    assertVisible(By.text("Asigna una clase a una unidad para evaluar el grupo."));
                     click(By.res(PACKAGE, "back_to_route"));
                     click(By.res(PACKAGE, "back_to_routes"));
 
                     openUnits("Leda");
-                    assertVisible(remove);
+                    revealRosterItem(remove, Direction.DOWN);
                     click(By.res(PACKAGE, "back_to_route"));
                     click(By.res(PACKAGE, "back_to_routes"));
                 }
@@ -177,7 +193,17 @@ public class RouteNavigationTest {
         find(search).setText(filter);
         assertVisible(By.res(PACKAGE, "class_icon"));
         click(By.res(PACKAGE, "class_name").text(name));
-        assertVisible(By.desc("Quitar a Alexandra"));
+        assertTrue(device.wait(Until.gone(search), TIMEOUT));
+    }
+
+    private UiObject2 revealRosterItem(BySelector selector, Direction direction) {
+        UiObject2 item = device.findObject(selector);
+        if (item == null) {
+            item = find(By.res(PACKAGE, "recruited_unit_list"))
+                    .scrollUntil(direction, Until.findObject(selector));
+        }
+        assertNotNull("Missing UI element " + selector, item);
+        return item;
     }
 
     private void assertClassTooltip(UiObject2 icon, String name) {
@@ -188,7 +214,8 @@ public class RouteNavigationTest {
             assertNotNull(root);
             AccessibilityNodeInfo node = root.findAccessibilityNodeInfosByViewId(
                     PACKAGE + ":id/recruited_class_icon").stream()
-                    .filter(candidate -> name.equals(candidate.getContentDescription()))
+                    .filter(candidate -> candidate.getContentDescription() != null
+                            && candidate.getContentDescription().toString().endsWith(name))
                     .findFirst().orElse(null);
             assertNotNull(node);
             assertTrue(node.refresh());

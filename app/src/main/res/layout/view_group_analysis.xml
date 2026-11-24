@@ -20,52 +20,55 @@
         android:textAppearance="@style/TextAppearance.Fefw.Body" />
 
     <LinearLayout
-        android:id="@+id/group_scores"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/item_gap"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
 
-        <TextView
+        <include
             android:id="@+id/group_attack"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Fefw.Body" />
+            layout="@layout/view_group_metric" />
 
-        <TextView
+        <include
             android:id="@+id/group_defense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Fefw.Body" />
+            layout="@layout/view_group_metric" />
 
-        <TextView
+        <include
             android:id="@+id/group_mobility"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Fefw.Body" />
+            layout="@layout/view_group_metric" />
 
-        <TextView
+        <include
             android:id="@+id/group_support"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Fefw.Body" />
+            layout="@layout/view_group_metric" />
 
-        <TextView
+        <include
             android:id="@+id/group_healing"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Fefw.Body" />
+            layout="@layout/view_group_metric" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/group_alerts"
-        style="@android:style/Widget.Material.Button.Borderless"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/group_alert_heading"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:text="@string/group_view_alerts"
-        android:textAllCaps="false"
+        android:layout_marginTop="@dimen/item_gap"
+        android:text="@string/group_alerts_title"
+        android:textAppearance="@style/TextAppearance.Fefw.Inscription"
         android:textColor="@color/imperial_gold"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/group_alerts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textAppearance="@style/TextAppearance.Fefw.Body"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/group_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/item_gap"
+        android:textAppearance="@style/TextAppearance.Fefw.Body"
         android:visibility="gone" />
 </LinearLayout>

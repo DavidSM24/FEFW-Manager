@@ -41,11 +41,13 @@ public class RouteProgressTest {
 
             progress.recruit(new RecruitedUnit(Route.CAI, "tialla", "archer"));
             progress.recruit(new RecruitedUnit(Route.CAI, "tialla", "bishop"));
+            assertEquals("archer", progress.findRecruit(Route.CAI, "tialla").classId);
             progress.recruit(new RecruitedUnit(Route.DIETRICH, "tialla"));
 
             progress.addSupport(new SupportPair(Route.CAI, "tialla", "peter"));
             progress.addSupport(new SupportPair(Route.CAI, "peter", "tialla"));
             progress.addSupport(new SupportPair(Route.DIETRICH, "tialla", "peter"));
+            progress.changeRecruitClass(Route.CAI, "tialla", "bishop");
 
             database.close();
             database = ProgressDatabase.open(context, name);
@@ -57,7 +59,7 @@ public class RouteProgressTest {
             assertEquals("Misión actualizada", cai.description);
             assertEquals(1, cai.unitCount);
             assertEquals(1, cai.supportCount);
-            assertEquals("archer", progress.findRecruit(Route.CAI, "tialla").classId);
+            assertEquals("bishop", progress.findRecruit(Route.CAI, "tialla").classId);
             assertNull(progress.findRecruit(Route.DIETRICH, "tialla").classId);
 
             RouteProgress theodora = observeOnce(progress.observeProgress(Route.THEODORA));

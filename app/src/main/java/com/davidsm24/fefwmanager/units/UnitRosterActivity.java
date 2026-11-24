@@ -4,11 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -26,12 +25,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public final class UnitRosterActivity extends ImperialActivity {
     private static final String EXTRA_ROUTE_ID = "route_id";
 
     private ActivityUnitRosterBinding binding;
-    private ViewGroupAnalysisBinding analysisBinding;
     private UnitRosterViewModel viewModel;
     private UnitListAdapter rosterAdapter;
     private Route route;
@@ -61,10 +60,13 @@ public final class UnitRosterActivity extends ImperialActivity {
         }
         binding.backToRoute.setOnClickListener(view -> finish());
         binding.addUnit.setOnClickListener(view -> showAvailableUnits());
-        rosterAdapter = new UnitListAdapter(getLayoutInflater(), getColor(route.accentResource),
-                this::confirmRemoval);
-        analysisBinding = ViewGroupAnalysisBinding.inflate(getLayoutInflater(), binding.recruitedUnitList,
+        int accent = getColor(route.accentResource);
+        rosterAdapter = new UnitListAdapter(getLayoutInflater(), accent,
+                this::showClassEditor, this::confirmRemoval);
+        ViewGroupAnalysisBinding analysisBinding = ViewGroupAnalysisBinding.inflate(
+                getLayoutInflater(), binding.recruitedUnitList,
                 false);
+        GroupAnalysisCard analysisCard = new GroupAnalysisCard(analysisBinding, accent);
         binding.recruitedUnitList.addHeaderView(analysisBinding.getRoot(), null, false);
         binding.recruitedUnitList.setAdapter(rosterAdapter);
 
@@ -78,7 +80,10 @@ public final class UnitRosterActivity extends ImperialActivity {
             }
         }).get(UnitRosterViewModel.class);
         viewModel.catalog().observe(this, ignored -> render());
-        viewModel.recruited().observe(this, ignored -> render());
+        viewModel.recruited().observe(this, recruits -> {
+            analysisCard.render(viewModel.analyzeGroup(recruits), recruits.size());
+            render();
+        });
         viewModel.classes().observe(this, ignored -> render());
         viewModel.writes().observe(this, ignored -> render());
     }
@@ -113,7 +118,6 @@ public final class UnitRosterActivity extends ImperialActivity {
         }
         units.sort(UnitLabel.BY_NAME);
         rosterAdapter.show(units, assignedClasses, !writing);
-        renderAnalysis(viewModel.analyzeGroup(recruits), recruits.size());
         binding.recruitedUnitList.setVisibility(View.VISIBLE);
 
         if (writeState == UnitRosterViewModel.WriteState.FAILED) {
@@ -125,47 +129,6 @@ public final class UnitRosterActivity extends ImperialActivity {
         } else {
             binding.unitNotice.setVisibility(View.GONE);
         }
-    }
-
-    private void renderAnalysis(PartyAnalysisResult analysis, int recruitedCount) {
-        analysisBinding.groupEvaluatedUnits.setText(getString(R.string.group_evaluated_units,
-                analysis.evaluatedCount(), recruitedCount));
-        analysisBinding.groupScores.setVisibility(analysis.isEmpty() ? View.GONE : View.VISIBLE);
-        if (!analysis.isEmpty()) {
-            PartyAnalysisResult.Scores scores = analysis.scores();
-            setGroupScore(analysisBinding.groupAttack, R.string.group_attack, scores.atk());
-            setGroupScore(analysisBinding.groupDefense, R.string.group_defense, scores.def());
-            setGroupScore(analysisBinding.groupMobility, R.string.group_mobility, scores.mov());
-            setGroupScore(analysisBinding.groupSupport, R.string.group_support, scores.sup());
-            setGroupScore(analysisBinding.groupHealing, R.string.group_healing, scores.heal());
-        }
-        List<PartyAlert> alerts = analysis.alerts();
-        analysisBinding.groupAlerts.setVisibility(alerts.isEmpty() ? View.GONE : View.VISIBLE);
-        analysisBinding.groupAlerts.setOnClickListener(alerts.isEmpty() ? null
-                : view -> showPartyAlerts(alerts));
-    }
-
-    private void showPartyAlerts(List<PartyAlert> alerts) {
-        List<String> messages = new ArrayList<>(alerts.size());
-        for (PartyAlert alert : alerts) {
-            messages.add(getString(switch (alert) {
-                case MISSING_MAGIC_DAMAGE -> R.string.group_alert_missing_magic_damage;
-                case MISSING_PHYSICAL_DAMAGE -> R.string.group_alert_missing_physical_damage;
-                case LOW_HEALING -> R.string.group_alert_low_healing;
-                case NO_FRONTLINE -> R.string.group_alert_no_frontline;
-                case NO_MOBILE_UNITS -> R.string.group_alert_no_mobile_units;
-                case REDUNDANT_LOCKPICKING -> R.string.group_alert_redundant_lockpicking;
-            }));
-        }
-        dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.group_alerts_title)
-                .setMessage(TextUtils.join("\n\n", messages))
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
-    }
-
-    private void setGroupScore(TextView view, int label, int score) {
-        view.setText(getString(R.string.group_score, getString(label), score));
     }
 
     private void showNotice(int message) {
@@ -184,15 +147,21 @@ public final class UnitRosterActivity extends ImperialActivity {
         AlertDialog.Builder picker = new AlertDialog.Builder(this)
                 .setTitle(R.string.add_unit);
         dialog = UnitPicker.show(picker, getColor(route.accentResource), choices,
-                R.string.no_available_units, this::showAvailableClasses);
+                R.string.no_available_units, unit -> showClassPicker(unit, R.string.choose_class_for_unit,
+                        unitClass -> viewModel.recruit(unit, unitClass)));
     }
 
-    private void showAvailableClasses(UnitLabel unit) {
+    private void showClassEditor(UnitLabel unit) {
+        showClassPicker(unit, R.string.change_class_for_unit,
+                unitClass -> viewModel.changeClass(unit, unitClass));
+    }
+
+    private void showClassPicker(UnitLabel unit, @StringRes int title, Consumer<UnitClass> onChoose) {
         List<UnitClass> choices = viewModel.classes().getValue();
         AlertDialog.Builder picker = new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.choose_class_for_unit, unit.name()))
+                .setTitle(getString(title, unit.name()))
                 .setIcon(UnitPortraits.resourceFor(unit.id()));
-        dialog = UnitPicker.showClasses(picker, choices, unitClass -> viewModel.recruit(unit, unitClass));
+        dialog = UnitPicker.showClasses(picker, choices, onChoose);
     }
 
     private void confirmRemoval(UnitLabel unit) {

@@ -49,6 +49,9 @@ public interface RouteProgressDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void recruit(RecruitedUnit unit);
 
+    @Query("UPDATE recruited_units SET class_id = :classId WHERE route_id = :route AND unit_id = :unitId")
+    void changeRecruitClass(Route route, String unitId, String classId);
+
     @Delete
     void removeRecruit(RecruitedUnit unit);
 

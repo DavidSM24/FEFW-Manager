@@ -68,6 +68,10 @@ final class UnitRosterViewModel extends ViewModel {
         save(() -> progress.recruit(new RecruitedUnit(route, unit.id(), unitClass.id)));
     }
 
+    void changeClass(UnitLabel unit, UnitClass unitClass) {
+        save(() -> progress.changeRecruitClass(route, unit.id(), unitClass.id));
+    }
+
     void remove(UnitLabel unit) {
         save(() -> progress.removeRecruit(new RecruitedUnit(route, unit.id())));
     }

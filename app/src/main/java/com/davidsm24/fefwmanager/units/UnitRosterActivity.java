@@ -4,7 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -33,6 +36,7 @@ public final class UnitRosterActivity extends ImperialActivity {
     private ActivityUnitRosterBinding binding;
     private UnitRosterViewModel viewModel;
     private UnitListAdapter rosterAdapter;
+    private GroupAnalysisCard openAnalysis;
     private Route route;
     private AlertDialog dialog;
 
@@ -60,14 +64,10 @@ public final class UnitRosterActivity extends ImperialActivity {
         }
         binding.backToRoute.setOnClickListener(view -> finish());
         binding.addUnit.setOnClickListener(view -> showAvailableUnits());
+        binding.showGroupAnalysis.setOnClickListener(view -> showGroupAnalysis());
         int accent = getColor(route.accentResource);
         rosterAdapter = new UnitListAdapter(getLayoutInflater(), accent,
                 this::showClassEditor, this::confirmRemoval);
-        ViewGroupAnalysisBinding analysisBinding = ViewGroupAnalysisBinding.inflate(
-                getLayoutInflater(), binding.recruitedUnitList,
-                false);
-        GroupAnalysisCard analysisCard = new GroupAnalysisCard(analysisBinding, accent);
-        binding.recruitedUnitList.addHeaderView(analysisBinding.getRoot(), null, false);
         binding.recruitedUnitList.setAdapter(rosterAdapter);
 
         FefwApplication app = (FefwApplication) getApplication();
@@ -81,7 +81,10 @@ public final class UnitRosterActivity extends ImperialActivity {
         }).get(UnitRosterViewModel.class);
         viewModel.catalog().observe(this, ignored -> render());
         viewModel.recruited().observe(this, recruits -> {
-            analysisCard.render(viewModel.analyzeGroup(recruits), recruits.size());
+            binding.showGroupAnalysis.setEnabled(true);
+            if (openAnalysis != null) {
+                openAnalysis.render(viewModel.analyzeGroup(recruits), recruits.size());
+            }
             render();
         });
         viewModel.classes().observe(this, ignored -> render());
@@ -134,6 +137,36 @@ public final class UnitRosterActivity extends ImperialActivity {
     private void showNotice(int message) {
         binding.unitNotice.setText(message);
         binding.unitNotice.setVisibility(View.VISIBLE);
+    }
+
+    private void showGroupAnalysis() {
+        List<RecruitedUnit> recruits = viewModel.recruited().getValue();
+        if (recruits == null) {
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        ScrollView content = new ScrollView(builder.getContext());
+        ViewGroupAnalysisBinding analysis = ViewGroupAnalysisBinding.inflate(
+                LayoutInflater.from(builder.getContext()), content, false);
+        content.addView(analysis.getRoot());
+        GroupAnalysisCard card = new GroupAnalysisCard(analysis, getColor(route.accentResource));
+        card.render(viewModel.analyzeGroup(recruits), recruits.size());
+
+        dialog = builder.setView(content).create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setOnDismissListener(ignored -> {
+            if (openAnalysis == card) {
+                openAnalysis = null;
+            }
+        });
+        openAnalysis = card;
+        dialog.show();
+
+        int gutter = getResources().getDimensionPixelSize(R.dimen.screen_gutter);
+        int maxWidth = getResources().getDimensionPixelSize(R.dimen.group_dialog_max_width);
+        int width = Math.min(binding.getRoot().getWidth() - 2 * gutter, maxWidth);
+        dialog.getWindow().setLayout(width, WindowManager.LayoutParams.WRAP_CONTENT);
     }
 
     private void showAvailableUnits() {

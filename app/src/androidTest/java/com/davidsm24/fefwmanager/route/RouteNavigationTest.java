@@ -20,7 +20,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.BySelector;
-import androidx.test.uiautomator.Direction;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
@@ -98,62 +97,69 @@ public class RouteNavigationTest {
                 progress.removeRecruit(leda);
                 try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
                     openUnits("Cai");
+                    openGroupAnalysis();
                     assertVisible(By.res(PACKAGE, "group_attack").desc("Ataque, 1 de 5"));
                     assertVisible(By.text("Asigna una clase a una unidad para evaluar el grupo."));
+                    click(By.res(PACKAGE, "group_attack"));
+                    dismissGroupAnalysisFromOutside();
                     openAlexandraClassPicker();
                     click(By.res("android", "button2"));
                     assertTrue(device.wait(Until.gone(By.text("Elegir clase para Alexandra")), TIMEOUT));
                     assertNull(fixture.routeProgress().findRecruit(cai.route, cai.unitId));
                     openAlexandraClassPicker();
                     chooseClass("Archer", " aRcH ");
+                    BySelector archer = By.res(PACKAGE, "recruited_class_icon").descContains("Archer");
+                    assertVisible(archer);
+                    openGroupAnalysis();
                     assertVisible(By.res(PACKAGE, "group_attack").desc("Ataque, 4 de 5"));
                     assertEquals("archer", fixture.routeProgress().findRecruit(cai.route, cai.unitId).classId);
                     assertVisible(By.text("Alertas tácticas"));
                     assertVisible(By.res(PACKAGE, "group_alerts").textContains("Falta daño mágico."));
-                    BySelector archer = By.res(PACKAGE, "recruited_class_icon").descContains("Archer");
-                    UiObject2 archerIcon = revealRosterItem(archer, Direction.DOWN);
+                    dismissGroupAnalysisFromOutside();
+                    UiObject2 archerIcon = find(archer);
                     assertTrue(archerIcon.getVisibleBounds().right
                             <= find(By.desc("Quitar a Alexandra")).getVisibleBounds().left);
                     assertClassTooltip(archerIcon, "Archer");
                     click(archer);
                     assertVisible(By.text("Cambiar clase de Alexandra"));
                     chooseClass("Diviner", "divin");
-                    revealRosterItem(By.res(PACKAGE, "recruited_class_icon").descContains("Diviner"),
-                            Direction.DOWN);
+                    assertVisible(By.res(PACKAGE, "recruited_class_icon").descContains("Diviner"));
                     assertEquals("diviner", fixture.routeProgress().findRecruit(cai.route, cai.unitId).classId);
-                    revealRosterItem(By.res(PACKAGE, "group_healing").desc("Curación, 4 de 5"), Direction.UP);
+                    openGroupAnalysis();
+                    assertVisible(By.res(PACKAGE, "group_healing").desc("Curación, 4 de 5"));
                     assertVisible(By.res(PACKAGE, "group_alerts").textContains("Falta daño físico."));
                     assertFalse(device.hasObject(By.res(PACKAGE, "group_alerts")
                             .textContains("Falta daño mágico.")));
+                    dismissGroupAnalysisFromOutside();
                     click(By.res(PACKAGE, "back_to_route"));
                     click(By.res(PACKAGE, "back_to_routes"));
 
                     openUnits("Leda");
                     openAlexandraClassPicker();
                     chooseClass("Bishop", "bIsh");
-                    revealRosterItem(By.res(PACKAGE, "recruited_class_icon").descContains("Bishop"),
-                            Direction.DOWN);
+                    assertVisible(By.res(PACKAGE, "recruited_class_icon").descContains("Bishop"));
                     assertEquals("bishop", fixture.routeProgress().findRecruit(leda.route, leda.unitId).classId);
                     click(By.res(PACKAGE, "back_to_route"));
                     click(By.res(PACKAGE, "back_to_routes"));
 
                     BySelector remove = By.desc("Quitar a Alexandra");
                     openUnits("Cai");
-                    revealRosterItem(remove, Direction.DOWN).click();
+                    click(remove);
                     click(By.res("android", "button2"));
                     assertVisible(remove);
                     click(remove);
                     click(By.res("android", "button1"));
                     assertTrue("Alexandra should be removed from Cai",
                             device.wait(Until.gone(remove), TIMEOUT));
-                    revealRosterItem(By.res(PACKAGE, "group_evaluated_units").textEndsWith("0/0"),
-                            Direction.UP);
+                    openGroupAnalysis();
+                    assertVisible(By.res(PACKAGE, "group_evaluated_units").textEndsWith("0/0"));
                     assertVisible(By.text("Asigna una clase a una unidad para evaluar el grupo."));
+                    dismissGroupAnalysisFromOutside();
                     click(By.res(PACKAGE, "back_to_route"));
                     click(By.res(PACKAGE, "back_to_routes"));
 
                     openUnits("Leda");
-                    revealRosterItem(remove, Direction.DOWN);
+                    assertVisible(remove);
                     click(By.res(PACKAGE, "back_to_route"));
                     click(By.res(PACKAGE, "back_to_routes"));
                 }
@@ -170,7 +176,21 @@ public class RouteNavigationTest {
         click(By.text(route));
         click(By.res(PACKAGE, "manage_units").enabled(true));
         assertVisible(By.res(PACKAGE, "add_unit").enabled(true));
-        assertVisible(By.res(PACKAGE, "group_evaluated_units"));
+        assertVisible(By.res(PACKAGE, "show_group_analysis").enabled(true));
+        assertFalse(device.hasObject(By.res(PACKAGE, "group_evaluated_units")));
+    }
+
+    private void openGroupAnalysis() {
+        click(By.res(PACKAGE, "show_group_analysis").enabled(true));
+        assertVisible(By.text("Análisis del grupo"));
+    }
+
+    private void dismissGroupAnalysisFromOutside() {
+        BySelector title = By.text("Análisis del grupo");
+        int tapY = find(title).getVisibleBounds().centerY();
+        assertTrue(device.click(2, tapY));
+        assertTrue(device.wait(Until.gone(title), TIMEOUT));
+        assertVisible(By.res(PACKAGE, "show_group_analysis").enabled(true));
     }
 
     private void openAlexandraClassPicker() {
@@ -194,16 +214,6 @@ public class RouteNavigationTest {
         assertVisible(By.res(PACKAGE, "class_icon"));
         click(By.res(PACKAGE, "class_name").text(name));
         assertTrue(device.wait(Until.gone(search), TIMEOUT));
-    }
-
-    private UiObject2 revealRosterItem(BySelector selector, Direction direction) {
-        UiObject2 item = device.findObject(selector);
-        if (item == null) {
-            item = find(By.res(PACKAGE, "recruited_unit_list"))
-                    .scrollUntil(direction, Until.findObject(selector));
-        }
-        assertNotNull("Missing UI element " + selector, item);
-        return item;
     }
 
     private void assertClassTooltip(UiObject2 icon, String name) {

@@ -9,7 +9,6 @@ import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.room.Room;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -33,7 +32,7 @@ public class RouteProgressTest {
         Context context = instrumentation.getTargetContext();
         String name = "progress-test-" + UUID.randomUUID() + ".db";
 
-        ProgressDatabase database = Room.databaseBuilder(context, ProgressDatabase.class, name).build();
+        ProgressDatabase database = ProgressDatabase.open(context, name);
         try {
             RouteProgressDao progress = database.routeProgress();
             progress.saveMission(new MainMission(Route.CAI, 10, 5, "Misión inicial"));
@@ -49,7 +48,7 @@ public class RouteProgressTest {
             progress.addSupport(new SupportPair(Route.DIETRICH, "tialla", "peter"));
 
             database.close();
-            database = Room.databaseBuilder(context, ProgressDatabase.class, name).build();
+            database = ProgressDatabase.open(context, name);
             progress = database.routeProgress();
 
             RouteProgress cai = observeOnce(progress.observeProgress(Route.CAI));

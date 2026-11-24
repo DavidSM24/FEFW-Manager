@@ -11,7 +11,6 @@ import android.text.Spanned;
 import android.text.style.ImageSpan;
 import android.widget.TextView;
 
-import androidx.room.Room;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -83,8 +82,7 @@ public class RouteNavigationTest {
     public void managesTheSameUnitIndependentlyInTwoRoutes() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         RouteProgressDao progress = ((FefwApplication) context.getApplicationContext()).routeProgress();
-        ProgressDatabase fixture = Room.databaseBuilder(context, ProgressDatabase.class,
-                "route-progress.db").build();
+        ProgressDatabase fixture = ProgressDatabase.open(context, "route-progress.db");
         RecruitedUnit cai = new RecruitedUnit(Route.CAI, "alexandra");
         RecruitedUnit leda = new RecruitedUnit(Route.LEDA, "alexandra");
 
@@ -170,8 +168,7 @@ public class RouteNavigationTest {
     public void editsOnlyTheSelectedMissionAndReordersRoutes() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         RouteProgressDao progress = ((FefwApplication) context.getApplicationContext()).routeProgress();
-        ProgressDatabase fixture = Room.databaseBuilder(context, ProgressDatabase.class,
-                "route-progress.db").build();
+        ProgressDatabase fixture = ProgressDatabase.open(context, "route-progress.db");
         MainMission caiBefore = readMission(fixture, Route.CAI);
         MainMission theodoraBefore = readMission(fixture, Route.THEODORA);
         String updatedDescription = "Nueva misión\nReúne a las unidades";
@@ -251,8 +248,7 @@ public class RouteNavigationTest {
     public void summarizesPlayOrderOnlyWhenAtLeastTwoRoutesHaveDates() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         RouteProgressDao progress = ((FefwApplication) context.getApplicationContext()).routeProgress();
-        ProgressDatabase fixture = Room.databaseBuilder(context, ProgressDatabase.class,
-                "route-progress.db").build();
+        ProgressDatabase fixture = ProgressDatabase.open(context, "route-progress.db");
         BySelector summary = By.res(PACKAGE, "play_order_summary");
 
         try {

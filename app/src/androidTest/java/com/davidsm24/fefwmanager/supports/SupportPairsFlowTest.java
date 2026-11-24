@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import android.content.Context;
 import android.database.Cursor;
 
-import androidx.room.Room;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -39,8 +38,7 @@ public class SupportPairsFlowTest {
     public void createsAndRemovesPairWithoutLosingItWhenARecruitLeaves() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         RouteProgressDao progress = ((FefwApplication) context.getApplicationContext()).routeProgress();
-        ProgressDatabase fixture = Room.databaseBuilder(context, ProgressDatabase.class,
-                "route-progress.db").build();
+        ProgressDatabase fixture = ProgressDatabase.open(context, "route-progress.db");
         RecruitedUnit alexandra = new RecruitedUnit(Route.CAI, "alexandra");
         RecruitedUnit benditz = new RecruitedUnit(Route.CAI, "benditz");
         SupportPair pair = new SupportPair(Route.CAI, alexandra.unitId, benditz.unitId);

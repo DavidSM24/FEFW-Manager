@@ -7,7 +7,6 @@ import android.util.Log;
 import androidx.annotation.MainThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.room.Room;
 
 import com.davidsm24.fefwmanager.data.ProgressDatabase;
 import com.davidsm24.fefwmanager.data.RouteProgressDao;
@@ -27,7 +26,7 @@ public final class FefwApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        database = Room.databaseBuilder(this, ProgressDatabase.class, "route-progress.db").build();
+        database = ProgressDatabase.open(this, "route-progress.db");
     }
 
     public RouteProgressDao routeProgress() {

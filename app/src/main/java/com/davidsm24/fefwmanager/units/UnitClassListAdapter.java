@@ -1,8 +1,5 @@
 package com.davidsm24.fefwmanager.units;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +7,9 @@ import android.view.ViewGroup;
 import com.davidsm24.fefwmanager.data.UnitClass;
 import com.davidsm24.fefwmanager.databinding.ItemUnitClassBinding;
 
-import java.util.HashMap;
-import java.util.Map;
-
 final class UnitClassListAdapter extends ChoiceListAdapter<UnitClass> {
     private final LayoutInflater inflater;
-    private final Map<String, Bitmap> icons = new HashMap<>();
+    private final UnitClassIcons icons = new UnitClassIcons();
 
     UnitClassListAdapter(LayoutInflater inflater) {
         this.inflater = inflater;
@@ -33,11 +27,7 @@ final class UnitClassListAdapter extends ChoiceListAdapter<UnitClass> {
 
         UnitClass unitClass = getItem(position);
         row.className.setText(unitClass.name);
-        Bitmap icon = icons.computeIfAbsent(unitClass.id, id ->
-                BitmapFactory.decodeByteArray(unitClass.imagePng, 0, unitClass.imagePng.length));
-        BitmapDrawable drawable = new BitmapDrawable(parent.getResources(), icon);
-        drawable.setFilterBitmap(false);
-        row.classIcon.setImageDrawable(drawable);
+        icons.bind(row.classIcon, unitClass);
         return row.getRoot();
     }
 }

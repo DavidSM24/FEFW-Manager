@@ -8,8 +8,10 @@ import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Build;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.TextView;
 
 import androidx.sqlite.db.SimpleSQLiteQuery;
@@ -102,6 +104,10 @@ public class RouteNavigationTest {
                     openAlexandraClassPicker();
                     chooseClass("Archer", " aRcH ");
                     assertEquals("archer", fixture.routeProgress().findRecruit(cai.route, cai.unitId).classId);
+                    UiObject2 archerIcon = find(By.res(PACKAGE, "recruited_class_icon").desc("Archer"));
+                    assertTrue(archerIcon.getVisibleBounds().right
+                            <= find(By.desc("Quitar a Alexandra")).getVisibleBounds().left);
+                    assertClassTooltip(archerIcon, "Archer");
                     click(By.res(PACKAGE, "back_to_route"));
                     click(By.res(PACKAGE, "back_to_routes"));
 
@@ -109,6 +115,7 @@ public class RouteNavigationTest {
                     openAlexandraClassPicker();
                     chooseClass("Bishop", "bIsh");
                     assertEquals("bishop", fixture.routeProgress().findRecruit(leda.route, leda.unitId).classId);
+                    assertVisible(By.res(PACKAGE, "recruited_class_icon").desc("Bishop"));
                     click(By.res(PACKAGE, "back_to_route"));
                     click(By.res(PACKAGE, "back_to_routes"));
 
@@ -165,6 +172,24 @@ public class RouteNavigationTest {
         assertVisible(By.res(PACKAGE, "class_icon"));
         click(By.res(PACKAGE, "class_name").text(name));
         assertVisible(By.desc("Quitar a Alexandra"));
+    }
+
+    private void assertClassTooltip(UiObject2 icon, String name) {
+        icon.longClick();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            var automation = InstrumentationRegistry.getInstrumentation().getUiAutomation();
+            AccessibilityNodeInfo root = automation.getRootInActiveWindow();
+            assertNotNull(root);
+            AccessibilityNodeInfo node = root.findAccessibilityNodeInfosByViewId(
+                    PACKAGE + ":id/recruited_class_icon").stream()
+                    .filter(candidate -> name.equals(candidate.getContentDescription()))
+                    .findFirst().orElse(null);
+            assertNotNull(node);
+            assertTrue(node.refresh());
+            assertEquals(name, String.valueOf(node.getTooltipText()));
+            assertTrue(node.getActionList().contains(
+                    AccessibilityNodeInfo.AccessibilityAction.ACTION_HIDE_TOOLTIP));
+        }
     }
 
     private static void restoreRecruit(RouteProgressDao progress, RecruitedUnit unit,

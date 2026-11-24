@@ -21,7 +21,7 @@ final class UnitRosterViewModel extends ViewModel {
     private final Route route;
     private final RouteProgressDao progress;
     private final Executor io;
-    private final LiveData<List<String>> recruited;
+    private final LiveData<List<RecruitedUnit>> recruited;
     private final LiveData<UnitCatalog.LoadResult> catalog;
     private final LiveData<List<UnitClass>> classes;
     private final MutableLiveData<WriteState> writes = new MutableLiveData<>(WriteState.IDLE);
@@ -32,11 +32,11 @@ final class UnitRosterViewModel extends ViewModel {
         this.progress = progress;
         this.io = io;
         this.catalog = catalog;
-        recruited = progress.observeRecruitedUnitIds(route);
+        recruited = progress.observeRecruits(route);
         classes = classCatalog.observeAll();
     }
 
-    LiveData<List<String>> recruited() {
+    LiveData<List<RecruitedUnit>> recruited() {
         return recruited;
     }
 

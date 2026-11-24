@@ -27,6 +27,16 @@
         android:textAppearance="@style/TextAppearance.Fefw.LedgerBody"
         android:textSize="17sp" />
 
+    <ImageView
+        android:id="@+id/recruited_class_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="4dp"
+        android:contentDescription="@null"
+        android:padding="6dp"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/remove_unit"
         style="@style/Widget.FefwManager.LedgerAction"

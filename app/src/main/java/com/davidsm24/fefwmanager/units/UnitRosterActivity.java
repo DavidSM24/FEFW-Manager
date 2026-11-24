@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.davidsm24.fefwmanager.FefwApplication;
 import com.davidsm24.fefwmanager.R;
+import com.davidsm24.fefwmanager.data.RecruitedUnit;
 import com.davidsm24.fefwmanager.data.UnitClass;
 import com.davidsm24.fefwmanager.databinding.ActivityUnitRosterBinding;
 import com.davidsm24.fefwmanager.route.Route;
@@ -19,7 +20,9 @@ import com.davidsm24.fefwmanager.ui.ImperialActivity;
 import com.davidsm24.fefwmanager.ui.ImperialMotion;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class UnitRosterActivity extends ImperialActivity {
     private static final String EXTRA_ROUTE_ID = "route_id";
@@ -75,9 +78,10 @@ public final class UnitRosterActivity extends ImperialActivity {
 
     private void render() {
         UnitCatalog.LoadResult result = viewModel.catalog().getValue();
-        List<String> recruitedIds = viewModel.recruited().getValue();
+        List<RecruitedUnit> recruits = viewModel.recruited().getValue();
+        List<UnitClass> classes = viewModel.classes().getValue();
         UnitRosterViewModel.WriteState writeState = viewModel.writes().getValue();
-        if (result == null || recruitedIds == null) {
+        if (result == null || recruits == null || classes == null) {
             showNotice(R.string.loading_units);
             binding.addUnit.setEnabled(false);
             return;
@@ -85,13 +89,23 @@ public final class UnitRosterActivity extends ImperialActivity {
 
         UnitCatalog catalog = result.catalog();
         boolean writing = writeState == UnitRosterViewModel.WriteState.SAVING;
-        binding.addUnit.setEnabled(catalog != null && !writing && viewModel.classes().getValue() != null);
+        binding.addUnit.setEnabled(catalog != null && !writing);
+        Map<String, UnitClass> classesById = new HashMap<>();
+        for (UnitClass unitClass : classes) {
+            classesById.put(unitClass.id, unitClass);
+        }
         List<UnitLabel> units = new ArrayList<>();
-        for (String id : recruitedIds) {
+        Map<String, UnitClass> assignedClasses = new HashMap<>();
+        for (RecruitedUnit recruit : recruits) {
+            String id = recruit.unitId;
             units.add(catalog == null ? new UnitLabel(id, id) : catalog.labelFor(id));
+            UnitClass assignedClass = classesById.get(recruit.classId);
+            if (assignedClass != null) {
+                assignedClasses.put(id, assignedClass);
+            }
         }
         units.sort(UnitLabel.BY_NAME);
-        rosterAdapter.show(units, !writing);
+        rosterAdapter.show(units, assignedClasses, !writing);
         binding.recruitedUnitList.setVisibility(units.isEmpty() ? View.GONE : View.VISIBLE);
 
         if (writeState == UnitRosterViewModel.WriteState.FAILED) {
@@ -112,7 +126,11 @@ public final class UnitRosterActivity extends ImperialActivity {
 
     private void showAvailableUnits() {
         UnitCatalog catalog = viewModel.catalog().getValue().catalog();
-        List<UnitLabel> choices = catalog.availableFor(route, viewModel.recruited().getValue());
+        List<String> recruitedIds = new ArrayList<>();
+        for (RecruitedUnit recruit : viewModel.recruited().getValue()) {
+            recruitedIds.add(recruit.unitId);
+        }
+        List<UnitLabel> choices = catalog.availableFor(route, recruitedIds);
         choices.sort(UnitLabel.BY_NAME);
         AlertDialog.Builder picker = new AlertDialog.Builder(this)
                 .setTitle(R.string.add_unit);

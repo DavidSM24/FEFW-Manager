@@ -150,7 +150,7 @@ public final class UnitRosterActivity extends ImperialActivity {
         ViewGroupAnalysisBinding analysis = ViewGroupAnalysisBinding.inflate(
                 LayoutInflater.from(builder.getContext()), content, false);
         content.addView(analysis.getRoot());
-        GroupAnalysisCard card = new GroupAnalysisCard(analysis, getColor(route.accentResource));
+        GroupAnalysisCard card = new GroupAnalysisCard(analysis);
         card.render(viewModel.analyzeGroup(recruits), recruits.size());
 
         dialog = builder.setView(content).create();

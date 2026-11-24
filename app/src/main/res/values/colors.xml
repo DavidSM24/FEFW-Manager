@@ -25,4 +25,9 @@
     <color name="route_theodora">#F2A99D</color>
     <color name="route_dietrich">#CCC2E5</color>
     <color name="route_leda">#9ED5CA</color>
+    <color name="stat_level_1">#E53935</color>
+    <color name="stat_level_2">#FB8C00</color>
+    <color name="stat_level_3">#43A047</color>
+    <color name="stat_level_4">#1E88E5</color>
+    <color name="stat_level_5">#9C27B0</color>
 </resources>

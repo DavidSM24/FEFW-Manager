@@ -15,18 +15,14 @@
         android:importantForAccessibility="no"
         android:textAppearance="@style/TextAppearance.Fefw.Body" />
 
-    <ProgressBar
-        android:id="@+id/metric_progress"
-        style="?android:attr/progressBarStyleHorizontal"
+    <com.davidsm24.fefwmanager.units.StatLevelBar
+        android:id="@+id/metric_level"
         android:layout_width="0dp"
-        android:layout_height="6dp"
+        android:layout_height="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="12dp"
         android:layout_weight="1"
-        android:importantForAccessibility="no"
-        android:max="5000"
-        android:maxHeight="6dp"
-        android:progressBackgroundTint="@color/panel_inlay" />
+        android:importantForAccessibility="no" />
 
     <TextView
         android:id="@+id/metric_score"

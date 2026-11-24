@@ -1,11 +1,9 @@
 package com.davidsm24.fefwmanager.units;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.text.TextUtils;
 import android.view.View;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.StringRes;
 
 import com.davidsm24.fefwmanager.R;
@@ -16,31 +14,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 final class GroupAnalysisCard {
-    private static final double MAX_SCORE = 5.0;
-
     private final ViewGroupAnalysisBinding binding;
     private final Context context;
 
-    GroupAnalysisCard(ViewGroupAnalysisBinding binding, @ColorInt int accent) {
+    GroupAnalysisCard(ViewGroupAnalysisBinding binding) {
         this.binding = binding;
         context = binding.getRoot().getContext();
-        ColorStateList tint = ColorStateList.valueOf(accent);
-        for (ViewGroupMetricBinding metric : new ViewGroupMetricBinding[]{binding.groupAttack,
-                binding.groupDefense, binding.groupMobility, binding.groupSupport, binding.groupHealing}) {
-            metric.metricProgress.setProgressTintList(tint);
-        }
     }
 
     void render(PartyAnalysisResult analysis, int recruitedCount) {
         binding.groupEvaluatedUnits.setText(context.getString(R.string.group_evaluated_units,
                 analysis.evaluatedCount(), recruitedCount));
-        PartyAnalysisResult.Raw raw = analysis.raw();
         PartyAnalysisResult.Scores scores = analysis.scores();
-        setMetric(binding.groupAttack, R.string.group_attack, scores.atk(), raw.atk());
-        setMetric(binding.groupDefense, R.string.group_defense, scores.def(), raw.def());
-        setMetric(binding.groupMobility, R.string.group_mobility, scores.mov(), raw.mov());
-        setMetric(binding.groupSupport, R.string.group_support, scores.sup(), raw.sup());
-        setMetric(binding.groupHealing, R.string.group_healing, scores.heal(), raw.heal());
+        setMetric(binding.groupAttack, R.string.group_attack, scores.atk());
+        setMetric(binding.groupDefense, R.string.group_defense, scores.def());
+        setMetric(binding.groupMobility, R.string.group_mobility, scores.mov());
+        setMetric(binding.groupSupport, R.string.group_support, scores.sup());
+        setMetric(binding.groupHealing, R.string.group_healing, scores.heal());
 
         List<PartyAlert> alerts = analysis.alerts();
         boolean hasAlerts = !alerts.isEmpty();
@@ -62,12 +52,13 @@ final class GroupAnalysisCard {
         }
     }
 
-    private void setMetric(ViewGroupMetricBinding metric, @StringRes int label, int score, double raw) {
+    private void setMetric(ViewGroupMetricBinding metric, @StringRes int label, int score) {
+        metric.metricLevel.setLevel(score);
+        int level = metric.metricLevel.getLevel();
         metric.metricLabel.setText(label);
-        metric.metricScore.setText(context.getString(R.string.group_score, score));
-        metric.metricProgress.setProgress((int) Math.round(raw / MAX_SCORE * metric.metricProgress.getMax()));
+        metric.metricScore.setText(context.getString(R.string.group_score, level));
         metric.getRoot().setContentDescription(
-                context.getString(R.string.group_score_accessibility, context.getString(label), score));
+                context.getString(R.string.group_score_accessibility, context.getString(label), level));
     }
 
     @StringRes

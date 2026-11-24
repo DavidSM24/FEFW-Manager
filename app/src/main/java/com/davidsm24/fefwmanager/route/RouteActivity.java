@@ -60,6 +60,8 @@ public final class RouteActivity extends ImperialActivity {
 
         binding.routeTitle.setText(getString(R.string.route_title, getString(route.nameResource)));
         UnitPortraits.bind(binding.routePortrait, route);
+        UnitPortraits.enableDetails(binding.routePortrait, route,
+                unit -> details().showUnit(unit, route), null);
         binding.backToRoutes.setOnClickListener(view -> finish());
         binding.manageUnits.setOnClickListener(
                 view -> startActivity(UnitRosterActivity.intent(this, route)));

@@ -12,11 +12,14 @@
     android:paddingEnd="12dp"
     android:paddingBottom="6dp">
 
-    <ImageView
+    <com.davidsm24.fefwmanager.units.HoldImageButton
         android:id="@+id/class_icon"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:importantForAccessibility="no"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/imperial_touch"
+        android:contentDescription="@null"
+        android:focusable="false"
+        android:padding="3dp"
         android:scaleType="fitCenter" />
 
     <TextView

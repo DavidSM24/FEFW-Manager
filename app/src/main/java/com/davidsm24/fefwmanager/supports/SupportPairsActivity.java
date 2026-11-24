@@ -40,6 +40,7 @@ public final class SupportPairsActivity extends ImperialActivity {
     private LiveData<UnitCatalog.LoadResult> catalog;
     private SupportPairAdapter adapter;
     private AlertDialog dialog;
+    private Route route;
     private int accent;
 
     public static Intent intent(Context context, Route route) {
@@ -49,7 +50,7 @@ public final class SupportPairsActivity extends ImperialActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Route route = Route.fromId(getIntent().getStringExtra(EXTRA_ROUTE_ID));
+        route = Route.fromId(getIntent().getStringExtra(EXTRA_ROUTE_ID));
         if (route == null) {
             finish();
             return;
@@ -61,13 +62,15 @@ public final class SupportPairsActivity extends ImperialActivity {
         binding.pageHeader.ledgerRoute.setText(
                 getString(R.string.route_title, getString(route.nameResource)));
         UnitPortraits.bind(binding.pageHeader.routePortrait, route);
+        UnitPortraits.enableDetails(binding.pageHeader.routePortrait, route, this::showUnitDetails, null);
         if (savedInstanceState == null) {
             ImperialMotion.reveal(binding.pageHeader.getRoot());
         }
         binding.backToRoute.setOnClickListener(view -> finish());
         binding.addSupport.setOnClickListener(view -> chooseFirst());
         accent = getColor(route.accentResource);
-        adapter = new SupportPairAdapter(getLayoutInflater(), accent, this::confirmRemoval);
+        adapter = new SupportPairAdapter(getLayoutInflater(), accent, this::showUnitDetails,
+                this::confirmRemoval);
         binding.supportPairList.setAdapter(adapter);
 
         FefwApplication app = (FefwApplication) getApplication();
@@ -167,7 +170,12 @@ public final class SupportPairsActivity extends ImperialActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setIcon(icon);
-        dialog = UnitPicker.show(builder, accent, choices, R.string.support_recruits_changed, choose);
+        dialog = UnitPicker.show(builder, accent, choices, R.string.support_recruits_changed, choose,
+                this::showUnitDetails);
+    }
+
+    private void showUnitDetails(UnitLabel unit) {
+        details().showUnit(unit, route);
     }
 
     private void confirmRemoval(SupportPairAdapter.Row row) {
@@ -175,6 +183,8 @@ public final class SupportPairsActivity extends ImperialActivity {
                 DialogSupportPortraitsBinding.inflate(getLayoutInflater());
         UnitPortraits.bind(portraits.firstPortrait, row.first().unit(), accent);
         UnitPortraits.bind(portraits.secondPortrait, row.second().unit(), accent);
+        UnitPortraits.enableDetails(portraits.firstPortrait, row.first().unit(), this::showUnitDetails, null);
+        UnitPortraits.enableDetails(portraits.secondPortrait, row.second().unit(), this::showUnitDetails, null);
         dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.remove_support)
                 .setMessage(getString(R.string.remove_support_confirmation,

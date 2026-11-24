@@ -1,12 +1,15 @@
 package com.davidsm24.fefwmanager.units;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 import android.content.Context;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.davidsm24.fefwmanager.R;
 import com.davidsm24.fefwmanager.data.ProgressDatabase;
 import com.davidsm24.fefwmanager.data.UnitClass;
 
@@ -29,6 +32,9 @@ public final class ClassRoleCatalogTest {
             Set<String> ids = new HashSet<>();
             for (UnitClass unitClass : database.unitClasses().getAll()) {
                 ids.add(unitClass.id);
+                int description = ClassDescriptions.forClass(unitClass.id);
+                assertNotEquals(unitClass.id, R.string.class_description_unknown, description);
+                assertFalse(unitClass.id, context.getString(description).trim().isEmpty());
             }
             assertEquals(60, ids.size());
             assertEquals(ids, ClassRoleCatalog.classIds());

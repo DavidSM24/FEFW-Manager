@@ -4,7 +4,7 @@
     android:layout_height="@dimen/emblem_size"
     android:background="@drawable/unit_portrait_background"
     android:foreground="@drawable/unit_portrait_border"
-    android:importantForAccessibility="noHideDescendants">
+    android:importantForAccessibility="no">
 
     <ImageView
         android:id="@+id/unit_portrait_image"
@@ -18,7 +18,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:importantForAccessibility="no"
         android:textAppearance="@style/TextAppearance.Fefw.Display"
         android:textSize="22sp"
+        android:visibility="gone" />
+
+    <com.davidsm24.fefwmanager.units.HoldImageButton
+        android:id="@+id/inspect_unit_portrait"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/imperial_touch"
+        android:contentDescription="@null"
+        android:focusable="false"
         android:visibility="gone" />
 </FrameLayout>

@@ -27,17 +27,19 @@ public final class UnitPicker {
     }
 
     public static AlertDialog show(AlertDialog.Builder builder, @ColorInt int accent,
-            List<UnitLabel> choices, @StringRes int emptyMessage, Consumer<UnitLabel> onChoose) {
+            List<UnitLabel> choices, @StringRes int emptyMessage, Consumer<UnitLabel> onChoose,
+            Consumer<UnitLabel> onUnitDetails) {
         UnitListAdapter adapter = new UnitListAdapter(LayoutInflater.from(builder.getContext()), accent,
-                null, null);
+                onUnitDetails, null, null, null);
         return show(builder, adapter, choices, UnitLabel::name,
                 new SearchLabels(R.string.search_units, R.string.no_matching_units, emptyMessage),
                 onChoose);
     }
 
     static AlertDialog showClasses(AlertDialog.Builder builder, List<UnitClass> choices,
-            Consumer<UnitClass> onChoose) {
-        UnitClassListAdapter adapter = new UnitClassListAdapter(LayoutInflater.from(builder.getContext()));
+            Consumer<UnitClass> onChoose, Consumer<UnitClass> onClassDetails) {
+        UnitClassListAdapter adapter = new UnitClassListAdapter(LayoutInflater.from(builder.getContext()),
+                onClassDetails);
         return show(builder, adapter, choices, unitClass -> unitClass.name,
                 new SearchLabels(R.string.search_classes, R.string.no_matching_classes,
                         R.string.no_available_classes), onChoose);

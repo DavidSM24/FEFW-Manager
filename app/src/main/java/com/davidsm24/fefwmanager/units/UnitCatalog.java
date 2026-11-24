@@ -24,6 +24,9 @@ public final class UnitCatalog {
     public record LoadResult(@Nullable UnitCatalog catalog) {
     }
 
+    record Biography(String description, String referenceClassId) {
+    }
+
     private final Map<String, Entry> entries;
 
     private UnitCatalog(Map<String, Entry> entries) {
@@ -58,7 +61,9 @@ public final class UnitCatalog {
             if (id.isEmpty() || name.isEmpty() || entries.containsKey(id)) {
                 throw new JSONException("Invalid unit in the catalog");
             }
-            entries.put(id, new Entry(new UnitLabel(id, name), routes));
+            Biography biography = new Biography(unit.optString("descripcion"),
+                    unit.optString("claseDeReferencia"));
+            entries.put(id, new Entry(new UnitLabel(id, name), routes, biography));
         }
         return new UnitCatalog(entries);
     }
@@ -66,6 +71,12 @@ public final class UnitCatalog {
     public UnitLabel labelFor(String id) {
         Entry entry = entries.get(id);
         return entry == null ? new UnitLabel(id, id) : entry.label;
+    }
+
+    @Nullable
+    Biography biographyFor(String id) {
+        Entry entry = entries.get(id);
+        return entry == null ? null : entry.biography;
     }
 
     List<UnitLabel> availableFor(Route route, List<String> recruitedIds) {
@@ -81,10 +92,12 @@ public final class UnitCatalog {
     private static final class Entry {
         private final UnitLabel label;
         private final EnumSet<Route> routes;
+        private final Biography biography;
 
-        private Entry(UnitLabel label, EnumSet<Route> routes) {
+        private Entry(UnitLabel label, EnumSet<Route> routes, Biography biography) {
             this.label = label;
             this.routes = routes;
+            this.biography = biography;
         }
     }
 }

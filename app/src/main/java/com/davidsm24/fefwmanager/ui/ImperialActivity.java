@@ -5,8 +5,11 @@ import android.os.SystemClock;
 
 import androidx.activity.ComponentActivity;
 
+import com.davidsm24.fefwmanager.units.UnitDetailsDialogs;
+
 public abstract class ImperialActivity extends ComponentActivity {
     private ImperialMosaic mosaic;
+    private UnitDetailsDialogs details;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,5 +28,20 @@ public abstract class ImperialActivity extends ComponentActivity {
     protected void onStop() {
         mosaic.setAnimating(false);
         super.onStop();
+    }
+
+    protected final UnitDetailsDialogs details() {
+        if (details == null) {
+            details = new UnitDetailsDialogs(this);
+        }
+        return details;
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (details != null) {
+            details.dismiss();
+        }
+        super.onDestroy();
     }
 }

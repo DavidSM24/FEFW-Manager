@@ -5,10 +5,13 @@ import android.view.View;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
+import androidx.annotation.Nullable;
 
 import com.davidsm24.fefwmanager.R;
 import com.davidsm24.fefwmanager.databinding.ViewUnitPortraitBinding;
 import com.davidsm24.fefwmanager.route.Route;
+
+import java.util.function.Consumer;
 
 public final class UnitPortraits {
     private UnitPortraits() {
@@ -18,6 +21,28 @@ public final class UnitPortraits {
         Context context = binding.getRoot().getContext();
         bind(binding, new UnitLabel(route.id, context.getString(route.nameResource)),
                 context.getColor(route.accentResource));
+    }
+
+    public static void enableDetails(ViewUnitPortraitBinding binding, Route route,
+            Consumer<UnitLabel> onDetails, @Nullable View.OnClickListener onTap) {
+        Context context = binding.getRoot().getContext();
+        UnitLabel unit = new UnitLabel(route.id, context.getString(route.nameResource));
+        enableDetails(binding, unit, onDetails, onTap);
+    }
+
+    public static void enableDetails(ViewUnitPortraitBinding binding, UnitLabel unit,
+            Consumer<UnitLabel> onDetails, @Nullable View.OnClickListener onTap) {
+        HoldImageButton button = binding.inspectUnitPortrait;
+        button.cancelHold();
+        button.setContentDescription(button.getContext().getString(R.string.unit_portrait_details,
+                unit.name()));
+        button.setOnClickListener(onTap);
+        button.setClickable(onTap != null);
+        button.setOnLongClickListener(view -> {
+            onDetails.accept(unit);
+            return true;
+        });
+        button.setVisibility(View.VISIBLE);
     }
 
     public static void bind(ViewUnitPortraitBinding binding, UnitLabel unit, @ColorInt int accent) {

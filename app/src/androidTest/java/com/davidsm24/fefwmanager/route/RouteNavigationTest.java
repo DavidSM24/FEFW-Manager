@@ -8,10 +8,8 @@ import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Build;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
-import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.TextView;
 
 import androidx.sqlite.db.SimpleSQLiteQuery;
@@ -82,6 +80,59 @@ public class RouteNavigationTest {
     }
 
     @Test
+    public void inspectsUnitsAndOpensTheirClassDetails() {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        RouteProgressDao progress = ((FefwApplication) context.getApplicationContext()).routeProgress();
+        RecruitedUnit recruit = new RecruitedUnit(Route.CAI, "alexandra");
+        RecruitedUnit original = progress.findRecruit(recruit.route, recruit.unitId);
+        progress.removeRecruit(recruit);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            BySelector caiPortrait = By.res(PACKAGE, "inspect_unit_portrait").desc("Ver ficha de Cai");
+            BySelector caiTitle = By.res(PACKAGE, "detail_unit_name").text("Cai");
+            BySelector alexandraTitle = By.res(PACKAGE, "detail_unit_name").text("Alexandra");
+            hold(caiPortrait);
+            assertVisible(caiTitle);
+            assertVisible(By.res(PACKAGE, "detail_unit_description").textContains("Ribeira"));
+            assertVisible(By.res(PACKAGE, "detail_unit_class_name").text("Commoner"));
+            dismissFromOutside(caiTitle);
+            click(caiPortrait);
+            assertVisible(By.text("Senda de Cai"));
+            click(By.res(PACKAGE, "manage_units").enabled(true));
+            click(By.res(PACKAGE, "add_unit").enabled(true));
+
+            BySelector search = By.res(PACKAGE, "unit_search");
+            find(search).setText(" eXan ");
+            BySelector portrait = By.res(PACKAGE, "inspect_unit_portrait").desc("Ver ficha de Alexandra");
+            hold(portrait);
+            assertVisible(alexandraTitle);
+            assertVisible(By.res(PACKAGE, "detail_unit_description").textContains("pegaso"));
+            assertVisible(By.res(PACKAGE, "detail_unit_class_name").text("Wing Soldier"));
+            assertVisible(By.text("Clase de referencia"));
+            dismissFromOutside(alexandraTitle);
+            assertVisible(search.text(" eXan "));
+            click(portrait);
+            assertVisible(By.text("Elegir clase para Alexandra"));
+            chooseClass("Archer", "arch");
+            assertVisible(By.res(PACKAGE, "recruited_class_icon").descContains("Archer"));
+
+            hold(portrait);
+            assertVisible(By.res(PACKAGE, "detail_unit_class_name").text("Archer"));
+            assertVisible(By.text("Clase en esta senda"));
+            click(By.res(PACKAGE, "detail_unit_class_icon"));
+            BySelector classTitle = By.res(PACKAGE, "detail_class_name").text("Archer");
+            assertVisible(classTitle);
+            assertVisible(By.res(PACKAGE, "detail_class_description").textContains("a distancia"));
+            dismissFromOutside(classTitle);
+            assertVisible(alexandraTitle);
+            dismissFromOutside(alexandraTitle);
+            assertVisible(portrait);
+            assertEquals("archer", progress.findRecruit(recruit.route, recruit.unitId).classId);
+        } finally {
+            restoreRecruit(progress, recruit, original);
+        }
+    }
+
+    @Test
     public void managesTheSameUnitIndependentlyInTwoRoutes() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         RouteProgressDao progress = ((FefwApplication) context.getApplicationContext()).routeProgress();
@@ -107,7 +158,13 @@ public class RouteNavigationTest {
                     assertTrue(device.wait(Until.gone(By.text("Elegir clase para Alexandra")), TIMEOUT));
                     assertNull(fixture.routeProgress().findRecruit(cai.route, cai.unitId));
                     openAlexandraClassPicker();
-                    chooseClass("Archer", " aRcH ");
+                    filterClasses(" aRcH ");
+                    BySelector pickerIcon = By.res(PACKAGE, "class_icon").descContains("Archer");
+                    inspectArcher(pickerIcon);
+                    assertVisible(By.text("Elegir clase para Alexandra"));
+                    assertVisible(By.res(PACKAGE, "unit_search").text(" aRcH "));
+                    assertNull(fixture.routeProgress().findRecruit(cai.route, cai.unitId));
+                    click(pickerIcon);
                     BySelector archer = By.res(PACKAGE, "recruited_class_icon").descContains("Archer");
                     assertVisible(archer);
                     openGroupAnalysis();
@@ -119,7 +176,8 @@ public class RouteNavigationTest {
                     UiObject2 archerIcon = find(archer);
                     assertTrue(archerIcon.getVisibleBounds().right
                             <= find(By.desc("Quitar a Alexandra")).getVisibleBounds().left);
-                    assertClassTooltip(archerIcon, "Archer");
+                    inspectArcher(archer);
+                    assertVisible(archer);
                     click(archer);
                     assertVisible(By.text("Cambiar clase de Alexandra"));
                     chooseClass("Diviner", "divin");
@@ -207,32 +265,35 @@ public class RouteNavigationTest {
     }
 
     private void chooseClass(String name, String filter) {
+        filterClasses(filter);
+        click(By.res(PACKAGE, "class_name").text(name));
+        assertTrue(device.wait(Until.gone(By.res(PACKAGE, "unit_search")), TIMEOUT));
+    }
+
+    private void filterClasses(String filter) {
         BySelector search = By.res(PACKAGE, "unit_search");
         find(search).setText("zzzz");
         assertVisible(By.text("No hay clases que coincidan."));
         find(search).setText(filter);
         assertVisible(By.res(PACKAGE, "class_icon"));
-        click(By.res(PACKAGE, "class_name").text(name));
-        assertTrue(device.wait(Until.gone(search), TIMEOUT));
     }
 
-    private void assertClassTooltip(UiObject2 icon, String name) {
-        icon.longClick();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            var automation = InstrumentationRegistry.getInstrumentation().getUiAutomation();
-            AccessibilityNodeInfo root = automation.getRootInActiveWindow();
-            assertNotNull(root);
-            AccessibilityNodeInfo node = root.findAccessibilityNodeInfosByViewId(
-                    PACKAGE + ":id/recruited_class_icon").stream()
-                    .filter(candidate -> candidate.getContentDescription() != null
-                            && candidate.getContentDescription().toString().endsWith(name))
-                    .findFirst().orElse(null);
-            assertNotNull(node);
-            assertTrue(node.refresh());
-            assertEquals(name, String.valueOf(node.getTooltipText()));
-            assertTrue(node.getActionList().contains(
-                    AccessibilityNodeInfo.AccessibilityAction.ACTION_HIDE_TOOLTIP));
-        }
+    private void inspectArcher(BySelector icon) {
+        hold(icon);
+        BySelector title = By.res(PACKAGE, "detail_class_name").text("Archer");
+        assertVisible(By.res(PACKAGE, "detail_class_description")
+                .textContains("Combatiente físico a distancia."));
+        dismissFromOutside(title);
+    }
+
+    private void hold(BySelector icon) {
+        var center = find(icon).getVisibleCenter();
+        assertTrue(device.swipe(center.x, center.y, center.x, center.y, 260));
+    }
+
+    private void dismissFromOutside(BySelector title) {
+        assertTrue(device.click(2, find(title).getVisibleBounds().centerY()));
+        assertTrue(device.wait(Until.gone(title), TIMEOUT));
     }
 
     private static void restoreRecruit(RouteProgressDao progress, RecruitedUnit unit,

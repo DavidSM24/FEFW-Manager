@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.davidsm24.fefwmanager.data.ProgressDatabase;
 import com.davidsm24.fefwmanager.data.RouteProgressDao;
+import com.davidsm24.fefwmanager.data.UnitClassDao;
 import com.davidsm24.fefwmanager.units.UnitCatalog;
 
 import org.json.JSONException;
@@ -31,6 +32,10 @@ public final class FefwApplication extends Application {
 
     public RouteProgressDao routeProgress() {
         return database.routeProgress();
+    }
+
+    public UnitClassDao unitClasses() {
+        return database.unitClasses();
     }
 
     @MainThread

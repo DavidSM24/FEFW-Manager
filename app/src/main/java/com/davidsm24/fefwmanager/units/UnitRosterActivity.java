@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.davidsm24.fefwmanager.FefwApplication;
 import com.davidsm24.fefwmanager.R;
+import com.davidsm24.fefwmanager.data.UnitClass;
 import com.davidsm24.fefwmanager.databinding.ActivityUnitRosterBinding;
 import com.davidsm24.fefwmanager.route.Route;
 import com.davidsm24.fefwmanager.ui.ImperialActivity;
@@ -63,11 +64,12 @@ public final class UnitRosterActivity extends ImperialActivity {
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
                 return modelClass.cast(new UnitRosterViewModel(route, app.routeProgress(),
-                        app.progressIo(), app.unitCatalog()));
+                        app.unitClasses(), app.progressIo(), app.unitCatalog()));
             }
         }).get(UnitRosterViewModel.class);
         viewModel.catalog().observe(this, ignored -> render());
         viewModel.recruited().observe(this, ignored -> render());
+        viewModel.classes().observe(this, ignored -> render());
         viewModel.writes().observe(this, ignored -> render());
     }
 
@@ -83,7 +85,7 @@ public final class UnitRosterActivity extends ImperialActivity {
 
         UnitCatalog catalog = result.catalog();
         boolean writing = writeState == UnitRosterViewModel.WriteState.SAVING;
-        binding.addUnit.setEnabled(catalog != null && !writing);
+        binding.addUnit.setEnabled(catalog != null && !writing && viewModel.classes().getValue() != null);
         List<UnitLabel> units = new ArrayList<>();
         for (String id : recruitedIds) {
             units.add(catalog == null ? new UnitLabel(id, id) : catalog.labelFor(id));
@@ -115,7 +117,15 @@ public final class UnitRosterActivity extends ImperialActivity {
         AlertDialog.Builder picker = new AlertDialog.Builder(this)
                 .setTitle(R.string.add_unit);
         dialog = UnitPicker.show(picker, getColor(route.accentResource), choices,
-                R.string.no_available_units, viewModel::recruit);
+                R.string.no_available_units, this::showAvailableClasses);
+    }
+
+    private void showAvailableClasses(UnitLabel unit) {
+        List<UnitClass> choices = viewModel.classes().getValue();
+        AlertDialog.Builder picker = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.choose_class_for_unit, unit.name()))
+                .setIcon(UnitPortraits.resourceFor(unit.id()));
+        dialog = UnitPicker.showClasses(picker, choices, unitClass -> viewModel.recruit(unit, unitClass));
     }
 
     private void confirmRemoval(UnitLabel unit) {

@@ -42,14 +42,14 @@ public final class UnitClassCatalogTest {
             createVersionOneDatabase();
             assertCatalog(database.unitClasses().getAll());
             SupportSQLiteDatabase migrated = database.getOpenHelper().getReadableDatabase();
-            assertEquals(2, migrated.getVersion());
+            assertEquals(3, migrated.getVersion());
             assertRowCount(migrated, 1, """
                     SELECT * FROM main_missions WHERE route_id = 'cai'
                     AND day = 10 AND month = 5 AND description = 'Guard the gate'
                     """);
             assertRowCount(migrated, 2, """
                     SELECT * FROM recruited_units WHERE route_id = 'cai'
-                    AND unit_id IN ('peter', 'tialla')
+                    AND unit_id IN ('peter', 'tialla') AND class_id IS NULL
                     """);
             assertRowCount(migrated, 1, """
                     SELECT * FROM support_pairs WHERE route_id = 'cai'

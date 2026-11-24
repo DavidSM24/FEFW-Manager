@@ -39,8 +39,8 @@ public class RouteProgressTest {
             progress.saveMission(new MainMission(Route.CAI, 11, 5, "Misión actualizada"));
             progress.saveMission(new MainMission(Route.THEODORA, 28, 5, "Misión de Theodora"));
 
-            progress.recruit(new RecruitedUnit(Route.CAI, "tialla"));
-            progress.recruit(new RecruitedUnit(Route.CAI, "tialla"));
+            progress.recruit(new RecruitedUnit(Route.CAI, "tialla", "archer"));
+            progress.recruit(new RecruitedUnit(Route.CAI, "tialla", "bishop"));
             progress.recruit(new RecruitedUnit(Route.DIETRICH, "tialla"));
 
             progress.addSupport(new SupportPair(Route.CAI, "tialla", "peter"));
@@ -57,6 +57,8 @@ public class RouteProgressTest {
             assertEquals("Misión actualizada", cai.description);
             assertEquals(1, cai.unitCount);
             assertEquals(1, cai.supportCount);
+            assertEquals("archer", progress.findRecruit(Route.CAI, "tialla").classId);
+            assertNull(progress.findRecruit(Route.DIETRICH, "tialla").classId);
 
             RouteProgress theodora = observeOnce(progress.observeProgress(Route.THEODORA));
             assertEquals(Integer.valueOf(28), theodora.day);

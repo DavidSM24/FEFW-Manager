@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.davidsm24.fefwmanager.data.RecruitedUnit;
 import com.davidsm24.fefwmanager.data.RouteProgressDao;
+import com.davidsm24.fefwmanager.data.UnitClass;
+import com.davidsm24.fefwmanager.data.UnitClassDao;
 import com.davidsm24.fefwmanager.route.Route;
 
 import java.util.List;
@@ -21,15 +23,17 @@ final class UnitRosterViewModel extends ViewModel {
     private final Executor io;
     private final LiveData<List<String>> recruited;
     private final LiveData<UnitCatalog.LoadResult> catalog;
+    private final LiveData<List<UnitClass>> classes;
     private final MutableLiveData<WriteState> writes = new MutableLiveData<>(WriteState.IDLE);
 
-    UnitRosterViewModel(Route route, RouteProgressDao progress, Executor io,
+    UnitRosterViewModel(Route route, RouteProgressDao progress, UnitClassDao classCatalog, Executor io,
             LiveData<UnitCatalog.LoadResult> catalog) {
         this.route = route;
         this.progress = progress;
         this.io = io;
         this.catalog = catalog;
         recruited = progress.observeRecruitedUnitIds(route);
+        classes = classCatalog.observeAll();
     }
 
     LiveData<List<String>> recruited() {
@@ -44,8 +48,12 @@ final class UnitRosterViewModel extends ViewModel {
         return writes;
     }
 
-    void recruit(UnitLabel unit) {
-        save(() -> progress.recruit(new RecruitedUnit(route, unit.id())));
+    LiveData<List<UnitClass>> classes() {
+        return classes;
+    }
+
+    void recruit(UnitLabel unit, UnitClass unitClass) {
+        save(() -> progress.recruit(new RecruitedUnit(route, unit.id(), unitClass.id)));
     }
 
     void remove(UnitLabel unit) {

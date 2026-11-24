@@ -1,5 +1,6 @@
 package com.davidsm24.fefwmanager.data;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -31,6 +32,10 @@ public interface RouteProgressDao {
 
     @Query("SELECT unit_id FROM recruited_units WHERE route_id = :route")
     LiveData<List<String>> observeRecruitedUnitIds(Route route);
+
+    @Nullable
+    @Query("SELECT * FROM recruited_units WHERE route_id = :route AND unit_id = :unitId")
+    RecruitedUnit findRecruit(Route route, String unitId);
 
     @Query("SELECT * FROM support_pairs WHERE route_id = :route ORDER BY first_unit_id, second_unit_id")
     LiveData<List<SupportPair>> observeSupportPairs(Route route);

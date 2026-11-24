@@ -38,6 +38,10 @@
     <string name="no_available_units">Ya has añadido todas las unidades disponibles para esta senda.</string>
     <string name="search_units">Buscar unidad</string>
     <string name="no_matching_units">No hay unidades que coincidan.</string>
+    <string name="choose_class_for_unit">Elegir clase para %1$s</string>
+    <string name="search_classes">Buscar clase</string>
+    <string name="no_matching_classes">No hay clases que coincidan.</string>
+    <string name="no_available_classes">El catálogo de clases está vacío.</string>
     <string name="unit_catalog_error">No se pudo abrir el catálogo de unidades.</string>
     <string name="recruit_write_error">No se pudo actualizar el registro. Inténtalo de nuevo.</string>
     <string name="support_pairs_title">Parejas de apoyo</string>

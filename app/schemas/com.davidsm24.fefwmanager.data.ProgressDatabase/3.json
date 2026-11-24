@@ -1,0 +1,165 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "08e54fdf4997d812ebe6d2a43bcdd649",
+    "entities": [
+      {
+        "tableName": "main_missions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`route_id` TEXT NOT NULL, `day` INTEGER NOT NULL, `month` INTEGER NOT NULL, `description` TEXT NOT NULL, PRIMARY KEY(`route_id`))",
+        "fields": [
+          {
+            "fieldPath": "route",
+            "columnName": "route_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "day",
+            "columnName": "day",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "month",
+            "columnName": "month",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "route_id"
+          ]
+        }
+      },
+      {
+        "tableName": "recruited_units",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`route_id` TEXT NOT NULL, `unit_id` TEXT NOT NULL, `class_id` TEXT, PRIMARY KEY(`route_id`, `unit_id`), FOREIGN KEY(`class_id`) REFERENCES `unit_classes`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "route",
+            "columnName": "route_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "unitId",
+            "columnName": "unit_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "classId",
+            "columnName": "class_id",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "route_id",
+            "unit_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_recruited_units_class_id",
+            "unique": false,
+            "columnNames": [
+              "class_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_recruited_units_class_id` ON `${TABLE_NAME}` (`class_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "unit_classes",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "class_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "support_pairs",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`route_id` TEXT NOT NULL, `first_unit_id` TEXT NOT NULL, `second_unit_id` TEXT NOT NULL, PRIMARY KEY(`route_id`, `first_unit_id`, `second_unit_id`))",
+        "fields": [
+          {
+            "fieldPath": "route",
+            "columnName": "route_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firstUnitId",
+            "columnName": "first_unit_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "secondUnitId",
+            "columnName": "second_unit_id",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "route_id",
+            "first_unit_id",
+            "second_unit_id"
+          ]
+        }
+      },
+      {
+        "tableName": "unit_classes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `image_png` BLOB NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imagePng",
+            "columnName": "image_png",
+            "affinity": "BLOB",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '08e54fdf4997d812ebe6d2a43bcdd649')"
+    ]
+  }
+}

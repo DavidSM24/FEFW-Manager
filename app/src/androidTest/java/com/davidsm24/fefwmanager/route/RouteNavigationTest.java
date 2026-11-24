@@ -3,6 +3,7 @@ package com.davidsm24.fefwmanager.route;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
@@ -87,19 +88,27 @@ public class RouteNavigationTest {
         RecruitedUnit leda = new RecruitedUnit(Route.LEDA, "alexandra");
 
         try {
-            boolean caiHadUnit = hasRecruit(fixture, cai);
-            boolean ledaHadUnit = hasRecruit(fixture, leda);
+            RecruitedUnit caiBefore = fixture.routeProgress().findRecruit(cai.route, cai.unitId);
+            RecruitedUnit ledaBefore = fixture.routeProgress().findRecruit(leda.route, leda.unitId);
             try {
                 progress.removeRecruit(cai);
                 progress.removeRecruit(leda);
                 try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
                     openUnits("Cai");
-                    addAlexandra();
+                    openAlexandraClassPicker();
+                    click(By.res("android", "button2"));
+                    assertTrue(device.wait(Until.gone(By.text("Elegir clase para Alexandra")), TIMEOUT));
+                    assertNull(fixture.routeProgress().findRecruit(cai.route, cai.unitId));
+                    openAlexandraClassPicker();
+                    chooseClass("Archer", " aRcH ");
+                    assertEquals("archer", fixture.routeProgress().findRecruit(cai.route, cai.unitId).classId);
                     click(By.res(PACKAGE, "back_to_route"));
                     click(By.res(PACKAGE, "back_to_routes"));
 
                     openUnits("Leda");
-                    addAlexandra();
+                    openAlexandraClassPicker();
+                    chooseClass("Bishop", "bIsh");
+                    assertEquals("bishop", fixture.routeProgress().findRecruit(leda.route, leda.unitId).classId);
                     click(By.res(PACKAGE, "back_to_route"));
                     click(By.res(PACKAGE, "back_to_routes"));
 
@@ -121,8 +130,8 @@ public class RouteNavigationTest {
                     click(By.res(PACKAGE, "back_to_routes"));
                 }
             } finally {
-                restoreRecruit(progress, cai, caiHadUnit);
-                restoreRecruit(progress, leda, ledaHadUnit);
+                restoreRecruit(progress, cai, caiBefore);
+                restoreRecruit(progress, leda, ledaBefore);
             }
         } finally {
             fixture.close();
@@ -135,7 +144,7 @@ public class RouteNavigationTest {
         assertVisible(By.res(PACKAGE, "add_unit").enabled(true));
     }
 
-    private void addAlexandra() {
+    private void openAlexandraClassPicker() {
         click(By.res(PACKAGE, "add_unit").enabled(true));
         BySelector search = By.res(PACKAGE, "unit_search");
         find(search).setText("zzzz");
@@ -145,22 +154,24 @@ public class RouteNavigationTest {
         find(search).setText(" eXan ");
         assertTrue(device.wait(Until.gone(By.res(PACKAGE, "unit_search_empty")), TIMEOUT));
         click(By.res(PACKAGE, "unit_name").text("Alexandra"));
+        assertVisible(By.text("Elegir clase para Alexandra"));
+    }
+
+    private void chooseClass(String name, String filter) {
+        BySelector search = By.res(PACKAGE, "unit_search");
+        find(search).setText("zzzz");
+        assertVisible(By.text("No hay clases que coincidan."));
+        find(search).setText(filter);
+        assertVisible(By.res(PACKAGE, "class_icon"));
+        click(By.res(PACKAGE, "class_name").text(name));
         assertVisible(By.desc("Quitar a Alexandra"));
     }
 
-    private static boolean hasRecruit(ProgressDatabase database, RecruitedUnit unit) {
-        try (Cursor cursor = database.getOpenHelper().getReadableDatabase().query(
-                new SimpleSQLiteQuery("SELECT 1 FROM recruited_units WHERE route_id = ? AND unit_id = ?",
-                        new Object[]{unit.route.id, unit.unitId}))) {
-            return cursor.moveToFirst();
-        }
-    }
-
-    private static void restoreRecruit(RouteProgressDao progress, RecruitedUnit unit, boolean recruited) {
-        if (recruited) {
-            progress.recruit(unit);
-        } else {
-            progress.removeRecruit(unit);
+    private static void restoreRecruit(RouteProgressDao progress, RecruitedUnit unit,
+            RecruitedUnit previous) {
+        progress.removeRecruit(unit);
+        if (previous != null) {
+            progress.recruit(previous);
         }
     }
 

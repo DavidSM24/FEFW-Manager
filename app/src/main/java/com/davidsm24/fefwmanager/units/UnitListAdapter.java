@@ -3,7 +3,6 @@ package com.davidsm24.fefwmanager.units;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
@@ -11,15 +10,13 @@ import androidx.annotation.Nullable;
 import com.davidsm24.fefwmanager.R;
 import com.davidsm24.fefwmanager.databinding.ItemUnitBinding;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-public final class UnitListAdapter extends BaseAdapter {
+public final class UnitListAdapter extends ChoiceListAdapter<UnitLabel> {
     private final LayoutInflater inflater;
     private final int accent;
     @Nullable private final Consumer<UnitLabel> onRemove;
-    private List<UnitLabel> units = Collections.emptyList();
     private boolean canRemove;
 
     public UnitListAdapter(LayoutInflater inflater, @ColorInt int accent,
@@ -30,24 +27,8 @@ public final class UnitListAdapter extends BaseAdapter {
     }
 
     public void show(List<UnitLabel> units, boolean canRemove) {
-        this.units = units;
         this.canRemove = canRemove;
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public int getCount() {
-        return units.size();
-    }
-
-    @Override
-    public UnitLabel getItem(int position) {
-        return units.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+        showChoices(units);
     }
 
     @Override

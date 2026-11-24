@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,6 +25,38 @@ public final class PartyAnalyzerTest {
         assertEquals(new PartyAnalysisResult.Raw(1.0, 1.0, 1.0, 1.0, 1.0), result.raw());
         assertEquals(new PartyAnalysisResult.Scores(1, 1, 1, 1, 1), result.scores());
         assertTrue(result.alerts().isEmpty());
+    }
+
+    @Test
+    public void analyzesAnEarlyPartyOfThreeUnitsWithTheMinimumEffectiveSize() {
+        PartyAnalysisResult result = PartyAnalyzer.analyze(List.of(
+                ClassRoleCatalog.forClass("soldier"),
+                ClassRoleCatalog.forClass("diviner"),
+                ClassRoleCatalog.forClass("ornius-rider")));
+
+        assertEquals(3, result.evaluatedCount());
+        assertEquals(3.3, result.raw().atk(), TOLERANCE);
+        assertEquals(1.9, result.raw().def(), TOLERANCE);
+        assertEquals(3.833333333333333, result.raw().mov(), TOLERANCE);
+        assertEquals(5.0, result.raw().sup(), TOLERANCE);
+        assertEquals(3.823529411764706, result.raw().heal(), TOLERANCE);
+        assertEquals(new PartyAnalysisResult.Scores(3, 2, 4, 5, 4), result.scores());
+        assertEquals(List.of(PartyAlert.NO_FRONTLINE), result.alerts());
+    }
+
+    @Test
+    public void twoMainHealersReachFullHealingCoverageInATenUnitParty() {
+        List<ClassRoleProfile> profiles = new ArrayList<>(
+                Collections.nCopies(8, ClassRoleCatalog.forClass("soldier")));
+        profiles.add(ClassRoleCatalog.forClass("priest"));
+        profiles.add(ClassRoleCatalog.forClass("bishop"));
+
+        PartyAnalysisResult result = PartyAnalyzer.analyze(profiles);
+
+        assertEquals(10, result.evaluatedCount());
+        assertEquals(5.0, result.raw().heal(), TOLERANCE);
+        assertEquals(5, result.scores().heal());
+        assertFalse(result.alerts().contains(PartyAlert.LOW_HEALING));
     }
 
     @Test
@@ -100,16 +133,27 @@ public final class PartyAnalyzerTest {
     }
 
     @Test
+    public void allPhysicalPartyWithHighAttackIsCappedAtFour() {
+        PartyAnalysisResult result = PartyAnalyzer.analyze(
+                Collections.nCopies(4, PHYSICAL_ATTACKER));
+
+        assertEquals(4.0, result.raw().atk(), TOLERANCE);
+        assertEquals(4, result.scores().atk());
+        assertTrue(result.alerts().contains(PartyAlert.MISSING_MAGIC_DAMAGE));
+        assertFalse(result.alerts().contains(PartyAlert.MISSING_PHYSICAL_DAMAGE));
+    }
+
+    @Test
     public void missingEitherDamageTypeCapsAttackAndEmitsItsAlert() {
         ClassRoleProfile lowAttackMage = profile(2, 0, 0, 0, 0, ClassTag.MAGICO);
         ClassRoleProfile strongMage = profile(5, 0, 0, 0, 0, ClassTag.MAGICO);
-        PartyAnalysisResult physicalOnly = PartyAnalyzer.analyze(
+        PartyAnalysisResult withoutMagicAttacker = PartyAnalyzer.analyze(
                 List.of(PHYSICAL_ATTACKER, PHYSICAL_ATTACKER, PHYSICAL_ATTACKER, lowAttackMage));
         PartyAnalysisResult magicOnly = PartyAnalyzer.analyze(List.of(strongMage));
 
-        assertEquals(4.0, physicalOnly.raw().atk(), TOLERANCE);
-        assertTrue(physicalOnly.alerts().contains(PartyAlert.MISSING_MAGIC_DAMAGE));
-        assertFalse(physicalOnly.alerts().contains(PartyAlert.MISSING_PHYSICAL_DAMAGE));
+        assertEquals(4.0, withoutMagicAttacker.raw().atk(), TOLERANCE);
+        assertTrue(withoutMagicAttacker.alerts().contains(PartyAlert.MISSING_MAGIC_DAMAGE));
+        assertFalse(withoutMagicAttacker.alerts().contains(PartyAlert.MISSING_PHYSICAL_DAMAGE));
         assertEquals(4.0, magicOnly.raw().atk(), TOLERANCE);
         assertTrue(magicOnly.alerts().contains(PartyAlert.MISSING_PHYSICAL_DAMAGE));
         assertFalse(magicOnly.alerts().contains(PartyAlert.MISSING_MAGIC_DAMAGE));

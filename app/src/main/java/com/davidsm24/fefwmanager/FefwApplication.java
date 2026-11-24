@@ -7,10 +7,10 @@ import android.util.Log;
 import androidx.annotation.MainThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.room.Room;
 
 import com.davidsm24.fefwmanager.data.ProgressDatabase;
 import com.davidsm24.fefwmanager.data.RouteProgressDao;
+import com.davidsm24.fefwmanager.data.UnitClassDao;
 import com.davidsm24.fefwmanager.units.UnitCatalog;
 
 import org.json.JSONException;
@@ -27,11 +27,15 @@ public final class FefwApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        database = Room.databaseBuilder(this, ProgressDatabase.class, "route-progress.db").build();
+        database = ProgressDatabase.open(this, "route-progress.db");
     }
 
     public RouteProgressDao routeProgress() {
         return database.routeProgress();
+    }
+
+    public UnitClassDao unitClasses() {
+        return database.unitClasses();
     }
 
     @MainThread

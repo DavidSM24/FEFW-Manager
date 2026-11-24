@@ -9,12 +9,30 @@
     android:paddingEnd="@dimen/screen_gutter"
     android:paddingBottom="@dimen/section_gap">
 
-    <Button
-        android:id="@+id/back_to_route"
-        style="@style/Widget.FefwManager.Back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/back_to_route" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/back_to_route"
+            style="@style/Widget.FefwManager.Back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginEnd="48dp"
+            android:text="@string/back_to_route" />
+
+        <ImageButton
+            android:id="@+id/show_group_analysis"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="end|center_vertical"
+            android:background="@drawable/imperial_button_secondary"
+            android:contentDescription="@string/group_analysis_title"
+            android:enabled="false"
+            android:scaleType="center"
+            android:src="@drawable/ic_group_sword" />
+    </FrameLayout>
 
     <include
         android:id="@+id/page_header"
@@ -50,5 +68,6 @@
         android:layout_marginTop="@dimen/item_gap"
         android:layout_weight="1"
         android:divider="@android:color/transparent"
-        android:dividerHeight="6dp" />
+        android:dividerHeight="6dp"
+        android:visibility="gone" />
 </LinearLayout>

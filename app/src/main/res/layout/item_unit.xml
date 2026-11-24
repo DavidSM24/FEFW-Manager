@@ -27,6 +27,26 @@
         android:textAppearance="@style/TextAppearance.Fefw.LedgerBody"
         android:textSize="17sp" />
 
+    <ImageButton
+        android:id="@+id/recruited_class_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="4dp"
+        android:background="@drawable/imperial_touch"
+        android:contentDescription="@null"
+        android:padding="6dp"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/assign_class"
+        style="@style/Widget.FefwManager.LedgerAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/assign_class"
+        android:textColor="@color/ink"
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/remove_unit"
         style="@style/Widget.FefwManager.LedgerAction"

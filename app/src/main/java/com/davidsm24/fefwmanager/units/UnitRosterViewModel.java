@@ -8,8 +8,11 @@ import androidx.lifecycle.ViewModel;
 
 import com.davidsm24.fefwmanager.data.RecruitedUnit;
 import com.davidsm24.fefwmanager.data.RouteProgressDao;
+import com.davidsm24.fefwmanager.data.UnitClass;
+import com.davidsm24.fefwmanager.data.UnitClassDao;
 import com.davidsm24.fefwmanager.route.Route;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -19,20 +22,22 @@ final class UnitRosterViewModel extends ViewModel {
     private final Route route;
     private final RouteProgressDao progress;
     private final Executor io;
-    private final LiveData<List<String>> recruited;
+    private final LiveData<List<RecruitedUnit>> recruited;
     private final LiveData<UnitCatalog.LoadResult> catalog;
+    private final LiveData<List<UnitClass>> classes;
     private final MutableLiveData<WriteState> writes = new MutableLiveData<>(WriteState.IDLE);
 
-    UnitRosterViewModel(Route route, RouteProgressDao progress, Executor io,
+    UnitRosterViewModel(Route route, RouteProgressDao progress, UnitClassDao classCatalog, Executor io,
             LiveData<UnitCatalog.LoadResult> catalog) {
         this.route = route;
         this.progress = progress;
         this.io = io;
         this.catalog = catalog;
-        recruited = progress.observeRecruitedUnitIds(route);
+        recruited = progress.observeRecruits(route);
+        classes = classCatalog.observeAll();
     }
 
-    LiveData<List<String>> recruited() {
+    LiveData<List<RecruitedUnit>> recruited() {
         return recruited;
     }
 
@@ -44,8 +49,27 @@ final class UnitRosterViewModel extends ViewModel {
         return writes;
     }
 
-    void recruit(UnitLabel unit) {
-        save(() -> progress.recruit(new RecruitedUnit(route, unit.id())));
+    LiveData<List<UnitClass>> classes() {
+        return classes;
+    }
+
+    PartyAnalysisResult analyzeGroup(List<RecruitedUnit> recruits) {
+        List<ClassRoleProfile> profiles = new ArrayList<>(recruits.size());
+        for (RecruitedUnit recruit : recruits) {
+            ClassRoleProfile profile = ClassRoleCatalog.forClass(recruit.classId);
+            if (profile != null) {
+                profiles.add(profile);
+            }
+        }
+        return PartyAnalyzer.analyze(profiles);
+    }
+
+    void recruit(UnitLabel unit, UnitClass unitClass) {
+        save(() -> progress.recruit(new RecruitedUnit(route, unit.id(), unitClass.id)));
+    }
+
+    void changeClass(UnitLabel unit, UnitClass unitClass) {
+        save(() -> progress.changeRecruitClass(route, unit.id(), unitClass.id));
     }
 
     void remove(UnitLabel unit) {

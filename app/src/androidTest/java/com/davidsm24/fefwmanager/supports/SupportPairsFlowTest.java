@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import android.content.Context;
 import android.database.Cursor;
 
-import androidx.room.Room;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -39,15 +38,16 @@ public class SupportPairsFlowTest {
     public void createsAndRemovesPairWithoutLosingItWhenARecruitLeaves() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         RouteProgressDao progress = ((FefwApplication) context.getApplicationContext()).routeProgress();
-        ProgressDatabase fixture = Room.databaseBuilder(context, ProgressDatabase.class,
-                "route-progress.db").build();
+        ProgressDatabase fixture = ProgressDatabase.open(context, "route-progress.db");
         RecruitedUnit alexandra = new RecruitedUnit(Route.CAI, "alexandra");
         RecruitedUnit benditz = new RecruitedUnit(Route.CAI, "benditz");
         SupportPair pair = new SupportPair(Route.CAI, alexandra.unitId, benditz.unitId);
 
         try {
-            boolean alexandraWasRecruited = hasRecruit(fixture, alexandra);
-            boolean benditzWasRecruited = hasRecruit(fixture, benditz);
+            RecruitedUnit alexandraBefore = fixture.routeProgress()
+                    .findRecruit(alexandra.route, alexandra.unitId);
+            boolean benditzWasRecruited = fixture.routeProgress()
+                    .findRecruit(benditz.route, benditz.unitId) != null;
             boolean pairWasSaved = hasRow(fixture, """
                     SELECT 1 FROM support_pairs
                     WHERE route_id = ? AND first_unit_id = ? AND second_unit_id = ?
@@ -63,8 +63,8 @@ public class SupportPairsFlowTest {
                 } else {
                     progress.removeSupport(pair);
                 }
-                if (alexandraWasRecruited) {
-                    progress.recruit(alexandra);
+                if (alexandraBefore != null) {
+                    progress.recruit(alexandraBefore);
                 } else {
                     progress.removeRecruit(alexandra);
                 }
@@ -122,11 +122,6 @@ public class SupportPairsFlowTest {
         assertFalse(device.hasObject(By.res(PACKAGE, "unit_name").text(first)));
         find(search).setText(second.substring(1));
         click(By.res(PACKAGE, "unit_name").text(second));
-    }
-
-    private static boolean hasRecruit(ProgressDatabase database, RecruitedUnit unit) {
-        return hasRow(database, "SELECT 1 FROM recruited_units WHERE route_id = ? AND unit_id = ?",
-                unit.route.id, unit.unitId);
     }
 
     private static boolean hasRow(ProgressDatabase database, String sql, Object... arguments) {

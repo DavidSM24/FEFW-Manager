@@ -53,12 +53,15 @@ final class UnitRosterViewModel extends ViewModel {
         return classes;
     }
 
-    GroupAnalysis analyzeGroup(List<RecruitedUnit> recruits) {
-        List<String> classIds = new ArrayList<>(recruits.size());
+    PartyAnalysisResult analyzeGroup(List<RecruitedUnit> recruits) {
+        List<ClassRoleProfile> profiles = new ArrayList<>(recruits.size());
         for (RecruitedUnit recruit : recruits) {
-            classIds.add(recruit.classId);
+            ClassRoleProfile profile = ClassRoleCatalog.forClass(recruit.classId);
+            if (profile != null) {
+                profiles.add(profile);
+            }
         }
-        return GroupAnalysis.evaluate(classIds);
+        return PartyAnalyzer.analyze(profiles);
     }
 
     void recruit(UnitLabel unit, UnitClass unitClass) {

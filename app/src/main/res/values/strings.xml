@@ -36,6 +36,14 @@
     <string name="group_mobility">Movilidad</string>
     <string name="group_support">Apoyo / Utilidad</string>
     <string name="group_healing">Curación</string>
+    <string name="group_view_alerts">Ver alertas tácticas</string>
+    <string name="group_alerts_title">Alertas tácticas</string>
+    <string name="group_alert_missing_magic_damage">Falta daño mágico. El ataque queda limitado a 4/5 y el grupo puede tener dificultades contra enemigos acorazados.</string>
+    <string name="group_alert_missing_physical_damage">Falta daño físico. El ataque queda limitado a 4/5 y el grupo puede tener dificultades contra enemigos con alta resistencia mágica.</string>
+    <string name="group_alert_low_healing">Curación baja. El grupo necesita más cobertura de curadores.</string>
+    <string name="group_alert_no_frontline">Sin primera línea. Faltan unidades capaces de aguantar el frente.</string>
+    <string name="group_alert_no_mobile_units">Sin unidades voladoras o montadas. El terreno complicado y los objetivos secundarios serán más difíciles de alcanzar.</string>
+    <string name="group_alert_redundant_lockpicking">Utilidad redundante. Varias unidades cubren la apertura de cerraduras.</string>
     <string name="back_to_route">Volver a la senda</string>
     <string name="add_unit">Añadir unidad</string>
     <string name="remove_unit">Quitar</string>

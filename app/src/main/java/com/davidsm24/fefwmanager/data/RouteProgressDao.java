@@ -33,7 +33,7 @@ public interface RouteProgressDao {
     @Query("SELECT unit_id FROM recruited_units WHERE route_id = :route")
     LiveData<List<String>> observeRecruitedUnitIds(Route route);
 
-    @Query("SELECT * FROM recruited_units WHERE route_id = :route")
+    @Query("SELECT * FROM recruited_units WHERE route_id = :route ORDER BY unit_id")
     LiveData<List<RecruitedUnit>> observeRecruits(Route route);
 
     @Nullable

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -112,7 +113,7 @@ public final class UnitRosterActivity extends ImperialActivity {
         }
         units.sort(UnitLabel.BY_NAME);
         rosterAdapter.show(units, assignedClasses, !writing);
-        renderAnalysis(viewModel.analyzeGroup(recruits));
+        renderAnalysis(viewModel.analyzeGroup(recruits), recruits.size());
         binding.recruitedUnitList.setVisibility(View.VISIBLE);
 
         if (writeState == UnitRosterViewModel.WriteState.FAILED) {
@@ -126,18 +127,41 @@ public final class UnitRosterActivity extends ImperialActivity {
         }
     }
 
-    private void renderAnalysis(GroupAnalysis analysis) {
+    private void renderAnalysis(PartyAnalysisResult analysis, int recruitedCount) {
         analysisBinding.groupEvaluatedUnits.setText(getString(R.string.group_evaluated_units,
-                analysis.evaluatedUnits(), analysis.totalUnits()));
-        boolean hasScores = analysis.evaluatedUnits() > 0;
-        analysisBinding.groupScores.setVisibility(hasScores ? View.VISIBLE : View.GONE);
-        if (hasScores) {
-            setGroupScore(analysisBinding.groupAttack, R.string.group_attack, analysis.atk());
-            setGroupScore(analysisBinding.groupDefense, R.string.group_defense, analysis.def());
-            setGroupScore(analysisBinding.groupMobility, R.string.group_mobility, analysis.mov());
-            setGroupScore(analysisBinding.groupSupport, R.string.group_support, analysis.sup());
-            setGroupScore(analysisBinding.groupHealing, R.string.group_healing, analysis.heal());
+                analysis.evaluatedCount(), recruitedCount));
+        analysisBinding.groupScores.setVisibility(analysis.isEmpty() ? View.GONE : View.VISIBLE);
+        if (!analysis.isEmpty()) {
+            PartyAnalysisResult.Scores scores = analysis.scores();
+            setGroupScore(analysisBinding.groupAttack, R.string.group_attack, scores.atk());
+            setGroupScore(analysisBinding.groupDefense, R.string.group_defense, scores.def());
+            setGroupScore(analysisBinding.groupMobility, R.string.group_mobility, scores.mov());
+            setGroupScore(analysisBinding.groupSupport, R.string.group_support, scores.sup());
+            setGroupScore(analysisBinding.groupHealing, R.string.group_healing, scores.heal());
         }
+        List<PartyAlert> alerts = analysis.alerts();
+        analysisBinding.groupAlerts.setVisibility(alerts.isEmpty() ? View.GONE : View.VISIBLE);
+        analysisBinding.groupAlerts.setOnClickListener(alerts.isEmpty() ? null
+                : view -> showPartyAlerts(alerts));
+    }
+
+    private void showPartyAlerts(List<PartyAlert> alerts) {
+        List<String> messages = new ArrayList<>(alerts.size());
+        for (PartyAlert alert : alerts) {
+            messages.add(getString(switch (alert) {
+                case MISSING_MAGIC_DAMAGE -> R.string.group_alert_missing_magic_damage;
+                case MISSING_PHYSICAL_DAMAGE -> R.string.group_alert_missing_physical_damage;
+                case LOW_HEALING -> R.string.group_alert_low_healing;
+                case NO_FRONTLINE -> R.string.group_alert_no_frontline;
+                case NO_MOBILE_UNITS -> R.string.group_alert_no_mobile_units;
+                case REDUNDANT_LOCKPICKING -> R.string.group_alert_redundant_lockpicking;
+            }));
+        }
+        dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.group_alerts_title)
+                .setMessage(TextUtils.join("\n\n", messages))
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
     }
 
     private void setGroupScore(TextView view, int label, int score) {

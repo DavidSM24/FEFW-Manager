@@ -14,13 +14,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 @RunWith(AndroidJUnit4.class)
-public final class GroupAnalysisTest {
+public final class ClassRoleCatalogTest {
     @Test
     public void definesExactlyOneProfileForEveryPlayableClass() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
@@ -42,23 +41,4 @@ public final class GroupAnalysisTest {
         }
     }
 
-    @Test
-    public void evaluatesTheBestTwoContributionsAndIgnoresUnassignedUnits() {
-        assertEquals(new GroupAnalysis(3, 4, 4, 4, 4, 3, 3),
-                GroupAnalysis.evaluate(Arrays.asList("armored-knight", "priest", null, "wing-soldier")));
-    }
-
-    @Test
-    public void keepsGroupScoresOnTheOneToFiveScale() {
-        assertEquals(new GroupAnalysis(1, 1, 5, 2, 3, 1, 1),
-                GroupAnalysis.evaluate(Collections.singletonList("myrmidon")));
-    }
-
-    @Test
-    public void hasNoScoresWithoutAClassProfile() {
-        assertEquals(new GroupAnalysis(0, 0, 0, 0, 0, 0, 0),
-                GroupAnalysis.evaluate(Collections.emptyList()));
-        assertEquals(new GroupAnalysis(0, 2, 0, 0, 0, 0, 0),
-                GroupAnalysis.evaluate(Arrays.asList(null, "unrecognized-class")));
-    }
 }

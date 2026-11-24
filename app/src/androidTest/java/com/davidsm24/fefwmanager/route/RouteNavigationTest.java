@@ -105,6 +105,10 @@ public class RouteNavigationTest {
                     chooseClass("Archer", " aRcH ");
                     assertEquals("archer", fixture.routeProgress().findRecruit(cai.route, cai.unitId).classId);
                     assertVisible(By.res(PACKAGE, "group_attack"));
+                    click(By.res(PACKAGE, "group_alerts"));
+                    assertVisible(By.text("Alertas tácticas"));
+                    assertVisible(By.textContains("Falta daño mágico."));
+                    click(By.res("android", "button1"));
                     UiObject2 archerIcon = find(By.res(PACKAGE, "recruited_class_icon").desc("Archer"));
                     assertTrue(archerIcon.getVisibleBounds().right
                             <= find(By.desc("Quitar a Alexandra")).getVisibleBounds().left);

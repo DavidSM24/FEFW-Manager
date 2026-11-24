@@ -28,6 +28,14 @@
     <string name="manage_units">Gestionar unidades</string>
     <string name="manage_supports">Gestionar apoyos</string>
     <string name="unit_roster_title">Unidades reclutadas</string>
+    <string name="group_analysis_title">Análisis del grupo</string>
+    <string name="group_evaluated_units">Unidades evaluadas · %1$d/%2$d</string>
+    <string name="group_score">%1$s · %2$d/5</string>
+    <string name="group_attack">Ataque</string>
+    <string name="group_defense">Defensa</string>
+    <string name="group_mobility">Movilidad</string>
+    <string name="group_support">Apoyo / Utilidad</string>
+    <string name="group_healing">Curación</string>
     <string name="back_to_route">Volver a la senda</string>
     <string name="add_unit">Añadir unidad</string>
     <string name="remove_unit">Quitar</string>

@@ -104,6 +104,7 @@ public class RouteNavigationTest {
                     openAlexandraClassPicker();
                     chooseClass("Archer", " aRcH ");
                     assertEquals("archer", fixture.routeProgress().findRecruit(cai.route, cai.unitId).classId);
+                    assertVisible(By.res(PACKAGE, "group_attack"));
                     UiObject2 archerIcon = find(By.res(PACKAGE, "recruited_class_icon").desc("Archer"));
                     assertTrue(archerIcon.getVisibleBounds().right
                             <= find(By.desc("Quitar a Alexandra")).getVisibleBounds().left);
@@ -149,6 +150,7 @@ public class RouteNavigationTest {
         click(By.text(route));
         click(By.res(PACKAGE, "manage_units").enabled(true));
         assertVisible(By.res(PACKAGE, "add_unit").enabled(true));
+        assertVisible(By.res(PACKAGE, "group_evaluated_units"));
     }
 
     private void openAlexandraClassPicker() {

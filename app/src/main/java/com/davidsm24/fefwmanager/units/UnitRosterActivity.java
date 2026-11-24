@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
@@ -15,6 +16,7 @@ import com.davidsm24.fefwmanager.R;
 import com.davidsm24.fefwmanager.data.RecruitedUnit;
 import com.davidsm24.fefwmanager.data.UnitClass;
 import com.davidsm24.fefwmanager.databinding.ActivityUnitRosterBinding;
+import com.davidsm24.fefwmanager.databinding.ViewGroupAnalysisBinding;
 import com.davidsm24.fefwmanager.route.Route;
 import com.davidsm24.fefwmanager.ui.ImperialActivity;
 import com.davidsm24.fefwmanager.ui.ImperialMotion;
@@ -28,6 +30,7 @@ public final class UnitRosterActivity extends ImperialActivity {
     private static final String EXTRA_ROUTE_ID = "route_id";
 
     private ActivityUnitRosterBinding binding;
+    private ViewGroupAnalysisBinding analysisBinding;
     private UnitRosterViewModel viewModel;
     private UnitListAdapter rosterAdapter;
     private Route route;
@@ -59,6 +62,9 @@ public final class UnitRosterActivity extends ImperialActivity {
         binding.addUnit.setOnClickListener(view -> showAvailableUnits());
         rosterAdapter = new UnitListAdapter(getLayoutInflater(), getColor(route.accentResource),
                 this::confirmRemoval);
+        analysisBinding = ViewGroupAnalysisBinding.inflate(getLayoutInflater(), binding.recruitedUnitList,
+                false);
+        binding.recruitedUnitList.addHeaderView(analysisBinding.getRoot(), null, false);
         binding.recruitedUnitList.setAdapter(rosterAdapter);
 
         FefwApplication app = (FefwApplication) getApplication();
@@ -106,7 +112,8 @@ public final class UnitRosterActivity extends ImperialActivity {
         }
         units.sort(UnitLabel.BY_NAME);
         rosterAdapter.show(units, assignedClasses, !writing);
-        binding.recruitedUnitList.setVisibility(units.isEmpty() ? View.GONE : View.VISIBLE);
+        renderAnalysis(viewModel.analyzeGroup(recruits));
+        binding.recruitedUnitList.setVisibility(View.VISIBLE);
 
         if (writeState == UnitRosterViewModel.WriteState.FAILED) {
             showNotice(R.string.recruit_write_error);
@@ -117,6 +124,24 @@ public final class UnitRosterActivity extends ImperialActivity {
         } else {
             binding.unitNotice.setVisibility(View.GONE);
         }
+    }
+
+    private void renderAnalysis(GroupAnalysis analysis) {
+        analysisBinding.groupEvaluatedUnits.setText(getString(R.string.group_evaluated_units,
+                analysis.evaluatedUnits(), analysis.totalUnits()));
+        boolean hasScores = analysis.evaluatedUnits() > 0;
+        analysisBinding.groupScores.setVisibility(hasScores ? View.VISIBLE : View.GONE);
+        if (hasScores) {
+            setGroupScore(analysisBinding.groupAttack, R.string.group_attack, analysis.atk());
+            setGroupScore(analysisBinding.groupDefense, R.string.group_defense, analysis.def());
+            setGroupScore(analysisBinding.groupMobility, R.string.group_mobility, analysis.mov());
+            setGroupScore(analysisBinding.groupSupport, R.string.group_support, analysis.sup());
+            setGroupScore(analysisBinding.groupHealing, R.string.group_healing, analysis.heal());
+        }
+    }
+
+    private void setGroupScore(TextView view, int label, int score) {
+        view.setText(getString(R.string.group_score, getString(label), score));
     }
 
     private void showNotice(int message) {

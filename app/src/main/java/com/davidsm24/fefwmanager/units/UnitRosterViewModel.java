@@ -12,6 +12,7 @@ import com.davidsm24.fefwmanager.data.UnitClass;
 import com.davidsm24.fefwmanager.data.UnitClassDao;
 import com.davidsm24.fefwmanager.route.Route;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -50,6 +51,14 @@ final class UnitRosterViewModel extends ViewModel {
 
     LiveData<List<UnitClass>> classes() {
         return classes;
+    }
+
+    GroupAnalysis analyzeGroup(List<RecruitedUnit> recruits) {
+        List<String> classIds = new ArrayList<>(recruits.size());
+        for (RecruitedUnit recruit : recruits) {
+            classIds.add(recruit.classId);
+        }
+        return GroupAnalysis.evaluate(classIds);
     }
 
     void recruit(UnitLabel unit, UnitClass unitClass) {

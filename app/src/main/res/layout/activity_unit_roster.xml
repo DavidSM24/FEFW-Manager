@@ -50,5 +50,6 @@
         android:layout_marginTop="@dimen/item_gap"
         android:layout_weight="1"
         android:divider="@android:color/transparent"
-        android:dividerHeight="6dp" />
+        android:dividerHeight="6dp"
+        android:visibility="gone" />
 </LinearLayout>

@@ -60,6 +60,15 @@
     <string name="change_class_for_unit">Cambiar clase de %1$s</string>
     <string name="change_class_description">Cambiar clase de %1$s, actualmente %2$s</string>
     <string name="select_class_description">Seleccionar %1$s</string>
+    <string name="unit_portrait_details">Ver ficha de %1$s</string>
+    <string name="unit_details_loading">Cargando ficha…</string>
+    <string name="unit_description_missing">Todavía no hay una descripción para esta unidad.</string>
+    <string name="unit_details_class">Clase</string>
+    <string name="unit_details_assigned_class">Clase en esta senda</string>
+    <string name="unit_details_reference_class">Clase de referencia</string>
+    <string name="unit_details_class_missing">Clase sin confirmar</string>
+    <string name="unit_details_class_unavailable">No se ha podido cargar la clase.</string>
+    <string name="unit_details_open_class">Ver detalles de la clase %1$s</string>
     <string name="assign_class">Asignar clase</string>
     <string name="assign_class_description">Asignar clase a %1$s</string>
     <string name="search_classes">Buscar clase</string>

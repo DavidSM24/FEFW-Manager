@@ -27,13 +27,16 @@ final class SupportPairAdapter extends BaseAdapter {
 
     private final LayoutInflater inflater;
     private final int accent;
+    private final Consumer<UnitLabel> onUnitDetails;
     private final Consumer<Row> onRemove;
     private List<Row> rows = Collections.emptyList();
     private boolean canRemove;
 
-    SupportPairAdapter(LayoutInflater inflater, @ColorInt int accent, Consumer<Row> onRemove) {
+    SupportPairAdapter(LayoutInflater inflater, @ColorInt int accent, Consumer<UnitLabel> onUnitDetails,
+            Consumer<Row> onRemove) {
         this.inflater = inflater;
         this.accent = accent;
+        this.onUnitDetails = onUnitDetails;
         this.onRemove = onRemove;
     }
 
@@ -80,6 +83,7 @@ final class SupportPairAdapter extends BaseAdapter {
     private void bind(ViewSupportMemberBinding binding, Member member) {
         binding.supportMemberName.setText(member.unit().name());
         UnitPortraits.bind(binding.supportMemberPortrait, member.unit(), accent);
+        UnitPortraits.enableDetails(binding.supportMemberPortrait, member.unit(), onUnitDetails, null);
         binding.supportMemberStatus.setVisibility(member.recruited() ? View.GONE : View.VISIBLE);
     }
 }

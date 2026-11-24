@@ -6,7 +6,7 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.widget.ImageButton;
 
-public final class ClassIconButton extends ImageButton {
+public final class HoldImageButton extends ImageButton {
     private static final long HOLD_MILLIS = 1_000;
 
     private final int touchSlop;
@@ -19,7 +19,7 @@ public final class ClassIconButton extends ImageButton {
     private float downX;
     private float downY;
 
-    public ClassIconButton(Context context, AttributeSet attrs) {
+    public HoldImageButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
     }

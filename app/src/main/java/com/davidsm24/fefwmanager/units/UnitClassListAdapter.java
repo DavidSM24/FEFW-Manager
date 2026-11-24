@@ -3,7 +3,6 @@ package com.davidsm24.fefwmanager.units;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import com.davidsm24.fefwmanager.R;
 import com.davidsm24.fefwmanager.data.UnitClass;
@@ -37,13 +36,7 @@ final class UnitClassListAdapter extends ChoiceListAdapter<UnitClass> {
         icons.bind(row.classIcon, unitClass);
         row.classIcon.setContentDescription(parent.getContext().getString(
                 R.string.select_class_description, unitClass.name));
-        View.OnClickListener selectClass = clicked -> {
-            AdapterView<?> list = (AdapterView<?>) parent;
-            int selected = list.getPositionForView(clicked);
-            if (selected != AdapterView.INVALID_POSITION) {
-                list.performItemClick(row.getRoot(), selected, list.getItemIdAtPosition(selected));
-            }
-        };
+        View.OnClickListener selectClass = selectItem(parent, row.getRoot());
         row.getRoot().setOnClickListener(selectClass);
         row.classIcon.setOnClickListener(selectClass);
         row.classIcon.setOnLongClickListener(icon -> {

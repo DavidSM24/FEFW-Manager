@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 public final class UnitListAdapter extends ChoiceListAdapter<UnitLabel> {
     private final LayoutInflater inflater;
     private final int accent;
+    private final Consumer<UnitLabel> onUnitDetails;
     @Nullable private final Consumer<UnitLabel> onChangeClass;
     @Nullable private final Consumer<UnitClass> onClassDetails;
     @Nullable private final Consumer<UnitLabel> onRemove;
@@ -27,10 +28,12 @@ public final class UnitListAdapter extends ChoiceListAdapter<UnitLabel> {
     private boolean canEdit;
 
     public UnitListAdapter(LayoutInflater inflater, @ColorInt int accent,
+            Consumer<UnitLabel> onUnitDetails,
             @Nullable Consumer<UnitLabel> onChangeClass, @Nullable Consumer<UnitClass> onClassDetails,
             @Nullable Consumer<UnitLabel> onRemove) {
         this.inflater = inflater;
         this.accent = accent;
+        this.onUnitDetails = onUnitDetails;
         this.onChangeClass = onChangeClass;
         this.onClassDetails = onClassDetails;
         this.onRemove = onRemove;
@@ -56,6 +59,9 @@ public final class UnitListAdapter extends ChoiceListAdapter<UnitLabel> {
         String name = unit.name();
         row.unitName.setText(name);
         UnitPortraits.bind(row.unitPortrait, unit, accent);
+        View.OnClickListener selectUnit = onRemove == null ? selectItem(parent, row.getRoot()) : null;
+        row.getRoot().setOnClickListener(selectUnit);
+        UnitPortraits.enableDetails(row.unitPortrait, unit, onUnitDetails, selectUnit);
         bindClassAction(row, unit, assignedClasses.get(unit.id()));
         if (onRemove == null) {
             row.removeUnit.setVisibility(View.GONE);
@@ -73,7 +79,7 @@ public final class UnitListAdapter extends ChoiceListAdapter<UnitLabel> {
         if (onChangeClass == null) {
             return;
         }
-        ClassIconButton view = row.recruitedClassIcon;
+        HoldImageButton view = row.recruitedClassIcon;
         view.cancelHold();
         classIcons.bind(view, unitClass);
         boolean hasClass = unitClass != null;

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
@@ -19,9 +18,9 @@ import com.davidsm24.fefwmanager.R;
 import com.davidsm24.fefwmanager.data.RecruitedUnit;
 import com.davidsm24.fefwmanager.data.UnitClass;
 import com.davidsm24.fefwmanager.databinding.ActivityUnitRosterBinding;
-import com.davidsm24.fefwmanager.databinding.DialogClassDetailsBinding;
 import com.davidsm24.fefwmanager.databinding.ViewGroupAnalysisBinding;
 import com.davidsm24.fefwmanager.route.Route;
+import com.davidsm24.fefwmanager.ui.FloatingCards;
 import com.davidsm24.fefwmanager.ui.ImperialActivity;
 import com.davidsm24.fefwmanager.ui.ImperialMotion;
 
@@ -40,8 +39,6 @@ public final class UnitRosterActivity extends ImperialActivity {
     private GroupAnalysisCard openAnalysis;
     private Route route;
     private AlertDialog dialog;
-    private AlertDialog classDetailsDialog;
-    private final UnitClassIcons detailIcons = new UnitClassIcons();
 
     public static Intent intent(Context context, Route route) {
         return new Intent(context, UnitRosterActivity.class).putExtra(EXTRA_ROUTE_ID, route.id);
@@ -62,6 +59,7 @@ public final class UnitRosterActivity extends ImperialActivity {
         binding.pageHeader.ledgerRoute.setText(
                 getString(R.string.route_title, getString(route.nameResource)));
         UnitPortraits.bind(binding.pageHeader.routePortrait, route);
+        UnitPortraits.enableDetails(binding.pageHeader.routePortrait, route, this::showUnitDetails, null);
         if (savedInstanceState == null) {
             ImperialMotion.reveal(binding.pageHeader.getRoot());
         }
@@ -70,7 +68,7 @@ public final class UnitRosterActivity extends ImperialActivity {
         binding.showGroupAnalysis.setOnClickListener(view -> showGroupAnalysis());
         int accent = getColor(route.accentResource);
         rosterAdapter = new UnitListAdapter(getLayoutInflater(), accent,
-                this::showClassEditor, this::showClassDetails, this::confirmRemoval);
+                this::showUnitDetails, this::showClassEditor, details()::showClass, this::confirmRemoval);
         binding.recruitedUnitList.setAdapter(rosterAdapter);
 
         FefwApplication app = (FefwApplication) getApplication();
@@ -163,34 +161,11 @@ public final class UnitRosterActivity extends ImperialActivity {
             }
         });
         openAnalysis = card;
-        showFloatingCard(dialog);
+        FloatingCards.show(this, dialog);
     }
 
-    private void showClassDetails(UnitClass unitClass) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        DialogClassDetailsBinding details = DialogClassDetailsBinding.inflate(
-                LayoutInflater.from(builder.getContext()));
-        detailIcons.bind(details.detailClassIcon, unitClass);
-        details.detailClassName.setText(unitClass.name);
-        details.detailClassDescription.setText(ClassDescriptions.forClass(unitClass.id));
-
-        AlertDialog detailsDialog = builder.setView(details.getRoot()).create();
-        detailsDialog.setOnDismissListener(ignored -> {
-            if (classDetailsDialog == detailsDialog) {
-                classDetailsDialog = null;
-            }
-        });
-        classDetailsDialog = detailsDialog;
-        showFloatingCard(detailsDialog);
-    }
-
-    private void showFloatingCard(AlertDialog card) {
-        card.setCanceledOnTouchOutside(true);
-        card.show();
-        int gutter = getResources().getDimensionPixelSize(R.dimen.screen_gutter);
-        int maxWidth = getResources().getDimensionPixelSize(R.dimen.floating_dialog_max_width);
-        int width = Math.min(binding.getRoot().getWidth() - 2 * gutter, maxWidth);
-        card.getWindow().setLayout(width, WindowManager.LayoutParams.WRAP_CONTENT);
+    private void showUnitDetails(UnitLabel unit) {
+        details().showUnit(unit, route);
     }
 
     private void showAvailableUnits() {
@@ -205,7 +180,7 @@ public final class UnitRosterActivity extends ImperialActivity {
                 .setTitle(R.string.add_unit);
         dialog = UnitPicker.show(picker, getColor(route.accentResource), choices,
                 R.string.no_available_units, unit -> showClassPicker(unit, R.string.choose_class_for_unit,
-                        unitClass -> viewModel.recruit(unit, unitClass)));
+                        unitClass -> viewModel.recruit(unit, unitClass)), this::showUnitDetails);
     }
 
     private void showClassEditor(UnitLabel unit) {
@@ -218,7 +193,7 @@ public final class UnitRosterActivity extends ImperialActivity {
         AlertDialog.Builder picker = new AlertDialog.Builder(this)
                 .setTitle(getString(title, unit.name()))
                 .setIcon(UnitPortraits.resourceFor(unit.id()));
-        dialog = UnitPicker.showClasses(picker, choices, onChoose, this::showClassDetails);
+        dialog = UnitPicker.showClasses(picker, choices, onChoose, details()::showClass);
     }
 
     private void confirmRemoval(UnitLabel unit) {
@@ -233,9 +208,6 @@ public final class UnitRosterActivity extends ImperialActivity {
 
     @Override
     protected void onDestroy() {
-        if (classDetailsDialog != null) {
-            classDetailsDialog.dismiss();
-        }
         if (dialog != null) {
             dialog.dismiss();
         }

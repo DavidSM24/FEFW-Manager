@@ -12,7 +12,7 @@
     android:paddingEnd="12dp"
     android:paddingBottom="6dp">
 
-    <com.davidsm24.fefwmanager.units.ClassIconButton
+    <com.davidsm24.fefwmanager.units.HoldImageButton
         android:id="@+id/class_icon"
         android:layout_width="48dp"
         android:layout_height="48dp"

@@ -1,5 +1,8 @@
 package com.davidsm24.fefwmanager.units;
 
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
 import java.util.Collections;
@@ -11,6 +14,16 @@ abstract class ChoiceListAdapter<T> extends BaseAdapter {
     final void showChoices(List<T> choices) {
         this.choices = choices;
         notifyDataSetChanged();
+    }
+
+    static View.OnClickListener selectItem(ViewGroup parent, View row) {
+        AdapterView<?> list = (AdapterView<?>) parent;
+        return clicked -> {
+            int selected = list.getPositionForView(clicked);
+            if (selected != AdapterView.INVALID_POSITION) {
+                list.performItemClick(row, selected, list.getItemIdAtPosition(selected));
+            }
+        };
     }
 
     @Override

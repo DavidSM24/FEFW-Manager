@@ -46,6 +46,8 @@ public final class MainActivity extends ImperialActivity {
             card.routeName.setText(name);
             UnitPortraits.bind(card.routePortrait, route);
             card.getRoot().setOnClickListener(view -> startActivity(RouteActivity.intent(this, route)));
+            UnitPortraits.enableDetails(card.routePortrait, route,
+                    unit -> details().showUnit(unit, route), view -> card.getRoot().performClick());
             binding.routeCards.addView(card.getRoot());
             cards.put(route, card);
         }

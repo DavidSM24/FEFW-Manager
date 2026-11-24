@@ -3,16 +3,22 @@ package com.davidsm24.fefwmanager.units;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
+import com.davidsm24.fefwmanager.R;
 import com.davidsm24.fefwmanager.data.UnitClass;
 import com.davidsm24.fefwmanager.databinding.ItemUnitClassBinding;
 
+import java.util.function.Consumer;
+
 final class UnitClassListAdapter extends ChoiceListAdapter<UnitClass> {
     private final LayoutInflater inflater;
+    private final Consumer<UnitClass> onClassDetails;
     private final UnitClassIcons icons = new UnitClassIcons();
 
-    UnitClassListAdapter(LayoutInflater inflater) {
+    UnitClassListAdapter(LayoutInflater inflater, Consumer<UnitClass> onClassDetails) {
         this.inflater = inflater;
+        this.onClassDetails = onClassDetails;
     }
 
     @Override
@@ -27,7 +33,23 @@ final class UnitClassListAdapter extends ChoiceListAdapter<UnitClass> {
 
         UnitClass unitClass = getItem(position);
         row.className.setText(unitClass.name);
+        row.classIcon.cancelHold();
         icons.bind(row.classIcon, unitClass);
+        row.classIcon.setContentDescription(parent.getContext().getString(
+                R.string.select_class_description, unitClass.name));
+        View.OnClickListener selectClass = clicked -> {
+            AdapterView<?> list = (AdapterView<?>) parent;
+            int selected = list.getPositionForView(clicked);
+            if (selected != AdapterView.INVALID_POSITION) {
+                list.performItemClick(row.getRoot(), selected, list.getItemIdAtPosition(selected));
+            }
+        };
+        row.getRoot().setOnClickListener(selectClass);
+        row.classIcon.setOnClickListener(selectClass);
+        row.classIcon.setOnLongClickListener(icon -> {
+            onClassDetails.accept(unitClass);
+            return true;
+        });
         return row.getRoot();
     }
 }

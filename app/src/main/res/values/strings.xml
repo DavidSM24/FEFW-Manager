@@ -59,6 +59,7 @@
     <string name="choose_class_for_unit">Elegir clase para %1$s</string>
     <string name="change_class_for_unit">Cambiar clase de %1$s</string>
     <string name="change_class_description">Cambiar clase de %1$s, actualmente %2$s</string>
+    <string name="select_class_description">Seleccionar %1$s</string>
     <string name="assign_class">Asignar clase</string>
     <string name="assign_class_description">Asignar clase a %1$s</string>
     <string name="search_classes">Buscar clase</string>

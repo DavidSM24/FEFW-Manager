@@ -8,10 +8,8 @@ import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Build;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
-import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.TextView;
 
 import androidx.sqlite.db.SimpleSQLiteQuery;
@@ -107,7 +105,13 @@ public class RouteNavigationTest {
                     assertTrue(device.wait(Until.gone(By.text("Elegir clase para Alexandra")), TIMEOUT));
                     assertNull(fixture.routeProgress().findRecruit(cai.route, cai.unitId));
                     openAlexandraClassPicker();
-                    chooseClass("Archer", " aRcH ");
+                    filterClasses(" aRcH ");
+                    BySelector pickerIcon = By.res(PACKAGE, "class_icon").descContains("Archer");
+                    inspectArcher(pickerIcon);
+                    assertVisible(By.text("Elegir clase para Alexandra"));
+                    assertVisible(By.res(PACKAGE, "unit_search").text(" aRcH "));
+                    assertNull(fixture.routeProgress().findRecruit(cai.route, cai.unitId));
+                    click(pickerIcon);
                     BySelector archer = By.res(PACKAGE, "recruited_class_icon").descContains("Archer");
                     assertVisible(archer);
                     openGroupAnalysis();
@@ -119,7 +123,8 @@ public class RouteNavigationTest {
                     UiObject2 archerIcon = find(archer);
                     assertTrue(archerIcon.getVisibleBounds().right
                             <= find(By.desc("Quitar a Alexandra")).getVisibleBounds().left);
-                    assertClassTooltip(archerIcon, "Archer");
+                    inspectArcher(archer);
+                    assertVisible(archer);
                     click(archer);
                     assertVisible(By.text("Cambiar clase de Alexandra"));
                     chooseClass("Diviner", "divin");
@@ -207,32 +212,27 @@ public class RouteNavigationTest {
     }
 
     private void chooseClass(String name, String filter) {
+        filterClasses(filter);
+        click(By.res(PACKAGE, "class_name").text(name));
+        assertTrue(device.wait(Until.gone(By.res(PACKAGE, "unit_search")), TIMEOUT));
+    }
+
+    private void filterClasses(String filter) {
         BySelector search = By.res(PACKAGE, "unit_search");
         find(search).setText("zzzz");
         assertVisible(By.text("No hay clases que coincidan."));
         find(search).setText(filter);
         assertVisible(By.res(PACKAGE, "class_icon"));
-        click(By.res(PACKAGE, "class_name").text(name));
-        assertTrue(device.wait(Until.gone(search), TIMEOUT));
     }
 
-    private void assertClassTooltip(UiObject2 icon, String name) {
-        icon.longClick();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            var automation = InstrumentationRegistry.getInstrumentation().getUiAutomation();
-            AccessibilityNodeInfo root = automation.getRootInActiveWindow();
-            assertNotNull(root);
-            AccessibilityNodeInfo node = root.findAccessibilityNodeInfosByViewId(
-                    PACKAGE + ":id/recruited_class_icon").stream()
-                    .filter(candidate -> candidate.getContentDescription() != null
-                            && candidate.getContentDescription().toString().endsWith(name))
-                    .findFirst().orElse(null);
-            assertNotNull(node);
-            assertTrue(node.refresh());
-            assertEquals(name, String.valueOf(node.getTooltipText()));
-            assertTrue(node.getActionList().contains(
-                    AccessibilityNodeInfo.AccessibilityAction.ACTION_HIDE_TOOLTIP));
-        }
+    private void inspectArcher(BySelector icon) {
+        var center = find(icon).getVisibleCenter();
+        assertTrue(device.swipe(center.x, center.y, center.x, center.y, 260));
+        BySelector title = By.res(PACKAGE, "detail_class_name").text("Archer");
+        assertVisible(By.res(PACKAGE, "detail_class_description")
+                .textContains("Combatiente físico a distancia."));
+        assertTrue(device.click(2, find(title).getVisibleBounds().centerY()));
+        assertTrue(device.wait(Until.gone(title), TIMEOUT));
     }
 
     private static void restoreRecruit(RouteProgressDao progress, RecruitedUnit unit,

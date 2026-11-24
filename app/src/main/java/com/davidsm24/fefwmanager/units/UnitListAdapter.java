@@ -1,11 +1,8 @@
 package com.davidsm24.fefwmanager.units;
 
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
@@ -23,16 +20,19 @@ public final class UnitListAdapter extends ChoiceListAdapter<UnitLabel> {
     private final LayoutInflater inflater;
     private final int accent;
     @Nullable private final Consumer<UnitLabel> onChangeClass;
+    @Nullable private final Consumer<UnitClass> onClassDetails;
     @Nullable private final Consumer<UnitLabel> onRemove;
     private final UnitClassIcons classIcons = new UnitClassIcons();
     private Map<String, UnitClass> assignedClasses = Collections.emptyMap();
     private boolean canEdit;
 
     public UnitListAdapter(LayoutInflater inflater, @ColorInt int accent,
-            @Nullable Consumer<UnitLabel> onChangeClass, @Nullable Consumer<UnitLabel> onRemove) {
+            @Nullable Consumer<UnitLabel> onChangeClass, @Nullable Consumer<UnitClass> onClassDetails,
+            @Nullable Consumer<UnitLabel> onRemove) {
         this.inflater = inflater;
         this.accent = accent;
         this.onChangeClass = onChangeClass;
+        this.onClassDetails = onClassDetails;
         this.onRemove = onRemove;
     }
 
@@ -73,25 +73,23 @@ public final class UnitListAdapter extends ChoiceListAdapter<UnitLabel> {
         if (onChangeClass == null) {
             return;
         }
-        ImageView view = row.recruitedClassIcon;
+        ClassIconButton view = row.recruitedClassIcon;
+        view.cancelHold();
         classIcons.bind(view, unitClass);
         boolean hasClass = unitClass != null;
         String name = hasClass ? unitClass.name : null;
         view.setVisibility(hasClass ? View.VISIBLE : View.GONE);
-        view.setEnabled(canEdit);
         view.setContentDescription(hasClass
                 ? view.getContext().getString(R.string.change_class_description, unit.name(), name)
                 : null);
-        view.setOnClickListener(icon -> onChangeClass.accept(unit));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            view.setTooltipText(name);
-        } else {
-            view.setOnLongClickListener(name == null ? null : icon -> {
-                Toast.makeText(icon.getContext(), name, Toast.LENGTH_SHORT).show();
-                return true;
-            });
-            view.setLongClickable(name != null);
-        }
+        view.setOnClickListener(canEdit ? icon -> onChangeClass.accept(unit) : null);
+        view.setClickable(canEdit);
+        boolean canInspect = hasClass && onClassDetails != null;
+        view.setOnLongClickListener(canInspect ? icon -> {
+            onClassDetails.accept(unitClass);
+            return true;
+        } : null);
+        view.setLongClickable(canInspect);
         row.assignClass.setVisibility(hasClass ? View.GONE : View.VISIBLE);
         row.assignClass.setEnabled(canEdit);
         row.assignClass.setContentDescription(

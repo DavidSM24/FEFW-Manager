@@ -5,7 +5,7 @@
     <dimen name="section_gap">16dp</dimen>
     <dimen name="item_gap">10dp</dimen>
     <dimen name="panel_inset">16dp</dimen>
-    <dimen name="group_dialog_max_width">480dp</dimen>
+    <dimen name="floating_dialog_max_width">480dp</dimen>
     <dimen name="stat_segment_gap">3dp</dimen>
     <dimen name="hero_height">192dp</dimen>
     <dimen name="hero_title_size">38sp</dimen>

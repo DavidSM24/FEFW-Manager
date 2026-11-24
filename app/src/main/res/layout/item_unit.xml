@@ -27,7 +27,7 @@
         android:textAppearance="@style/TextAppearance.Fefw.LedgerBody"
         android:textSize="17sp" />
 
-    <ImageButton
+    <com.davidsm24.fefwmanager.units.ClassIconButton
         android:id="@+id/recruited_class_icon"
         android:layout_width="48dp"
         android:layout_height="48dp"

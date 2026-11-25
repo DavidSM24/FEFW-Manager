@@ -90,6 +90,11 @@ public final class SupportPairsActivity extends ImperialActivity {
         viewModel.writes().observe(this, ignored -> render());
     }
 
+    @Override
+    protected Route musicRoute() {
+        return route;
+    }
+
     private void render() {
         UnitCatalog.LoadResult result = catalog.getValue();
         List<SupportPair> pairs = viewModel.pairs().getValue();

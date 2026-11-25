@@ -80,6 +80,38 @@ public class RouteNavigationTest {
     }
 
     @Test
+    public void groupsSelectableClassesByTier() {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        RouteProgressDao progress = ((FefwApplication) context.getApplicationContext()).routeProgress();
+        RecruitedUnit recruit = new RecruitedUnit(Route.CAI, "alexandra");
+        RecruitedUnit original = progress.findRecruit(recruit.route, recruit.unitId);
+        progress.removeRecruit(recruit);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            openUnits("Cai");
+            openAlexandraClassPicker();
+            BySelector initial = By.res(PACKAGE, "class_tier_heading").text("Inicial");
+            BySelector commoner = By.res(PACKAGE, "class_name").text("Commoner");
+            assertTrue(find(initial).getVisibleBounds().bottom <= find(commoner).getVisibleBounds().top);
+            assertTrue(find(commoner).getVisibleBounds().bottom
+                    <= find(By.res(PACKAGE, "class_name").text("Diviner")).getVisibleBounds().top);
+            click(initial);
+            assertVisible(By.text("Elegir clase para Alexandra"));
+            assertNull(progress.findRecruit(recruit.route, recruit.unitId));
+
+            assertClassFilter("Commoner", "Inicial");
+            assertClassFilter("Archer", "Intermedia");
+            assertClassFilter("Bishop", "Avanzada");
+            assertClassFilter("Swordmaster", "Suprema");
+            assertClassFilter("The Avatar", "Divina");
+            click(By.res(PACKAGE, "class_name").text("The Avatar"));
+            assertVisible(By.res(PACKAGE, "recruited_class_icon").descContains("The Avatar"));
+            assertEquals("the-avatar", progress.findRecruit(recruit.route, recruit.unitId).classId);
+        } finally {
+            restoreRecruit(progress, recruit, original);
+        }
+    }
+
+    @Test
     public void inspectsUnitsAndOpensTheirClassDetails() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         RouteProgressDao progress = ((FefwApplication) context.getApplicationContext()).routeProgress();
@@ -276,6 +308,13 @@ public class RouteNavigationTest {
         assertVisible(By.text("No hay clases que coincidan."));
         find(search).setText(filter);
         assertVisible(By.res(PACKAGE, "class_icon"));
+    }
+
+    private void assertClassFilter(String className, String heading) {
+        find(By.res(PACKAGE, "unit_search")).setText(className);
+        assertVisible(By.res(PACKAGE, "class_name").text(className));
+        assertVisible(By.res(PACKAGE, "class_tier_heading").text(heading));
+        assertEquals(1, device.findObjects(By.res(PACKAGE, "class_tier_heading")).size());
     }
 
     private void inspectArcher(BySelector icon) {

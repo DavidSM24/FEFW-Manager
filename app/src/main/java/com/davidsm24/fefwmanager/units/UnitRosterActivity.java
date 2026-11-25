@@ -92,6 +92,11 @@ public final class UnitRosterActivity extends ImperialActivity {
         viewModel.writes().observe(this, ignored -> render());
     }
 
+    @Override
+    protected Route musicRoute() {
+        return route;
+    }
+
     private void render() {
         UnitCatalog.LoadResult result = viewModel.catalog().getValue();
         List<RecruitedUnit> recruits = viewModel.recruited().getValue();

@@ -91,6 +91,11 @@ public final class RouteActivity extends ImperialActivity {
         app.routeProgress().observeProgress(route).observe(this, this::render);
     }
 
+    @Override
+    protected Route musicRoute() {
+        return route;
+    }
+
     private void render(RouteProgress progress) {
         String deadline = progress.day == null
                 ? getString(R.string.no_deadline)

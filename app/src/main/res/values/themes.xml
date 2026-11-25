@@ -9,6 +9,10 @@
         <item name="android:windowAnimationStyle">@style/Animation.Fefw.Screen</item>
     </style>
 
+    <style name="Theme.FefwManager.Starting" parent="Theme.FefwManager">
+        <item name="android:windowBackground">@color/midnight_deep</item>
+    </style>
+
     <style name="ThemeOverlay.Fefw.Dialog" parent="@android:style/Theme.Material.Dialog.Alert">
         <item name="android:windowBackground">@drawable/imperial_panel</item>
         <item name="android:windowAnimationStyle">@style/Animation.Fefw.Dialog</item>

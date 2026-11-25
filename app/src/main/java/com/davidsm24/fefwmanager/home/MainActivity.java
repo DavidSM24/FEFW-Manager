@@ -6,14 +6,18 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.core.view.OneShotPreDrawListener;
 
 import com.davidsm24.fefwmanager.FefwApplication;
 import com.davidsm24.fefwmanager.R;
 import com.davidsm24.fefwmanager.data.MainMission;
 import com.davidsm24.fefwmanager.databinding.ActivityMainBinding;
 import com.davidsm24.fefwmanager.databinding.ItemRouteBinding;
+import com.davidsm24.fefwmanager.databinding.LaunchArtBinding;
 import com.davidsm24.fefwmanager.route.Route;
 import com.davidsm24.fefwmanager.route.RouteActivity;
 import com.davidsm24.fefwmanager.ui.ImperialActivity;
@@ -28,14 +32,22 @@ import java.util.List;
 import java.util.Map;
 
 public final class MainActivity extends ImperialActivity {
+    private static final long SPLASH_HOLD_MILLIS = 900;
+    private static final long SPLASH_FADE_MILLIS = 180;
+
     private final Map<Route, ItemRouteBinding> cards = new EnumMap<>(Route.class);
+    private final Runnable beginSplashFade = this::fadeSplashArt;
+    private ActivityMainBinding binding;
+    private View splashArt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.Theme_FefwManager);
         super.onCreate(savedInstanceState);
-        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         if (savedInstanceState == null) {
+            showSplashArt();
             ImperialMotion.reveal(binding.heroHeading);
         }
 
@@ -54,6 +66,41 @@ public final class MainActivity extends ImperialActivity {
 
         ((FefwApplication) getApplication()).routeProgress().observeMissions()
                 .observe(this, missions -> renderMissions(binding, missions));
+    }
+
+    private void showSplashArt() {
+        ViewGroup content = findViewById(android.R.id.content);
+        View art = LaunchArtBinding.inflate(getLayoutInflater(), content, false).getRoot();
+        splashArt = art;
+        binding.getRoot().setVisibility(View.INVISIBLE);
+        content.addView(art);
+        OneShotPreDrawListener.add(art, () -> art.postDelayed(beginSplashFade, SPLASH_HOLD_MILLIS));
+    }
+
+    private void fadeSplashArt() {
+        if (splashArt != null) {
+            binding.getRoot().setVisibility(View.VISIBLE);
+            splashArt.animate().alpha(0f).setDuration(SPLASH_FADE_MILLIS)
+                    .withEndAction(this::removeSplashArt).start();
+        }
+    }
+
+    private void removeSplashArt() {
+        if (splashArt == null) {
+            return;
+        }
+        View art = splashArt;
+        splashArt = null;
+        art.removeCallbacks(beginSplashFade);
+        art.animate().cancel();
+        ((ViewGroup) art.getParent()).removeView(art);
+        binding.getRoot().setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onStop() {
+        removeSplashArt();
+        super.onStop();
     }
 
     private void renderMissions(ActivityMainBinding binding, List<MainMission> missions) {

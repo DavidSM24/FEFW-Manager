@@ -2,6 +2,7 @@
 <resources>
     <color name="midnight">#24212A</color>
     <color name="midnight_deep">#19171F</color>
+    <color name="launch_art_shade">#D119171F</color>
     <color name="mosaic_scrim">#BF19171F</color>
     <color name="parchment">#F0E2C8</color>
     <color name="parchment_shade">#DFCCAA</color>

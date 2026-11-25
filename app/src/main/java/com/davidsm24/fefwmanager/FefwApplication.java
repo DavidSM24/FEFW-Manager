@@ -8,6 +8,7 @@ import androidx.annotation.MainThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.davidsm24.fefwmanager.audio.RouteMusic;
 import com.davidsm24.fefwmanager.data.ProgressDatabase;
 import com.davidsm24.fefwmanager.data.RouteProgressDao;
 import com.davidsm24.fefwmanager.data.UnitClassDao;
@@ -23,6 +24,7 @@ public final class FefwApplication extends Application {
     private final Executor progressIo = Executors.newSingleThreadExecutor();
     private ProgressDatabase database;
     private LiveData<UnitCatalog.LoadResult> catalog;
+    private RouteMusic routeMusic;
 
     @Override
     public void onCreate() {
@@ -59,5 +61,13 @@ public final class FefwApplication extends Application {
 
     public Executor progressIo() {
         return progressIo;
+    }
+
+    @MainThread
+    public RouteMusic routeMusic() {
+        if (routeMusic == null) {
+            routeMusic = new RouteMusic(this);
+        }
+        return routeMusic;
     }
 }

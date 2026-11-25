@@ -72,6 +72,12 @@
     <string name="assign_class">Asignar clase</string>
     <string name="assign_class_description">Asignar clase a %1$s</string>
     <string name="search_classes">Buscar clase</string>
+    <string name="class_tier_initial">Inicial</string>
+    <string name="class_tier_intermediate">Intermedia</string>
+    <string name="class_tier_advanced">Avanzada</string>
+    <string name="class_tier_master">Suprema</string>
+    <string name="class_tier_divine">Divina</string>
+    <string name="class_tier_unclassified">Sin nivel</string>
     <string name="no_matching_classes">No hay clases que coincidan.</string>
     <string name="no_available_classes">El catálogo de clases está vacío.</string>
     <string name="unit_catalog_error">No se pudo abrir el catálogo de unidades.</string>

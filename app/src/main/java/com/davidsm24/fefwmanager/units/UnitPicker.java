@@ -31,7 +31,7 @@ public final class UnitPicker {
             Consumer<UnitLabel> onUnitDetails) {
         UnitListAdapter adapter = new UnitListAdapter(LayoutInflater.from(builder.getContext()), accent,
                 onUnitDetails, null, null, null);
-        return show(builder, adapter, choices, UnitLabel::name,
+        return show(builder, adapter, text -> matchingChoices(choices, UnitLabel::name, text),
                 new SearchLabels(R.string.search_units, R.string.no_matching_units, emptyMessage),
                 onChoose);
     }
@@ -40,15 +40,18 @@ public final class UnitPicker {
             Consumer<UnitClass> onChoose, Consumer<UnitClass> onClassDetails) {
         UnitClassListAdapter adapter = new UnitClassListAdapter(LayoutInflater.from(builder.getContext()),
                 onClassDetails);
-        return show(builder, adapter, choices, unitClass -> unitClass.name,
+        return show(builder, adapter, text -> UnitClassListAdapter.groupedRows(
+                        matchingChoices(choices, unitClass -> unitClass.name, text)),
                 new SearchLabels(R.string.search_classes, R.string.no_matching_classes,
-                        R.string.no_available_classes), onChoose);
+                        R.string.no_available_classes),
+                row -> onChoose.accept(((UnitClassListAdapter.Row.Choice) row).unitClass()));
     }
 
     private static <T> AlertDialog show(AlertDialog.Builder builder, ChoiceListAdapter<T> adapter,
-            List<T> choices, Function<T, String> name, SearchLabels labels, Consumer<T> onChoose) {
+            Function<String, List<T>> rowsForQuery, SearchLabels labels, Consumer<T> onChoose) {
         builder.setNegativeButton(R.string.cancel_action, null);
-        if (choices.isEmpty()) {
+        List<T> rows = rowsForQuery.apply("");
+        if (rows.isEmpty()) {
             return builder.setMessage(labels.empty()).show();
         }
 
@@ -56,7 +59,7 @@ public final class UnitPicker {
         DialogUnitPickerBinding binding = DialogUnitPickerBinding.inflate(inflater);
         binding.unitSearch.setHint(labels.hint());
         binding.unitSearchEmpty.setText(labels.noMatches());
-        adapter.showChoices(choices);
+        adapter.showChoices(rows);
         binding.unitChoices.setEmptyView(binding.unitSearchEmpty);
         binding.unitChoices.setAdapter(adapter);
         binding.unitSearch.addTextChangedListener(new TextWatcher() {
@@ -66,7 +69,7 @@ public final class UnitPicker {
 
             @Override
             public void onTextChanged(CharSequence text, int start, int before, int count) {
-                adapter.showChoices(matchingChoices(choices, name, text.toString()));
+                adapter.showChoices(rowsForQuery.apply(text.toString()));
                 binding.unitChoices.setSelection(0);
             }
 
@@ -79,9 +82,11 @@ public final class UnitPicker {
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
                 | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         binding.unitChoices.setOnItemClickListener((parent, row, position, id) -> {
-            T selected = adapter.getItem(position);
-            dialog.dismiss();
-            onChoose.accept(selected);
+            if (adapter.isEnabled(position)) {
+                T selected = adapter.getItem(position);
+                dialog.dismiss();
+                onChoose.accept(selected);
+            }
         });
         dialog.show();
         return dialog;

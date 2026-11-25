@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetTop="21.875%"
+    android:insetBottom="21.875%">
+    <bitmap
+        android:src="@drawable/fortune_weave_art"
+        android:gravity="fill"
+        android:filter="true" />
+</inset>
